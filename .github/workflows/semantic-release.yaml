@@ -1,4 +1,4 @@
-name: Release
+name: Semantic Release
 
 on:
   workflow_dispatch:
@@ -12,17 +12,16 @@ on:
       - ".github/workflows/semantic-release.yaml"
 
 jobs:
-  main:
-    name: semantic-release
+  semantic-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
           persist-credentials: false
 
-      - name: Get Token
+      - name: Get GitHub authentication token
+        if: ${{ !env.ACT }}
         id: get_workflow_token
         uses: peter-murray/workflow-application-token-action@v1
         with:
@@ -30,7 +29,7 @@ jobs:
           application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
           organization: 3ware
 
-      - name: Release
+      - name: Create GitHub release and update CHANGELOG
         uses: cycjimmy/semantic-release-action@v2
         with:
           semantic_version: 18.0.0

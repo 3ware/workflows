@@ -1,4 +1,5 @@
 name: tfsec Code Analysis
+
 on:
   pull_request:
     paths:
@@ -7,17 +8,19 @@ on:
       - ".github/workflows/tfsec-pr.yaml"
 
 jobs:
-  main:
-    name: tfsec PR commenter
+  tfsec-pr-commenter:
     permissions:
       pull-requests: write
       contents: read
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clone repo
+      - name: Checkout repository
         uses: actions/checkout@v3
-      - name: tfsec
+        with:
+          persist-credentials: false
+
+      - name: Add tfsec comments to pull request
         uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
