@@ -31,7 +31,10 @@ module.exports = {
     ],
   },
   /*
-   * Ignore dependabot commit messages. They are usually too long
+   * Ignore dependabot and release commit messages. They are usually too long
    */
-  ignores: [(message) => message.includes("chore(deps):")],
+  ignores: [
+    (message) => message.startsWith("chore(deps):"),
+    (message) => message.startsWith("chore(release):")
+  ],
 };
