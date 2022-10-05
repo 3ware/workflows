@@ -9,7 +9,7 @@ on:
   workflow_call:
 
 jobs:
-  semantic-pr-title:
+  conventional-pr-title:
     permissions:
       pull-requests: read
     runs-on: ubuntu-latest
