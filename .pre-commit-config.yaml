@@ -7,20 +7,18 @@ repos:
       - id: check-yaml
       - id: check-json
       - id: check-case-conflict
+      - id: check-merge-conflict
       - id: end-of-file-fixer
-        exclude_types:
-          - "gif"
-      - id: trailing-whitespace
 
   # gitleaks detects hard coded secrets
   - repo: https://github.com/zricethezav/gitleaks
-    rev: v8.8.12
+    rev: v8.13.0
     hooks:
       - id: gitleaks
 
   # actionlint is a static checker for GitHub Actions workflow files
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.6.15
+    rev: v1.6.19
     hooks:
       - id: actionlint
 
@@ -29,7 +27,7 @@ repos:
   # Module documentation is also generated with terraform-docs
   # tfsec performs static code analysis
   - repo: https://github.com/antonbabenko/pre-commit-terraform.git
-    rev: v1.74.1
+    rev: v1.75.0
     hooks:
       - id: terraform_fmt
       - id: terraform_docs

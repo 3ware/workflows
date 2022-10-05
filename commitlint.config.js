@@ -35,6 +35,6 @@ module.exports = {
    */
   ignores: [
     (message) => message.startsWith("chore(deps):"),
-    (message) => message.startsWith("chore(release):")
+    (message) => message.startsWith("chore(release):"),
   ],
 };
