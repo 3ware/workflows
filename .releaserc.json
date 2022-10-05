@@ -5,9 +5,10 @@
       "@semantic-release/commit-analyzer",
       {
         "preset": "conventionalcommits",
-        "releaseRules": [{ "type": "refactor", "release": "minor" },
-        { "type": "chore", "scope": "deps", "release": "patch" }
-      ]
+        "releaseRules": [
+          { "type": "refactor", "release": "minor" },
+          { "type": "chore", "scope": "deps", "release": "patch" }
+        ]
       }
     ],
     [
@@ -24,7 +25,7 @@
               "scope": "deps",
               "section": "Chores",
               "hidden": false
-            } 
+            }
           ]
         }
       }

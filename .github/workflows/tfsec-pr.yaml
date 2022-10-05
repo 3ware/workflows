@@ -1,11 +1,7 @@
 name: tfsec Code Analysis
 
 on:
-  pull_request:
-    paths:
-      - "**/*.tf"
-      - "**/*.tfvars"
-      - ".github/workflows/tfsec-pr.yaml"
+  workflow_call:
 
 jobs:
   tfsec-pr-commenter:
@@ -26,5 +22,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           working_directory: terraform
           #* Add tfsec_args - usually the path to tfvars files
-          tfsec_args: #>-
-            #--tfvars-file=
+          #tfsec_args:#>-
+          #--tfvars-file=
