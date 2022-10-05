@@ -11,12 +11,7 @@ jobs:
       pull-requests: read
       contents: read
     steps:
-      - name: Checkout repository for local testing
-        if: github.actor == 'nektos/act'
-        uses: actions/checkout@v3
-
       - name: Checkout repository
-        if: github.actor != 'nektos/act'
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
