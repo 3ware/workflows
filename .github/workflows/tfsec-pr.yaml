@@ -1,11 +1,7 @@
 name: tfsec Code Analysis
 
 on:
-  pull_request:
-    paths:
-      - "**/*.tf"
-      - "**/*.tfvars"
-      - ".github/workflows/tfsec-pr.yaml"
+  workflow_call:
 
 jobs:
   tfsec-pr-commenter:
