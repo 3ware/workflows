@@ -1,4 +1,4 @@
-name: Semantic PR title
+name: Validate PR title
 
 on:
   pull_request_target:
@@ -6,6 +6,7 @@ on:
       - opened
       - edited
       - synchronize
+  workflow_call:
 
 jobs:
   semantic-pr-title:
