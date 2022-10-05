@@ -26,5 +26,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           working_directory: terraform
           #* Add tfsec_args - usually the path to tfvars files
-          tfsec_args: #>-
-            #--tfvars-file=
+          #tfsec_args:#>-
+          #--tfvars-file=
