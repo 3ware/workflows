@@ -2,6 +2,7 @@ name: Conventional commits
 
 on:
   pull_request:
+  workflow_call:
 
 jobs:
   commit-lint:
