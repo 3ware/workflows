@@ -23,4 +23,4 @@ jobs:
         run: terraform init
 
       - name: Lint with trunk
-        uses: trunk-io/trunk-action@v1.0.4
+        uses: trunk-io/trunk-action@v1.0.6
