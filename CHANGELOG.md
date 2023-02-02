@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.3](https://github.com/3ware/workflows/compare/v1.0.2...v1.0.3) (2023-02-02)
+
+
+### Chores
+
+* **deps:** bump trunk-io/trunk-action from 1.0.4 to 1.0.6 ([#12](https://github.com/3ware/workflows/issues/12)) ([7bffa84](https://github.com/3ware/workflows/commit/7bffa84312a0e5da4930678e0cdd3335e7290942))
+
+## [1.0.2](https://github.com/3ware/workflows/compare/v1.0.1...v1.0.2) (2023-02-02)
+
+
+### Chores
+
+* **deps:** bump amannn/action-semantic-pull-request from 4 to 5 ([#7](https://github.com/3ware/workflows/issues/7)) ([3958e45](https://github.com/3ware/workflows/commit/3958e45e3ea7015553a233b101611b924d8a2183))
+* **deps:** bump aquasecurity/tfsec-pr-commenter-action from 1.2.0 to 1.3.1 ([#9](https://github.com/3ware/workflows/issues/9)) ([4f17bf3](https://github.com/3ware/workflows/commit/4f17bf3940a74622a94318a0b25943c8833389dd))
+
 ### [1.0.1](https://github.com/3ware/terraform-template/compare/v1.0.0...v1.0.1) (2022-09-27)
 
 
