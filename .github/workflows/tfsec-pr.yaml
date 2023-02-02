@@ -2,6 +2,17 @@ name: tfsec Code Analysis
 
 on:
   workflow_call:
+    inputs:
+      working_directory:
+        description: 'The directory to scan terraform file in.'
+        default: '.'
+        required: true
+        type: string
+      tfsec_args:
+        description: 'Command line arguments to pass to tfsec.'
+        default: ''
+        required: false
+        type: string
 
 jobs:
   tfsec-pr-commenter:
@@ -20,7 +31,3 @@ jobs:
         uses: aquasecurity/tfsec-pr-commenter-action@v1.3.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          working_directory: terraform
-          #* Add tfsec_args - usually the path to tfvars files
-          #tfsec_args:#>-
-          #--tfvars-file=
