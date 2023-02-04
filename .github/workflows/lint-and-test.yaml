@@ -29,6 +29,15 @@ jobs:
             echo "$file was changed"
           done
 
+      - name: Output terraform working directory
+        if: contains(steps.changed-files.outputs.all_changed_files, '.tf')
+        id: terraform-dir
+        uses: tj-actions/changed-files@v35
+        with:
+          dir_names: true
+        run: |
+          echo "${{ steps.changed-files.outputs.all_changed_files }}"
+
       - name: Setup Terraform
         if: contains(steps.changed-files.outputs.all_changed_files, '.tf')
         uses: hashicorp/setup-terraform@v2
@@ -38,7 +47,7 @@ jobs:
 
       - name: Initialise Terraform
         if: contains(steps.changed-files.outputs.all_changed_files, '.tf')
-        working-directory: ./terraform
+        working-directory: ${{ steps.terraform-dir.outputs.all_changed_files }}
         run: terraform init
 
       - name: Lint with trunk
