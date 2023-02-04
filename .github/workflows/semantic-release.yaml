@@ -6,11 +6,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "**/*.tftpl"
-      - "**/*.tf"
-      - "**/*.tfvars"
-      - ".github/workflows/*.yaml"
 
 jobs:
   semantic-release:
@@ -24,7 +19,7 @@ jobs:
       - name: Get GitHub authentication token
         if: ${{ ! env.ACT }}
         id: get_workflow_token
-        uses: peter-murray/workflow-application-token-action@v2
+        uses: peter-murray/workflow-application-token-action@v2.1.0
         with:
           application_id: ${{ secrets.APPLICATION_ID }}
           application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
