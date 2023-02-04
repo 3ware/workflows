@@ -7,7 +7,6 @@ on:
       - synchronize
     branches:
       - main
-      - ci-lint-tf-condition
   workflow_call:
 
 jobs:
