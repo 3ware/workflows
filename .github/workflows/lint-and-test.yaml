@@ -1,5 +1,5 @@
 name: Lint and test
-on: 
+on:
   workflow_call:
 
 jobs:
@@ -11,6 +11,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v35
+
+      - name: List all changed files
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
