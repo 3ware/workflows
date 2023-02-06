@@ -26,6 +26,8 @@ jobs:
       - name: Search for terraform files
         id: find-terraform
         uses: ./.github/workflows/changed-files-and-dirs.yaml
+        with:
+          file-type: '.tf'
 
       - name: Setup Terraform
         if: contains(steps.find-terraform.outputs.changed-files, '.tf')
