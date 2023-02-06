@@ -35,6 +35,8 @@ jobs:
         uses: tj-actions/changed-files@v35
         with:
           dir_names: true
+
+      - name: List output directories
         run: |
           echo "${{ steps.changed-files.outputs.all_changed_files }}"
 
