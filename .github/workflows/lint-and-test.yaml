@@ -34,11 +34,14 @@ jobs:
         id: terraform-dir
         uses: tj-actions/changed-files@v35
         with:
+          files: |
+            **/*.tf
           dir_names: true
+          dir_names_exclude_root: true
 
       - name: List output directories
         run: |
-          echo "${{ steps.changed-files.outputs.all_changed_files }}"
+          echo "${{ steps.terraform-dir.outputs.all_changed_files }}"
 
       - name: Setup Terraform
         if: contains(steps.changed-files.outputs.all_changed_files, '.tf')
