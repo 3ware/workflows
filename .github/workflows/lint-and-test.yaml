@@ -8,6 +8,10 @@ on:
     branches:
       - main
   workflow_call:
+    inputs:
+      terraform-version:
+        required: true
+        type: number
 
 jobs:
   lint-and-test:
@@ -19,40 +23,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v35
-
-      - name: List all changed files
-        run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo "$file was changed"
-          done
-
-      - name: Output terraform working directory
-        if: contains(steps.changed-files.outputs.all_changed_files, '.tf')
-        id: terraform-dir
-        uses: tj-actions/changed-files@v35
-        with:
-          files: |
-            **/*.tf
-          dir_names: true
-          dir_names_exclude_root: true
-
-      - name: List output directories
-        run: |
-          echo "${{ steps.terraform-dir.outputs.all_changed_files }}"
+      - name: Search for terraform files
+        id: find-terraform
+        uses: ./.github/workflows/changed-files-and-dirs.yaml
 
       - name: Setup Terraform
-        if: contains(steps.changed-files.outputs.all_changed_files, '.tf')
+        if: contains(steps.find-terraform.outputs.changed-files, '.tf')
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.3
+          terraform_version: ${{ inputs.terraform-version }}
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
+      #Initialise terraform in the directory where terraform file have changed.
       - name: Initialise Terraform
-        if: contains(steps.changed-files.outputs.all_changed_files, '.tf')
-        working-directory: ${{ steps.terraform-dir.outputs.all_changed_files }}
+        if: contains(steps.find-terraform.outputs.changed-files, '.tf')
+        working-directory: ${{ steps.find-terraform.outputs.dir-names }}
         run: terraform init
 
       - name: Lint with trunk
