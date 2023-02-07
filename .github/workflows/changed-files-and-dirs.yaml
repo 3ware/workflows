@@ -1,15 +1,5 @@
 name: Changed files and directories
 on:
-#TODO: remove PR trigger
-#? are more inputs required for branches to compare
-#? Whats the error from the last run all about
-  pull_request:
-    types:
-      - opened
-      - edited
-      - synchronize
-    branches:
-      - main
   workflow_call:
     inputs:
       file-type:

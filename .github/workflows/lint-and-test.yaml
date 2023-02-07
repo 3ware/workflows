@@ -21,7 +21,7 @@ jobs:
   find-terraform:
     uses: ./.github/workflows/changed-files-and-dirs.yaml
     with:
-      file-type: '.tf'
+      file-type: ".tf"
 
   lint:
     runs-on: ubuntu-latest
