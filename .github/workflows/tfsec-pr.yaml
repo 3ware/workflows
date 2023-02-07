@@ -16,8 +16,8 @@ jobs:
     uses: ./.github/workflows/changed-files-and-dirs.yaml
     with:
       file-type: |
-        ".tf"
-        ".tfvars"
+        .tf
+        .tfvars
 
   tfsec-pr-commenter:
     permissions:
