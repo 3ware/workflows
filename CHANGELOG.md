@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0](https://github.com/3ware/workflows/compare/v1.0.3...v1.1.0) (2023-02-07)
+
+
+### Features
+
+* Add workflow for changed files ([#16](https://github.com/3ware/workflows/issues/16)) ([b58334a](https://github.com/3ware/workflows/commit/b58334aba44e21dff28a2768d5d1b470c4aa9bcf))
+
 ## [1.0.3](https://github.com/3ware/workflows/compare/v1.0.2...v1.0.3) (2023-02-02)
 
 
