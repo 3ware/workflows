@@ -13,7 +13,6 @@ jobs:
   find-terraform:
     permissions:
       contents: read
-      checks: write
     uses: ./.github/workflows/changed-files-and-dirs.yaml
     with:
       file-type: |
