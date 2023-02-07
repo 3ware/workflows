@@ -15,7 +15,7 @@ on:
         value: ${{ jobs.changes.outputs.dirs }}
 
 jobs:
-  changes:
+  file-changes:
     runs-on: ubuntu-latest
     outputs:
       files: ${{ steps.changed-files.outputs.all_changed_files }}
