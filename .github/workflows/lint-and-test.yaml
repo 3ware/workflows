@@ -19,17 +19,9 @@ permissions:
 
 jobs:
   find-terraform:
-    runs-on: ubuntu-latest
-    outputs:
-      files: ${{ steps.find-tf-dir.outputs.files }}
-      dir: ${{ steps.find-tf-dir.outputs.dirs }}
-
-    steps:
-      - name: Search for terraform files
-        id: find-tf-dir
-        uses: ./.github/workflows/changed-files-and-dirs.yaml
-        with:
-          file-type: '.tf'
+    uses: ./.github/workflows/changed-files-and-dirs.yaml
+    with:
+      file-type: '.tf'
 
   lint:
     runs-on: ubuntu-latest
@@ -39,7 +31,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup Terraform
-        if: contains(needs.find-terraform.outputs.files, '.tf')
+        if: contains(needs.find-terraform.outputs.changed-files, '.tf')
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: ${{ inputs.terraform-version }}
@@ -47,8 +39,8 @@ jobs:
 
       #Initialise terraform in the directory where terraform file have changed.
       - name: Initialise Terraform
-        if: contains(needs.find-terraform.outputs.files, '.tf')
-        working-directory: ${{ needs.find-terraform.outputs.dir }}
+        if: contains(needs.find-terraform.outputs.changed-files, '.tf')
+        working-directory: ${{ needs.find-terraform.outputs.dir-names }}
         run: terraform init
 
       - name: Lint with trunk
