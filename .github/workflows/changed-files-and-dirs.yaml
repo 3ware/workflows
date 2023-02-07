@@ -9,10 +9,10 @@ on:
     outputs:
       changed-files:
         description: "The names of files that have been updated"
-        value: ${{ jobs.changes.outputs.files }}
+        value: ${{ jobs.file-changes.outputs.files }}
       dir-names:
         description: "The names of the directories that contain changed files"
-        value: ${{ jobs.changes.outputs.dirs }}
+        value: ${{ jobs.file-changes.outputs.dirs }}
 
 jobs:
   file-changes:
@@ -36,12 +36,12 @@ jobs:
             echo "$file was changed"
           done
 
-      #*Find the directory where files have been changed.
+      # Find the directory where files have been changed.
       - name: Get changed directories
         id: changed-dir
         uses: tj-actions/changed-files@v35
-        #*Step fails if nothing found.
-        continue-on-error: true #*Allows workflow to proceed if no files found
+        # Step fails if nothing found.
+        continue-on-error: true # Allows workflow to proceed if no files found
         with:
           files: |
             **/*${{ inputs.file-type }}
