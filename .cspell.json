@@ -6,12 +6,13 @@
   "language": "en-GB",
   // words - list of words to be always considered correct
   "words": [
-    "tfsec",
-    "tfvars",
     "aquasecurity",
+    "conventionalcommits",
+    "linters",
     "markdownlint",
     "runtimes",
-    "linters",
-    "conventionalcommits"
+    "tflint",
+    "tfsec",
+    "tfvars"
   ]
 }
