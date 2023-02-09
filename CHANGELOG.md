@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0](https://github.com/3ware/workflows/compare/v1.1.0...v1.2.0) (2023-02-09)
+
+
+### Features
+
+* tfsec action inputs ([#15](https://github.com/3ware/workflows/issues/15)) ([678ac31](https://github.com/3ware/workflows/commit/678ac31a5e67c4100aaa11cfc62f2407db7bca0a))
+
 ## [1.1.0](https://github.com/3ware/workflows/compare/v1.0.3...v1.1.0) (2023-02-07)
 
 
