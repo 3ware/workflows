@@ -1,0 +1,46 @@
+name: Terraform directory
+on:
+  workflow_call:
+    outputs:
+      terraform-dir:
+        description: "The terraform directory to initialise"
+        value: ${{ jobs.terraform-directory.outputs.dir }}
+
+jobs:
+  terraform-directory:
+    runs-on: ubuntu-latest
+    outputs:
+      dir: ${{ steps.changed-dir.outputs.all_changed_files }}
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v35
+
+      - name: List all changed files
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
+
+      # Find the directory where files have been changed.
+      - name: Get terraform directory
+        id: changed-dir
+        uses: tj-actions/changed-files@v35
+        # Step fails if nothing found.
+        continue-on-error: true # Allows workflow to proceed if no files found
+        with:
+          files: |
+            **/*.tf
+            **/*.tfvars
+          dir_names: true
+          dir_names_exclude_root: true
+
+      - name: List terraform directory
+        if: ${{ steps.changed-dir.conclusion == 'success'}}
+        run: |
+          echo "${{ steps.changed-dir.outputs.all_changed_files }}"
