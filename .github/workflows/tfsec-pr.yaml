@@ -13,11 +13,7 @@ jobs:
   find-terraform:
     permissions:
       contents: read
-    uses: ./.github/workflows/changed-files-and-dirs.yaml
-    with:
-      file-type: |
-        .tf
-        .tfvars
+    uses: ./.github/workflows/get-terraform-dir.yaml
 
   tfsec-pr-commenter:
     permissions:
@@ -36,5 +32,5 @@ jobs:
         uses: aquasecurity/tfsec-pr-commenter-action@v1.3.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          working_directory: ${{ needs.find-terraform.outputs.dir-names }}
+          working_directory: ${{ needs.find-terraform.outputs.terraform-dir }}
           tfsec_args: ${{ inputs.tfsec_args }}
