@@ -1,0 +1,24 @@
+name: Generate terraform docs
+on:
+  workflow_call:
+
+jobs:
+  find-terraform:
+    uses: ./.github/workflows/get-terraform-dir.yaml
+
+  docs:
+    runs-on: ubuntu-latest
+    needs: find-terraform
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Render terraform docs and push changes back to PR
+        uses: terraform-docs/gh-actions@v1.0.0
+        with:
+          working-dir: ${{ needs.find-terraform.outputs.terraform-dir }}
+          output-file: README.md
+          output-method: inject
+          git-push: "true"
+          git-commit-message: "update terraform documentation"
