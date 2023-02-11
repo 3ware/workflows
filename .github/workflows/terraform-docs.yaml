@@ -8,6 +8,8 @@ jobs:
 
   terraform-docs:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs: find-terraform
     steps:
       - uses: actions/checkout@v3
