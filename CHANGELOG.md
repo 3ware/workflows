@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0](https://github.com/3ware/workflows/compare/v1.2.0...v1.3.0) (2023-02-11)
+
+
+### Features
+
+* Add reusable workflow for terraform-docs ([#20](https://github.com/3ware/workflows/issues/20)) ([488f7f0](https://github.com/3ware/workflows/commit/488f7f0b481de752564e16bf67e6936757eae594))
+
 ## [1.2.0](https://github.com/3ware/workflows/compare/v1.1.0...v1.2.0) (2023-02-09)
 
 
