@@ -10,6 +10,7 @@
     "conventionalcommits",
     "linters",
     "markdownlint",
+    "noreply",
     "runtimes",
     "tflint",
     "tfsec",
