@@ -5,6 +5,7 @@ on:
 jobs:
   get-temp-token:
     uses: ./.github/workflows/get-workflow-token.yaml
+    secrets: inherit
   find-terraform:
     uses: ./.github/workflows/get-terraform-dir.yaml
 
