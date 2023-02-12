@@ -1,0 +1,16 @@
+# This workflow generates an installation access token for GitHub authentication
+name: Generate workflow token
+on:
+  workflow_call:
+
+jobs:
+  get-temp-token:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get GitHub authentication token
+        id: get_workflow_token
+        uses: peter-murray/workflow-application-token-action@v2.1.0
+        with:
+          application_id: ${{ secrets.APPLICATION_ID }}
+          application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
+          organization: 3ware
