@@ -2,13 +2,19 @@
 name: Generate workflow token
 on:
   workflow_call:
+    outputs:
+      temp-token:
+        description: "The temporary installation access token"
+        value: ${{ jobs.get-temp-token.outputs.token }}
 
 jobs:
   get-temp-token:
     runs-on: ubuntu-latest
+    outputs:
+      token: ${{ steps.get-workflow-token.outputs.token }}
     steps:
       - name: Get GitHub authentication token
-        id: get_workflow_token
+        id: get-workflow-token
         uses: peter-murray/workflow-application-token-action@v2.1.0
         with:
           application_id: ${{ secrets.APPLICATION_ID }}
