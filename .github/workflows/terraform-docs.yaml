@@ -37,29 +37,21 @@ jobs:
           working-dir: ${{ needs.find-terraform.outputs.terraform-dir }}
           output-file: README.md
           output-method: inject
-          #git-push: "true"
-          #git-commit-message: "update terraform documentation"
-          # See this link for configuring an apps email and username:
-          # https://github.com/orgs/community/discussions/24664
-          #git-push-user-name: "3ware-release[bot]"
-          # GitHub App user ID from:
-          # https://api.github.com/users/3ware-release%5Bbot%5D
-          #git-push-user-email: "108564841+3ware-release[bot]@users.noreply.github.com"
 
       # Use the REST API to commit changes, so we get automatic commit signing
-      # - name: Push changes back to PR with signature
-      #   env:
-      #     GH_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
-      #     FILE_TO_COMMIT: README.md
-      #     DESTINATION_BRANCH: ${{ github.event.pull_request.head.ref }}
-      #   run: |
-      #     export TODAY=$( date -u '+%Y-%m-%d' )
-      #     export MESSAGE="update $FILE_TO_COMMIT with terraform-docs"
-      #     export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
-      #     export CONTENT=$( base64 -i $FILE_TO_COMMIT )
-      #     gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
-      #       --field message="$MESSAGE" \
-      #       --field content="$CONTENT" \
-      #       --field encoding="base64" \
-      #       --field branch="$DESTINATION_BRANCH" \
-      #       --field sha="$SHA"
+      - name: Push changes back to PR with signature
+        env:
+          GH_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
+          FILE_TO_COMMIT: README.md
+          DESTINATION_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          export TODAY=$( date -u '+%Y-%m-%d' )
+          export MESSAGE="update $FILE_TO_COMMIT with terraform-docs [skip ci]"
+          export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
+          export CONTENT=$( base64 -i $FILE_TO_COMMIT )
+          gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
+            --field message="$MESSAGE" \
+            --field content="$CONTENT" \
+            --field encoding="base64" \
+            --field branch="$DESTINATION_BRANCH" \
+            --field sha="$SHA"
