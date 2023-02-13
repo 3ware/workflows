@@ -8,22 +8,29 @@ on:
       - main
 
 jobs:
+  get-temp-token:
+    uses: ./.github/workflows/get-workflow-token.yaml
+    secrets: inherit
+
   semantic-release:
     runs-on: ubuntu-latest
+    needs: get-temp-token
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           persist-credentials: false
 
-      - name: Get GitHub authentication token
-        if: ${{ ! env.ACT }}
-        id: get_workflow_token
-        uses: peter-murray/workflow-application-token-action@v2.1.0
-        with:
-          application_id: ${{ secrets.APPLICATION_ID }}
-          application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
-          organization: 3ware
+      - name: Decrypt the installation access token
+        id: decrypt-token
+        run: |
+          DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$KEY" \
+          --output - <(echo "${{ needs.get-temp-token.outputs.temp-token }}" \
+          | base64 --decode))
+          echo "::add-mask::$DECRYPTED_TOKEN"
+          echo "temp-token=$DECRYPTED_TOKEN" >> $GITHUB_OUTPUT
+        env:
+          KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
 
       - name: Create GitHub release and update CHANGELOG
         if: ${{ ! env.ACT }}
@@ -35,7 +42,7 @@ jobs:
             @semantic-release/git@10.0.0
             conventional-changelog-conventionalcommits@5.0.0
         env:
-          GITHUB_TOKEN: ${{ steps.get_workflow_token.outputs.token }}
+          GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
 
       - name: Local test release
         if: ${{ env.ACT }}
