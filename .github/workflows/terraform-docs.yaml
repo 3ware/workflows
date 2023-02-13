@@ -3,6 +3,9 @@ on:
   workflow_call:
 
 jobs:
+  get-temp-token:
+    uses: ./.github/workflows/get-workflow-token.yaml
+    secrets: inherit
   find-terraform:
     uses: ./.github/workflows/get-terraform-dir.yaml
 
@@ -10,23 +13,51 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    needs: find-terraform
+    env:
+      WORKING_DIR: ${{ needs.find-terraform.outputs.terraform-dir }}
+      TF_DOCS_FILE: README.md
+    needs: [get-temp-token, find-terraform]
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
-      - name: Render terraform docs and push changes back to PR
+      - name: Decrypt the installation access token
+        id: decrypt-token
+        run: |
+          DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$KEY" \
+          --output - <(echo "${{ needs.get-temp-token.outputs.temp-token }}" \
+          | base64 --decode))
+          echo "::add-mask::$DECRYPTED_TOKEN"
+          echo "temp-token=$DECRYPTED_TOKEN" >> $GITHUB_OUTPUT
+        env:
+          KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
+
+      - name: Render terraform docs
         uses: terraform-docs/gh-actions@v1.0.0
         with:
           working-dir: ${{ needs.find-terraform.outputs.terraform-dir }}
-          output-file: README.md
+          output-file: ${{ env.TF_DOCS_FILE }}
           output-method: inject
-          git-push: "true"
-          git-commit-message: "update terraform documentation"
-          # See this link for configuring an apps email and username:
-          # https://github.com/orgs/community/discussions/24664
-          git-push-user-name: "3ware-release[bot]"
-          # GitHub App user ID from:
-          # https://api.github.com/users/3ware-release%5Bbot%5D
-          git-push-user-email: "108564841+3ware-release[bot]@users.noreply.github.com"
+
+      - name: Set file path env
+        run: echo "FILE_PATH=${{ env.WORKING_DIR }}/${{ env.TF_DOCS_FILE }}" >> $GITHUB_ENV
+
+      # Use the REST API to commit changes, so we get automatic commit signing
+      - name: Push changes back to PR with signature
+        env:
+          GH_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
+          DESTINATION_BRANCH: ${{ github.event.pull_request.head.ref }}
+          FILE_TO_COMMIT: "${{ env.FILE_PATH }}"
+        run: |
+          export TODAY=$( date -u '+%Y-%m-%d' )
+          export MESSAGE="update documentation with terraform-docs"
+          export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
+          export CONTENT=$( base64 -i $FILE_TO_COMMIT )
+          gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
+            --field message="$MESSAGE" \
+            --field content="$CONTENT" \
+            --field encoding="base64" \
+            --field branch="$DESTINATION_BRANCH" \
+            --field sha="$SHA"
