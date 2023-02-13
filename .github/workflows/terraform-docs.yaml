@@ -15,9 +15,19 @@ jobs:
       contents: write
     needs: [get-temp-token, find-terraform]
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Decrypt the installation access token
+        id: decrypt-token
+        run: |
+          DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$KEY" \
+          --output - <(echo "${{ needs.get-temp-token.outputs.temp-token }}" \
+          | base64 --decode))
+        env:
+          KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
 
       - name: Render terraform docs
         uses: terraform-docs/gh-actions@v1.0.0
