@@ -42,6 +42,7 @@ jobs:
       - name: Push changes back to PR with signature
         env:
           GH_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
+          WORKING_DIR: ${{ needs.find-terraform.outputs.terraform-dir }}
           FILE_TO_COMMIT: README.md
           DESTINATION_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
@@ -49,7 +50,7 @@ jobs:
           export MESSAGE="update $FILE_TO_COMMIT with terraform-docs [skip ci]"
           export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
           export CONTENT=$( base64 -i $FILE_TO_COMMIT )
-          gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
+          gh api --method PUT /repos/:owner/:repo/contents/$WORKING_DIR/$FILE_TO_COMMIT \
             --field message="$MESSAGE" \
             --field content="$CONTENT" \
             --field encoding="base64" \
