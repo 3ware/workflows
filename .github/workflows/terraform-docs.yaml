@@ -26,6 +26,7 @@ jobs:
           DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$KEY" \
           --output - <(echo "${{ needs.get-temp-token.outputs.temp-token }}" \
           | base64 --decode))
+          echo "::add-mask::$DECRYPTED_TOKEN"
           echo "temp-token=$DECRYPTED_TOKEN" >> $GITHUB_OUTPUT
         env:
           KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
