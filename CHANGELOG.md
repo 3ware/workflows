@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0](https://github.com/3ware/workflows/compare/v1.3.0...v1.4.0) (2023-02-13)
+
+
+### Features
+
+* Add step to push signed commits in terraform-docs ([#24](https://github.com/3ware/workflows/issues/24)) ([b401a8f](https://github.com/3ware/workflows/commit/b401a8f947ef8a4fe8e537397dbcf759c787844d)), closes [#22](https://github.com/3ware/workflows/issues/22)
+
 ## [1.3.0](https://github.com/3ware/workflows/compare/v1.2.0...v1.3.0) (2023-02-11)
 
 
