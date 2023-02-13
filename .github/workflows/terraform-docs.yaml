@@ -13,6 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      WORKING_DIR: ${{ needs.find-terraform.outputs.terraform-dir }}
+      TF_DOCS_FILE: README.md
     needs: [get-temp-token, find-terraform]
     steps:
       - name: Checkout repository
@@ -35,16 +38,18 @@ jobs:
         uses: terraform-docs/gh-actions@v1.0.0
         with:
           working-dir: ${{ needs.find-terraform.outputs.terraform-dir }}
-          output-file: README.md
+          output-file: ${{ env.TF_DOCS_FILE }}
           output-method: inject
+
+      - name: Set file path env
+        run: echo "FILE_PATH=${{ env.WORKING_DIR }}/${{ env.TF_DOCS_FILE }}" >> $GITHUB_ENV
 
       # Use the REST API to commit changes, so we get automatic commit signing
       - name: Push changes back to PR with signature
         env:
           GH_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
-          WORKING_DIR: ${{ needs.find-terraform.outputs.terraform-dir }}
-          FILE_TO_COMMIT: $WORKING_DIR/README.md
           DESTINATION_BRANCH: ${{ github.event.pull_request.head.ref }}
+          FILE_TO_COMMIT: "${{ env.FILE_PATH }}"
         run: |
           export TODAY=$( date -u '+%Y-%m-%d' )
           export MESSAGE="update documentation with terraform-docs [skip ci]"
