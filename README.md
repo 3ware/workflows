@@ -23,7 +23,7 @@ This workflow uses [changed-files](https://github.com/tj-actions/changed-files) 
 
 ### get-workflow-token
 
-According to GitHubs documentation regarding [Authenticating with the API](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github#authenticating-with-the-api), Personal Access Tokens (PATS) should be used temporarily for development work and production workflows should use [GitHub App Authentication](https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps). Most GitHub Action documentation for workflows that require permissions over and above what `GITHUB_TOKEN` can provide, suggest using a PAT - however I wanted to see if I could follow GitHubs advice and use an app. It can be quite easy to lose track of which PAT is stored as which action secret if you have a few of them floating around.
+According to GitHubs documentation regarding [Authenticating with the API](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github#authenticating-with-the-api), Personal Access Tokens (PATS) should be used temporarily for development work and production workflows should use [GitHub App Authentication](https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps). Most GitHub Action documentation for workflows that require permissions over and above what `GITHUB_TOKEN` can provide, suggest using a PAT - however I wanted to see if I could follow GitHub's advice and use an app. It can be quite easy to lose track of which PAT is stored as which action secret if you have a few of them floating around, and you don't need to worry about expiration and rotation.
 
 This workflow uses the [workflow-application-token-action](https://github.com/marketplace/actions/workflow-application-token-action) to generate the [installation access token](https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-an-installation) using a GitHub App, which can be used in place of a Personal Access Token.
 
@@ -36,7 +36,9 @@ Therefore some extra steps are required in the reusable workflow to encrypt the 
 ```yaml
 - name: Get GitHub authentication token
   id: get-workflow-token
----
+  uses:
+    uses: peter-murray/workflow-application-token-action@v2.1.0 # Output is 'token'
+
 - name: Encrypt the token for reuse between jobs / workflows
   id: encrypt-token
   env:
@@ -99,7 +101,7 @@ calling-workflow:
     GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
 ```
 
-Thanks to this [this blog post](https://nitratine.net/blog/post/how-to-pass-secrets-between-runners-in-github-actions/) and [stack overflow answer](https://stackoverflow.com/a/75387551/18073694) for the wise words.
+Thanks to this [this blog post](https://nitratine.net/blog/post/how-to-pass-secrets-between-runners-in-github-actions/) and [stack overflow answer](https://stackoverflow.com/a/75387551/18073694) for the wise words. See [get-workflow-token](https://github.com/3ware/workflows/blob/main/.github/workflows/get-workflow-token.yaml) and [semantic-release](https://github.com/3ware/workflows/blob/main/.github/workflows/semantic-release.yaml) for complete workflows.
 
 ### lint
 
