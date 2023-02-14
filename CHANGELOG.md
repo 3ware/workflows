@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.0](https://github.com/3ware/workflows/compare/v1.4.0...v1.5.0) (2023-02-14)
+
+
+### Enhancement
+
+* semantic-release action to use get-temp-token ([#25](https://github.com/3ware/workflows/issues/25)) ([aacf707](https://github.com/3ware/workflows/commit/aacf707f0c29251e25e7fe4e3c8b58db3bcfb747))
+
 ## [1.4.0](https://github.com/3ware/workflows/compare/v1.3.0...v1.4.0) (2023-02-13)
 
 
