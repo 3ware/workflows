@@ -38,6 +38,7 @@ jobs:
           KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
 
       - name: Render terraform docs
+        id: terraform-docs
         uses: terraform-docs/gh-actions@v1.0.0
         with:
           working-dir: ${{ needs.find-terraform.outputs.terraform-dir }}
@@ -48,16 +49,19 @@ jobs:
         run: echo "FILE_PATH=${{ env.WORKING_DIR }}/${{ env.TF_DOCS_FILE }}" >> $GITHUB_ENV
 
       # Use the REST API to commit changes, so we get automatic commit signing
+      # Only run this job if the file has changed to prevent empty commits
       - name: Push changes back to PR with signature
+        if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
         env:
           GH_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
           DESTINATION_BRANCH: ${{ github.event.pull_request.head.ref }}
           FILE_TO_COMMIT: "${{ env.FILE_PATH }}"
         run: |
+          export MESSAGE=" update ${{ env.TF_DOCS_FILE }} with terraform-docs
           export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
           export CONTENT=$( base64 -i $FILE_TO_COMMIT )
           gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
-            --field message="update documentation with terraform-docs" \
+            --field message="$MESSAGE" \
             --field content="$CONTENT" \
             --field encoding="base64" \
             --field branch="$DESTINATION_BRANCH" \
