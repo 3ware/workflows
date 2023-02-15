@@ -3,9 +3,6 @@ on:
   workflow_call:
 
 jobs:
-  get-temp-token:
-    uses: ./.github/workflows/get-workflow-token.yaml
-    secrets: inherit
   find-terraform:
     uses: ./.github/workflows/get-terraform-dir.yaml
 
@@ -16,23 +13,12 @@ jobs:
     env:
       WORKING_DIR: ${{ needs.find-terraform.outputs.terraform-dir }}
       TF_DOCS_FILE: README.md
-    needs: [get-temp-token, find-terraform]
+    needs: find-terraform
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-
-      - name: Decrypt the installation access token
-        id: decrypt-token
-        run: |
-          DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$KEY" \
-          --output - <(echo "${{ needs.get-temp-token.outputs.temp-token }}" \
-          | base64 --decode))
-          echo "::add-mask::$DECRYPTED_TOKEN"
-          echo "temp-token=$DECRYPTED_TOKEN" >> $GITHUB_OUTPUT
-        env:
-          KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
 
       - name: Render terraform docs
         uses: terraform-docs/gh-actions@v1.0.0
@@ -47,17 +33,18 @@ jobs:
       # Use the REST API to commit changes, so we get automatic commit signing
       - name: Push changes back to PR with signature
         env:
-          GH_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
+          # Use the GITHUB_TOKEN to prevent a recursive workflow loop
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DESTINATION_BRANCH: ${{ github.event.pull_request.head.ref }}
           FILE_TO_COMMIT: "${{ env.FILE_PATH }}"
         run: |
-          export TODAY=$( date -u '+%Y-%m-%d' )
-          export MESSAGE="update documentation with terraform-docs"
           export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
           export CONTENT=$( base64 -i $FILE_TO_COMMIT )
           gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
-            --field message="$MESSAGE" \
+            --field message="update documentation with terraform-docs" \
             --field content="$CONTENT" \
             --field encoding="base64" \
             --field branch="$DESTINATION_BRANCH" \
-            --field sha="$SHA"
+            --field sha="$SHA" \
+            --field 'committer[name]'="3ware-release[bot]" \
+            --field 'committer[email]'="108564841+3ware-release[bot]@users.noreply.github.com"
