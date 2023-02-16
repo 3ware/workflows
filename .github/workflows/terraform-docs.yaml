@@ -2,6 +2,10 @@ name: Generate terraform docs
 on:
   workflow_call:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   get-temp-token:
     if: github.actor != '3ware-release[bot]'
@@ -13,6 +17,7 @@ jobs:
 
   terraform-docs:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     # only run this workflow if not triggered by 3ware-release
     # this prevents workflow loop
     if: github.actor != '3ware-release[bot]'
@@ -51,6 +56,7 @@ jobs:
       # Use the REST API to commit changes, so we get automatic commit signing
       # Only run this job if the file has changed to prevent empty commits
       - name: Push changes back to PR with signature
+        id: push-with-sig
         if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
         env:
           GH_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
@@ -66,3 +72,16 @@ jobs:
             --field encoding="base64" \
             --field branch="$DESTINATION_BRANCH" \
             --field sha="$SHA"
+
+      - name: Summary if skipped
+        if: ${{ steps.push-with-sig.conclusion == 'skipped' }}
+        run: |
+          echo "###Push Skipped" >> $GITHUB_STEP_SUMMARY
+          echo "Changes were not made to ${{ env.FILE_PATH }} on this run" >> $GITHUB_STEP_SUMMARY
+
+      - name: Summary if successful
+        if: ${{ steps.push-with-sig.conclusion == 'success' }}
+        run: |
+          echo "###Terraform Docs updated :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "${{ env.FILE_PATH }} add to ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "${{ github.event.pull_request.number }}" >> $GITHUB_STEP_SUMMARY
