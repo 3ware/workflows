@@ -7,10 +7,6 @@ on:
         description: "The temporary installation access token"
         value: ${{ jobs.get-temp-token.outputs.token }}
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   get-temp-token:
     runs-on: ubuntu-latest
