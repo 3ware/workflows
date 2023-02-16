@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0](https://github.com/3ware/workflows/compare/v1.5.0...v1.6.0) (2023-02-16)
+
+
+### Enhancement
+
+* terraform-docs workflow ([#29](https://github.com/3ware/workflows/issues/29)) ([572b0ce](https://github.com/3ware/workflows/commit/572b0ce66399d590676b5725c12cb2ab21e77878)), closes [#28](https://github.com/3ware/workflows/issues/28)
+
 ## [1.5.0](https://github.com/3ware/workflows/compare/v1.4.0...v1.5.0) (2023-02-14)
 
 
