@@ -82,6 +82,6 @@ jobs:
       - name: Summary if successful
         if: ${{ steps.push-with-sig.conclusion == 'success' }}
         run: |
-          echo "###Terraform Docs updated :rocket:" >> $GITHUB_STEP_SUMMARY
-          echo "${{ env.FILE_PATH }} add to ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "${{ github.event.pull_request.number }}" >> $GITHUB_STEP_SUMMARY
+          echo "### Terraform Docs updated :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "${{ env.FILE_PATH }} added to ${{ github.head_ref  }}" >> $GITHUB_STEP_SUMMARY
+          echo "${{ github.event.pull_request.url }}" >> $GITHUB_STEP_SUMMARY
