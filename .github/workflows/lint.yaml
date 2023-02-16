@@ -13,16 +13,21 @@ on:
         required: true
         type: number
 
-permissions:
-  contents: read
-  checks: write
-
 jobs:
   find-terraform:
     uses: ./.github/workflows/get-terraform-dir.yaml
+    permissions:
+      contents: read
 
   lint:
+    permissions:
+      contents: read
+      checks: write
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     needs: find-terraform
     steps:
       - name: Checkout repository

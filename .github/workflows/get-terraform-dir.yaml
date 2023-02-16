@@ -6,18 +6,14 @@ on:
         description: "The terraform directory to initialise"
         value: ${{ jobs.terraform-directory.outputs.dir }}
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   terraform-directory:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
       dir: ${{ steps.changed-dir.outputs.all_changed_files }}
-    permissions:
-      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

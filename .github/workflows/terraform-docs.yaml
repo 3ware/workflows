@@ -2,10 +2,6 @@ name: Generate terraform docs
 on:
   workflow_call:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   get-temp-token:
     if: github.actor != '3ware-release[bot]'
@@ -18,6 +14,9 @@ jobs:
   terraform-docs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     # only run this workflow if not triggered by 3ware-release
     # this prevents workflow loop
     if: github.actor != '3ware-release[bot]'
