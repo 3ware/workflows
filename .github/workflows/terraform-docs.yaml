@@ -57,7 +57,7 @@ jobs:
           DESTINATION_BRANCH: ${{ github.event.pull_request.head.ref }}
           FILE_TO_COMMIT: "${{ env.FILE_PATH }}"
         run: |
-          export MESSAGE=" update ${{ env.TF_DOCS_FILE }} with terraform-docs
+          export MESSAGE="update ${{ env.TF_DOCS_FILE }} with terraform-docs"
           export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
           export CONTENT=$( base64 -i $FILE_TO_COMMIT )
           gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
