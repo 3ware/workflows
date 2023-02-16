@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0](https://github.com/3ware/workflows/compare/v1.6.0...v1.7.0) (2023-02-16)
+
+
+### Features
+
+* workflow improvements and fixes ([#34](https://github.com/3ware/workflows/issues/34)) ([2987d37](https://github.com/3ware/workflows/commit/2987d3713fd10ff96222fb94c63811ed1c1a82e9)), closes [#30](https://github.com/3ware/workflows/issues/30)
+
+
+### Bug Fixes
+
+* change workflow concurrency level  ([#35](https://github.com/3ware/workflows/issues/35)) ([0cef516](https://github.com/3ware/workflows/commit/0cef516f96c08e3b604a0a50d7266158458a5d40))
+
 ## [1.6.0](https://github.com/3ware/workflows/compare/v1.5.0...v1.6.0) (2023-02-16)
 
 
