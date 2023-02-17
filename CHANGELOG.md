@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.1](https://github.com/3ware/workflows/compare/v1.7.0...v1.7.1) (2023-02-17)
+
+
+### Bug Fixes
+
+* terraform-docs job summary syntax ([4da90f1](https://github.com/3ware/workflows/commit/4da90f1e94cf0754bba07c4e31c26e1dd0f98e10))
+
 ## [1.7.0](https://github.com/3ware/workflows/compare/v1.6.0...v1.7.0) (2023-02-16)
 
 
