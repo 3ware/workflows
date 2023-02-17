@@ -76,6 +76,7 @@ jobs:
         if: ${{ steps.push-with-sig.conclusion == 'skipped' }}
         run: |
           echo "###Push Skipped" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           echo "Changes were not made to ${{ env.FILE_PATH }} on this run" >> $GITHUB_STEP_SUMMARY
 
       - name: Summary if successful
@@ -84,5 +85,6 @@ jobs:
           BRANCH: ${{ github.head_ref  }}
         run: |
           echo "### Terraform Docs updated :rocket:" >> $GITHUB_STEP_SUMMARY
-          echo "${{ env.FILE_PATH }} added to "$BRANCH" >> $GITHUB_STEP_SUMMARY
-          echo "${{ github.event.pull_request.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $$GITHUB_STEP_SUMMARY
+          echo "${{ env.FILE_PATH }} added to $BRANCH" >> $GITHUB_STEP_SUMMARY
+          echo "[#${{ github.event.pull_request.number }}](https://github.com/3ware/workflows/pull/${{ github.event.pull_request.number }})" >> $GITHUB_STEP_SUMMARY
