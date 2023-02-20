@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.2](https://github.com/3ware/workflows/compare/v1.7.1...v1.7.2) (2023-02-20)
+
+
+### Bug Fixes
+
+* Remove hcl files from terraform-docs ([#36](https://github.com/3ware/workflows/issues/36)) ([287fafa](https://github.com/3ware/workflows/commit/287fafa6a5f45aa6a2738a2cf6a2be60b3ac9159))
+
 ## [1.7.1](https://github.com/3ware/workflows/compare/v1.7.0...v1.7.1) (2023-02-17)
 
 
