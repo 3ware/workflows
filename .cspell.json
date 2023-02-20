@@ -14,6 +14,7 @@
     "runtimes",
     "tflint",
     "tfsec",
-    "tfvars"
+    "tfvars",
+    "THREEWARE"
   ]
 }
