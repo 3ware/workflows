@@ -18,7 +18,7 @@ jobs:
         id: get-workflow-token
         uses: peter-murray/workflow-application-token-action@v2.1.0
         with:
-          application_id: ${{ secrets.THREEWARE_RELEASE_APPLICATION_ID_APPLICATION_ID }}
+          application_id: ${{ secrets.THREEWARE_RELEASE_APPLICATION_ID }}
           application_private_key: ${{ secrets.THREEWARE_RELEASE_APPLICATION_PRIVATE_KEY }}
           organization: 3ware
 
