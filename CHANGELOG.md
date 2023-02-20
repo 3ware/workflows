@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.0](https://github.com/3ware/workflows/compare/v1.7.2...v1.8.0) (2023-02-20)
+
+
+### Enhancement
+
+* update references to new secret names ([#39](https://github.com/3ware/workflows/issues/39)) ([d8cfa70](https://github.com/3ware/workflows/commit/d8cfa7072778e5271c49030a2945278861a69712))
+* Update workflow secret references ([#37](https://github.com/3ware/workflows/issues/37)) ([b4df8b7](https://github.com/3ware/workflows/commit/b4df8b7ee53802c4553b936382a7f19d5957a240))
+
 ## [1.7.2](https://github.com/3ware/workflows/compare/v1.7.1...v1.7.2) (2023-02-20)
 
 
