@@ -6,6 +6,9 @@ on:
         description: "The terraform directory to initialise"
         value: ${{ jobs.terraform-directory.outputs.dir }}
 
+# Declare default permissions as read only.
+permissions: read-all
+
 jobs:
   terraform-directory:
     permissions:
@@ -15,21 +18,21 @@ jobs:
     outputs:
       dir: ${{ steps.changed-dir.outputs.all_changed_files }}
     steps:
-      - name: Checkout repository
+      - name: "Checkout repository"
         uses: actions/checkout@v3
 
-      - name: Get changed files
+      - name: "Get changed files"
         id: changed-files
         uses: tj-actions/changed-files@v35
 
-      - name: List all changed files
+      - name: "List all changed files"
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "$file was changed"
           done
 
       # Find the directory where files have been changed.
-      - name: Get terraform directory
+      - name: "Get terraform directory"
         id: changed-dir
         uses: tj-actions/changed-files@v35
         # Step fails if nothing found.
@@ -41,7 +44,7 @@ jobs:
           dir_names: true
           dir_names_exclude_root: true
 
-      - name: List terraform directory
+      - name: "List terraform directory"
         if: ${{ steps.changed-dir.conclusion == 'success'}}
         run: |
           echo "${{ steps.changed-dir.outputs.all_changed_files }}"
