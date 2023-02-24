@@ -7,6 +7,9 @@ on:
     branches:
       - main
 
+# Declare default permissions as read only.
+permissions: read-all
+
 jobs:
   get-temp-token:
     uses: ./.github/workflows/get-workflow-token.yaml
@@ -20,12 +23,12 @@ jobs:
       cancel-in-progress: true
     needs: get-temp-token
     steps:
-      - name: Checkout repository
+      - name: "Checkout repository"
         uses: actions/checkout@v3
         with:
           persist-credentials: false
 
-      - name: Decrypt the installation access token
+      - name: "Decrypt the installation access token"
         id: decrypt-token
         run: |
           DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$KEY" \
@@ -36,7 +39,7 @@ jobs:
         env:
           KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
 
-      - name: Create GitHub release and update CHANGELOG
+      - name: "Create GitHub release and update CHANGELOG"
         if: ${{ ! env.ACT }}
         uses: cycjimmy/semantic-release-action@v3
         with:
@@ -48,7 +51,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
 
-      - name: Local test release
+      - name: "Local test release"
         if: ${{ env.ACT }}
         uses: cycjimmy/semantic-release-action@v3
         with:
