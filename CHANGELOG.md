@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.0](https://github.com/3ware/workflows/compare/v1.8.0...v1.9.0) (2023-02-24)
+
+
+### Features
+
+* add ossf workflow ([#40](https://github.com/3ware/workflows/issues/40)) ([f443462](https://github.com/3ware/workflows/commit/f443462946b2386c48b4c6b5aee3db6077ca8c08)), closes [#23](https://github.com/3ware/workflows/issues/23)
+
 ## [1.8.0](https://github.com/3ware/workflows/compare/v1.7.2...v1.8.0) (2023-02-20)
 
 
