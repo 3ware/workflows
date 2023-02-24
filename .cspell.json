@@ -7,11 +7,14 @@
   // words - list of words to be always considered correct
   "words": [
     "aquasecurity",
+    "codeql",
     "conventionalcommits",
     "linters",
     "markdownlint",
     "noreply",
+    "ossf",
     "runtimes",
+    "sarif",
     "tflint",
     "tfsec",
     "tfvars",
