@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.1](https://github.com/3ware/workflows/compare/v1.9.0...v1.9.1) (2023-02-24)
+
+
+### Bug Fixes
+
+* Add top level read only permissions ([#42](https://github.com/3ware/workflows/issues/42)) ([1521340](https://github.com/3ware/workflows/commit/15213404667661fd6b16c0a39e2660e6c6f09197)), closes [#41](https://github.com/3ware/workflows/issues/41)
+
 ## [1.9.0](https://github.com/3ware/workflows/compare/v1.8.0...v1.9.0) (2023-02-24)
 
 
