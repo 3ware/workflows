@@ -12,6 +12,8 @@ jobs:
     secrets: inherit
   find-terraform:
     if: github.actor != '3ware-release[bot]'
+    permissions:
+      contents: read
     uses: ./.github/workflows/get-terraform-dir.yaml
 
   terraform-docs:
