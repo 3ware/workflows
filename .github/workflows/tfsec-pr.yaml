@@ -9,6 +9,9 @@ on:
         required: false
         type: string
 
+# Declare default permissions as read only.
+permissions: read-all
+
 jobs:
   find-terraform:
     permissions:
@@ -27,12 +30,12 @@ jobs:
     needs: find-terraform
 
     steps:
-      - name: Checkout repository
+      - name: "Checkout repository"
         uses: actions/checkout@v3
         with:
           persist-credentials: false
 
-      - name: Add tfsec comments to pull request
+      - name: "Add tfsec comments to pull request"
         uses: aquasecurity/tfsec-pr-commenter-action@v1.3.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
