@@ -27,7 +27,7 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
-    needs: find-terraform
+    needs: ["find-terraform"]
 
     steps:
       - name: "Checkout repository"
