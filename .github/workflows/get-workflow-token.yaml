@@ -7,6 +7,9 @@ on:
         description: "The temporary installation access token"
         value: ${{ jobs.get-temp-token.outputs.token }}
 
+# Declare default permissions as read only.
+permissions: read-all
+
 jobs:
   get-temp-token:
     runs-on: ubuntu-latest
@@ -14,7 +17,7 @@ jobs:
     outputs:
       token: ${{ steps.encrypt-token.outputs.encrypted-token }}
     steps:
-      - name: Get GitHub authentication token
+      - name: "Get GitHub authentication token"
         id: get-workflow-token
         uses: peter-murray/workflow-application-token-action@v2.1.0
         with:
@@ -22,7 +25,7 @@ jobs:
           application_private_key: ${{ secrets.THREEWARE_RELEASE_APPLICATION_PRIVATE_KEY }}
           organization: 3ware
 
-      - name: Encrypt the token for reuse between jobs / workflows
+      - name: "Encrypt the token for reuse between jobs / workflows"
         id: encrypt-token
         run: |
           ENCRYPTED_TOKEN=$(gpg --symmetric --batch --passphrase "$KEY" \
