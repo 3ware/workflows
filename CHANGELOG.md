@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.2](https://github.com/3ware/workflows/compare/v1.9.1...v1.9.2) (2023-02-24)
+
+
+### Bug Fixes
+
+* lint workflow token permissions ([#44](https://github.com/3ware/workflows/issues/44)) ([38ed872](https://github.com/3ware/workflows/commit/38ed8721102a8189da39bda062f080dce4bc5f39)), closes [#43](https://github.com/3ware/workflows/issues/43)
+
 ## [1.9.1](https://github.com/3ware/workflows/compare/v1.9.0...v1.9.1) (2023-02-24)
 
 
