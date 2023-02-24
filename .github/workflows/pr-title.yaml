@@ -8,6 +8,9 @@ on:
       - synchronize
   workflow_call:
 
+# Declare default permissions as read only.
+permissions: read-all
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -19,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Validate pull request title is conventional
+      - name: "Validate pull request title is conventional"
         uses: amannn/action-semantic-pull-request@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
