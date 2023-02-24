@@ -13,6 +13,9 @@ on:
         required: true
         type: number
 
+# Declare default permissions as read only.
+permissions: read-all
+
 jobs:
   find-terraform:
     uses: ./.github/workflows/get-terraform-dir.yaml
@@ -30,10 +33,10 @@ jobs:
       cancel-in-progress: true
     needs: find-terraform
     steps:
-      - name: Checkout repository
+      - name: "Checkout repository"
         uses: actions/checkout@v3
 
-      - name: Setup Terraform
+      - name: "Setup Terraform"
         if: ${{ needs.find-terraform.outputs.terraform-dir != '' }}
         uses: hashicorp/setup-terraform@v2
         with:
@@ -41,11 +44,11 @@ jobs:
           cli_config_credentials_token: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
 
       #Initialise terraform in the directory where terraform file have changed.
-      - name: Initialise Terraform
+      - name: "Initialise Terraform"
         if: ${{ needs.find-terraform.outputs.terraform-dir != ''}}
         working-directory: ${{ needs.find-terraform.outputs.terraform-dir }}
         run: terraform init
 
-      - name: Lint with trunk
+      - name: "Lint with trunk"
         if: ${{ always() }} #Run anyway, even if no terraform
         uses: trunk-io/trunk-action@v1.0.6
