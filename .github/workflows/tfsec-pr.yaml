@@ -1,4 +1,4 @@
-name: tfsec Code Analysis
+name: "tfsec Code Analysis"
 
 on:
   workflow_call:

@@ -1,4 +1,4 @@
-name: Terraform directory
+name: "Terraform directory"
 on:
   workflow_call:
     outputs:

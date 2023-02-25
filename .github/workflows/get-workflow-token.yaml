@@ -1,5 +1,5 @@
 # This workflow generates an installation access token for GitHub authentication
-name: Generate workflow token
+name: "Generate workflow token"
 on:
   workflow_call:
     outputs:
