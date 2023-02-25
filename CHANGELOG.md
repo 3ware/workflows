@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.3](https://github.com/3ware/workflows/compare/v1.9.2...v1.9.3) (2023-02-25)
+
+
+### Bug Fixes
+
+* pin workflow dependancies to hash ([#45](https://github.com/3ware/workflows/issues/45)) ([e62a20b](https://github.com/3ware/workflows/commit/e62a20bd57926694764d3af20a81d6c5ebf4b424))
+
 ## [1.9.2](https://github.com/3ware/workflows/compare/v1.9.1...v1.9.2) (2023-02-24)
 
 
