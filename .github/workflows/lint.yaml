@@ -1,4 +1,4 @@
-name: Lint
+name: "Lint"
 on:
   pull_request:
     types:
@@ -33,13 +33,13 @@ jobs:
     needs: ["find-terraform"]
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
           persist-credentials: false
 
       - name: "Setup Terraform"
         if: ${{ needs.find-terraform.outputs.terraform-dir != '' }}
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1 # v2.0.3
         with:
           terraform_version: ${{ inputs.terraform-version }}
           cli_config_credentials_token: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
@@ -52,4 +52,4 @@ jobs:
 
       - name: "Lint with trunk"
         if: ${{ always() }} #Run anyway, even if no terraform
-        uses: trunk-io/trunk-action@v1.0.6
+        uses: trunk-io/trunk-action@9cf65e08e822e9842fd9ef7ed2a2bd9092de0986 # v1.0.6

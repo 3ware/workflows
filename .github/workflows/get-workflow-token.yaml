@@ -1,5 +1,5 @@
 # This workflow generates an installation access token for GitHub authentication
-name: Generate workflow token
+name: "Generate workflow token"
 on:
   workflow_call:
     outputs:
@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: "Get GitHub authentication token"
         id: get-workflow-token
-        uses: peter-murray/workflow-application-token-action@v2.1.0
+        uses: peter-murray/workflow-application-token-action@8e1ba3bf1619726336414f1014e37f17fbadf1db # v2.1.0
         with:
           application_id: ${{ secrets.THREEWARE_RELEASE_APPLICATION_ID }}
           application_private_key: ${{ secrets.THREEWARE_RELEASE_APPLICATION_PRIVATE_KEY }}

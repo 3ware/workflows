@@ -1,4 +1,4 @@
-name: Terraform directory
+name: "Terraform directory"
 on:
   workflow_call:
     outputs:
@@ -20,13 +20,13 @@ jobs:
       dir: ${{ steps.changed-dir.outputs.all_changed_files }}
     steps:
       - name: "Checkout repository"
-        uses: actions/checkout@v3
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
           persist-credentials: false
 
       - name: "Get changed files"
         id: changed-files
-        uses: tj-actions/changed-files@v35
+        uses: tj-actions/changed-files@23e3c4300cb904a9d9c36fc2df4111a2fa9b9ff1 # v35.5.6
 
       - name: "List all changed files"
         run: |
@@ -37,7 +37,7 @@ jobs:
       # Find the directory where files have been changed.
       - name: "Get terraform directory"
         id: changed-dir
-        uses: tj-actions/changed-files@v35
+        uses: tj-actions/changed-files@23e3c4300cb904a9d9c36fc2df4111a2fa9b9ff1 # v35.5.6
         # Step fails if nothing found.
         continue-on-error: true # Allows workflow to proceed if no files found
         with:
