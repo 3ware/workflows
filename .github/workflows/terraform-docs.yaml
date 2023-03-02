@@ -1,6 +1,5 @@
-name: "Generate terraform docs"
-on:
-  workflow_call:
+name: Generate terraform docs
+on: workflow_call
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -28,15 +27,15 @@ jobs:
     env:
       WORKING_DIR: ${{ needs.find-terraform.outputs.terraform-dir }}
       TF_DOCS_FILE: README.md
-    needs: ["get-temp-token", "find-terraform"]
+    needs: [get-temp-token, find-terraform]
     steps:
-      - name: "Checkout repository"
+      - name: Checkout repository
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           persist-credentials: false
 
-      - name: "Decrypt the installation access token"
+      - name: Decrypt the installation access token
         id: decrypt-token
         run: |
           DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$KEY" \
@@ -47,7 +46,7 @@ jobs:
         env:
           KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
 
-      - name: "Render terraform docs"
+      - name: Render terraform docs
         id: terraform-docs
         uses: terraform-docs/gh-actions@f6d59f89a280fa0a3febf55ef68f146784b20ba0 # v1.0.0
         with:
@@ -55,12 +54,12 @@ jobs:
           output-file: ${{ env.TF_DOCS_FILE }}
           output-method: inject
 
-      - name: "Set file path env"
+      - name: Set file path env
         run: echo "FILE_PATH=${{ env.WORKING_DIR }}/${{ env.TF_DOCS_FILE }}" >> $GITHUB_ENV
 
       # Use the REST API to commit changes, so we get automatic commit signing
       # Only run this job if the file has changed to prevent empty commits
-      - name: "Push changes back to PR with signature"
+      - name: Push changes back to PR with signature
         id: push-with-sig
         if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
         env:
@@ -78,14 +77,14 @@ jobs:
             --field branch="$DESTINATION_BRANCH" \
             --field sha="$SHA"
 
-      - name: "Summary if skipped"
+      - name: Summary if skipped
         if: ${{ steps.push-with-sig.conclusion == 'skipped' }}
         run: |
           echo "### Push Skipped" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Changes were not made to ${{ env.FILE_PATH }} on this run" >> $GITHUB_STEP_SUMMARY
 
-      - name: "Summary if successful"
+      - name: Summary if successful
         if: ${{ steps.push-with-sig.conclusion == 'success' }}
         env:
           BRANCH: ${{ github.head_ref  }}

@@ -1,13 +1,12 @@
 # Generic workflow, that runs on main, so required_status_checks pass
 # https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/troubleshooting-required-status-checks#handling-skipped-but-required-checks
 
-name: "Validate PR title"
+name: Validate PR title
 
 on:
   push:
-    branches:
-      - main
-  workflow_call:
+    branches: [main]
+  workflow_call: {}
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -21,5 +20,5 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: "Validate pull request title is conventional"
-        run: 'echo "No pull request title to check"'
+      - name: Validate pull request title is conventional
+        run: echo "No pull request title to check"
