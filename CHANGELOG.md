@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.5](https://github.com/3ware/workflows/compare/v1.9.4...v1.9.5) (2023-03-03)
+
+
+### Bug Fixes
+
+* Add synchronize pull request type ([7f2d0f9](https://github.com/3ware/workflows/commit/7f2d0f9439f4a9d1ba575d22b23836bcf86d2cef))
+
 ## [1.9.4](https://github.com/3ware/workflows/compare/v1.9.3...v1.9.4) (2023-03-03)
 
 
