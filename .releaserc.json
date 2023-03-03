@@ -6,8 +6,15 @@
       {
         "preset": "conventionalcommits",
         "releaseRules": [
-          { "type": "refactor", "release": "minor" },
-          { "type": "chore", "scope": "deps", "release": "patch" }
+          {
+            "type": "refactor",
+            "release": "minor"
+          },
+          {
+            "type": "chore",
+            "scope": "deps",
+            "release": "patch"
+          }
         ]
       }
     ],
@@ -17,9 +24,21 @@
         "preset": "conventionalcommits",
         "presetConfig": {
           "types": [
-            { "type": "refactor", "section": "Enhancement", "hidden": false },
-            { "type": "feat", "section": "Features", "hidden": false },
-            { "type": "fix", "section": "Bug Fixes", "hidden": false },
+            {
+              "type": "refactor",
+              "section": "Enhancement",
+              "hidden": false
+            },
+            {
+              "type": "feat",
+              "section": "Features",
+              "hidden": false
+            },
+            {
+              "type": "fix",
+              "section": "Bug Fixes",
+              "hidden": false
+            },
             {
               "type": "chore",
               "scope": "deps",
