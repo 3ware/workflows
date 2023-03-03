@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.4](https://github.com/3ware/workflows/compare/v1.9.3...v1.9.4) (2023-03-03)
+
+
+### Bug Fixes
+
+* workflow concurrency groups ([#53](https://github.com/3ware/workflows/issues/53)) ([48fa9a1](https://github.com/3ware/workflows/commit/48fa9a1f298abbc27eaa0cba237d81027e1e391b))
+
+
+### Chores
+
+* **deps:** bump tj-actions/changed-files from 35.5.6 to 35.6.1 ([#50](https://github.com/3ware/workflows/issues/50)) ([786e63a](https://github.com/3ware/workflows/commit/786e63acb1482f7ce92f412e53a98e2851f17562)), closes [tj-actions/changed-files#1002](https://github.com/tj-actions/changed-files/issues/1002) [tj-actions/changed-files#1003](https://github.com/tj-actions/changed-files/issues/1003) [tj-actions/changed-files#997](https://github.com/tj-actions/changed-files/issues/997) [tj-actions/changed-files#1000](https://github.com/tj-actions/changed-files/issues/1000) [tj-actions/changed-files#1001](https://github.com/tj-actions/changed-files/issues/1001) [tj-actions/changed-files#1000](https://github.com/tj-actions/changed-files/issues/1000) [#999](https://github.com/3ware/workflows/issues/999) [#1003](https://github.com/3ware/workflows/issues/1003) [#1002](https://github.com/3ware/workflows/issues/1002) [#998](https://github.com/3ware/workflows/issues/998) [#995](https://github.com/3ware/workflows/issues/995) [#1001](https://github.com/3ware/workflows/issues/1001) [#1000](https://github.com/3ware/workflows/issues/1000) [#997](https://github.com/3ware/workflows/issues/997) [#993](https://github.com/3ware/workflows/issues/993) [#27](https://github.com/3ware/workflows/issues/27) [#996](https://github.com/3ware/workflows/issues/996) [#994](https://github.com/3ware/workflows/issues/994) [#1003](https://github.com/3ware/workflows/issues/1003) [#1002](https://github.com/3ware/workflows/issues/1002) [#1001](https://github.com/3ware/workflows/issues/1001) [#1000](https://github.com/3ware/workflows/issues/1000) [#997](https://github.com/3ware/workflows/issues/997)
+
 ## [1.9.3](https://github.com/3ware/workflows/compare/v1.9.2...v1.9.3) (2023-02-25)
 
 
