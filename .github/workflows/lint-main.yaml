@@ -1,0 +1,24 @@
+# Generic workflow, that runs on main, so required_status_checks pass
+# https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/troubleshooting-required-status-checks#handling-skipped-but-required-checks
+
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  workflow_call: {}
+
+# Declare default permissions as read only.
+permissions: read-all
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Lint with trunk
+        run: echo "No linting required"
