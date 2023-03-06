@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.7](https://github.com/3ware/workflows/compare/v1.9.6...v1.9.7) (2023-03-06)
+
+
+### Chores
+
+* **deps:** bump github/codeql-action from 2.2.4 to 2.2.5 ([#48](https://github.com/3ware/workflows/issues/48)) ([2461b47](https://github.com/3ware/workflows/commit/2461b47ad4f1fbd14f0435321e555f376b217e29))
+
 ## [1.9.6](https://github.com/3ware/workflows/compare/v1.9.5...v1.9.6) (2023-03-03)
 
 
