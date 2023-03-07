@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.8](https://github.com/3ware/workflows/compare/v1.9.7...v1.9.8) (2023-03-07)
+
+
+### Chores
+
+* **deps:** bump actions/upload-artifact from 3.1.0 to 3.1.2 ([#49](https://github.com/3ware/workflows/issues/49)) ([a115c66](https://github.com/3ware/workflows/commit/a115c6672006a3cb904c5a8874fb5471f8306268))
+
 ## [1.9.7](https://github.com/3ware/workflows/compare/v1.9.6...v1.9.7) (2023-03-06)
 
 
