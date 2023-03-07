@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.9](https://github.com/3ware/workflows/compare/v1.9.8...v1.9.9) (2023-03-07)
+
+
+### Chores
+
+* **deps:** bump actions/dependency-review-action from 2.5.1 to 3.0.3 ([#51](https://github.com/3ware/workflows/issues/51)) ([14d2a90](https://github.com/3ware/workflows/commit/14d2a90b56dd1dfa10361b1e258d9d7be462a0e6))
+
 ## [1.9.8](https://github.com/3ware/workflows/compare/v1.9.7...v1.9.8) (2023-03-07)
 
 
