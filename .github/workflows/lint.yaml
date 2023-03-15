@@ -28,7 +28,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
-          persist-credentials: false
+          persist-credentials: true # lint fails to authenticate when false
 
       - name: Setup Terraform
         if: ${{ needs.find-terraform.outputs.terraform-dir != '' }}
