@@ -6,7 +6,8 @@ on:
   workflow_call: {}
 
 # Declare default permissions as read only.
-permissions: read-all
+permissions:
+  pull-requests: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
@@ -14,8 +15,6 @@ concurrency:
 
 jobs:
   conventional-pr-title:
-    permissions:
-      pull-requests: read
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
