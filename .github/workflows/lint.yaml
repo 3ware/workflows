@@ -10,17 +10,14 @@ on:
         type: number
 
 # Declare default permissions as read only.
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
   find-terraform:
     uses: ./.github/workflows/get-terraform-dir.yaml
-    permissions:
-      contents: read
 
   lint:
-    permissions:
-      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 10
     concurrency:
