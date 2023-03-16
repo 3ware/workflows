@@ -19,6 +19,9 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    permissions:
+      checks: write # not required (see slack) but produces an error in the logs
+      # https://trunkcommunity.slack.com/archives/C04GAE5EA5S/p1677846825881319?thread_ts=1676214812.584879&cid=C04GAE5EA5S
     timeout-minutes: 10
     concurrency:
       group: ${{ github.workflow }}-${{ github.head_ref }}
