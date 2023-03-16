@@ -10,18 +10,16 @@ on:
         type: string
 
 # Declare default permissions as read only.
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
   find-terraform:
-    permissions:
-      contents: read
     uses: ./.github/workflows/get-terraform-dir.yaml
 
   tfsec-pr-commenter:
     permissions:
       pull-requests: write
-      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 10
     concurrency:

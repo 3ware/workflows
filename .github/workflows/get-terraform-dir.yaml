@@ -12,8 +12,6 @@ permissions:
 
 jobs:
   terraform-directory:
-    permissions:
-      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -22,11 +20,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
-          persist-credentials: false
+          persist-credentials: true # changed-files unable to authenticate if false
 
       - name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@04124efe7560d15e11ea2ba96c0df2989f68f1f4 # v35.6.1
+        uses: tj-actions/changed-files@v35.5.6
 
       - name: List all changed files
         run: |
