@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.11](https://github.com/3ware/workflows/compare/v1.9.10...v1.9.11) (2023-03-16)
+
+
+### Bug Fixes
+
+* pin get-terraform-dir workflow to sha ([#56](https://github.com/3ware/workflows/issues/56)) ([9020d81](https://github.com/3ware/workflows/commit/9020d81a7abc2d60e52d51c8ec7b4499baebd4b4))
+
 ## [1.9.10](https://github.com/3ware/workflows/compare/v1.9.9...v1.9.10) (2023-03-16)
 
 
