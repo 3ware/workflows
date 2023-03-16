@@ -2,7 +2,8 @@ name: Generate terraform docs
 on: workflow_call
 
 # Declare default permissions as read only.
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
   get-temp-token:
