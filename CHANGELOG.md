@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.12](https://github.com/3ware/workflows/compare/v1.9.11...v1.9.12) (2023-03-16)
+
+
+### Bug Fixes
+
+* tfsec top level workflow permissions ([#57](https://github.com/3ware/workflows/issues/57)) ([0c851b5](https://github.com/3ware/workflows/commit/0c851b51131f58b211ae0441935b0700a1cadd0d))
+
 ## [1.9.11](https://github.com/3ware/workflows/compare/v1.9.10...v1.9.11) (2023-03-16)
 
 
