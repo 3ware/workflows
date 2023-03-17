@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.13](https://github.com/3ware/workflows/compare/v1.9.12...v1.9.13) (2023-03-17)
+
+
+### Bug Fixes
+
+* workflow token permissions ([#58](https://github.com/3ware/workflows/issues/58)) ([10a468f](https://github.com/3ware/workflows/commit/10a468f6e61f60e693166021d4f3ce9bddea71ab))
+
 ## [1.9.12](https://github.com/3ware/workflows/compare/v1.9.11...v1.9.12) (2023-03-16)
 
 
