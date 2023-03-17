@@ -9,16 +9,18 @@ on:
         required: false
         type: string
 
-# Declare default permissions as read only.
-permissions:
-  contents: read
+# Disable permissions for all available scopes
+permissions: {}
 
 jobs:
   find-terraform:
+    permissions:
+      contents: read
     uses: ./.github/workflows/get-terraform-dir.yaml
 
   tfsec-pr-commenter:
     permissions:
+      contents: read
       pull-requests: write
     runs-on: ubuntu-latest
     timeout-minutes: 10
