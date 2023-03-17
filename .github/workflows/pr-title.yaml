@@ -5,9 +5,8 @@ on:
     types: [opened, edited, synchronize]
   workflow_call: {}
 
-# Declare default permissions as read only.
-permissions:
-  pull-requests: read
+# Disable permissions for all available scopes
+permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
@@ -15,6 +14,8 @@ concurrency:
 
 jobs:
   conventional-pr-title:
+    permissions:
+      pull-requests: read
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
