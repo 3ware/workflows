@@ -24,7 +24,7 @@ jobs:
 
       - name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@6b1da8ffbd4b4322392509155e438dbefe620220 # v35.7.1
+        uses: tj-actions/changed-files@4ea8e08f6930db51c667a695f94c99e1d9da9d63 # v35.7.1
 
       - name: List all changed files
         run: |
@@ -35,7 +35,7 @@ jobs:
       # Find the directory where files have been changed.
       - name: Get terraform directory
         id: changed-dir
-        uses: tj-actions/changed-files@04124efe7560d15e11ea2ba96c0df2989f68f1f4 # v35.6.1
+        uses: tj-actions/changed-files@4ea8e08f6930db51c667a695f94c99e1d9da9d63 # v35.6.1
         # Step fails if nothing found.
         continue-on-error: true # Allows workflow to proceed if no files found
         with:
