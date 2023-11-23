@@ -6,14 +6,21 @@ The repository contains [GitHub Action](https://docs.github.com/en/actions) [reu
 
 ## Table of contents
 
-- [Workflows](#workflows)
-  - [get-terraform-dir](#get-terraform-dir)
-  - [get-workflow-token](#get-workflow-token)
-  - [lint](#lint)
-  - [pr-title](#pr-title)
-  - [semantic-release](#semantic-release)
-  - [tfsec-pr-commenter](#tfsec-pr-commenter)
-  - [terraform-docs](#terraform-docs)
+- [3ware reusable workflows](#3ware-reusable-workflows)
+  - [Table of contents](#table-of-contents)
+  - [Workflows](#workflows)
+    - [get-terraform-dir](#get-terraform-dir)
+    - [get-workflow-token](#get-workflow-token)
+      - [Encrypt the token output](#encrypt-the-token-output)
+      - [Add Job level output](#add-job-level-output)
+      - [Add Workflow level output](#add-workflow-level-output)
+      - [Use encrypted token output in calling workflow](#use-encrypted-token-output-in-calling-workflow)
+      - [Decrypt the token](#decrypt-the-token)
+      - [Use the token for authentication](#use-the-token-for-authentication)
+    - [lint](#lint)
+    - [pr-title](#pr-title)
+    - [semantic-release](#semantic-release)
+    - [terraform-docs](#terraform-docs)
 
 ## Workflows
 
@@ -114,10 +121,6 @@ This workflow ensures that Pull Request titles follow the [conventional syntax](
 ### semantic-release
 
 [Semantic Release](https://github.com/marketplace/actions/action-for-semantic-release) generates tags and releases by mapping conventional commit messages to major, minor and patch version numbers. This action requires an authentication token to push the changes it generates to protected branches. It makes use of the [get-workflow-token](#get-workflow-token) for this, instead of using a PAT.
-
-### tfsec-pr-commenter
-
-Terraform static code analysis is performed using [tfsec](https://github.com/aquasecurity/tfsec). This action also uses [get-terraform-dir](#get-terraform-dir) to set the working directory.
 
 ### terraform-docs
 
