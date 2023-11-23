@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.14](https://github.com/3ware/workflows/compare/v1.9.13...v1.9.14) (2023-11-23)
+
+
+### Chores
+
+* **deps:** bump amannn/action-semantic-pull-request from 5.1.0 to 5.2.0 ([#63](https://github.com/3ware/workflows/issues/63)) ([2e583d1](https://github.com/3ware/workflows/commit/2e583d1d295dcd9ebf28fbb9c1a560cf496b8a17))
+
 ## [1.9.13](https://github.com/3ware/workflows/compare/v1.9.12...v1.9.13) (2023-03-17)
 
 
