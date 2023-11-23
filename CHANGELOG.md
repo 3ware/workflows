@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.18](https://github.com/3ware/workflows/compare/v1.9.17...v1.9.18) (2023-11-23)
+
+
+### Bug Fixes
+
+* lint workflow secrets ([#70](https://github.com/3ware/workflows/issues/70)) ([8651cc4](https://github.com/3ware/workflows/commit/8651cc4bade3786d4cdaa0969e075bf2e03de717))
+
 ## [1.9.17](https://github.com/3ware/workflows/compare/v1.9.16...v1.9.17) (2023-11-23)
 
 
