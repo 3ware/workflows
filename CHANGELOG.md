@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.16](https://github.com/3ware/workflows/compare/v1.9.15...v1.9.16) (2023-11-23)
+
+
+### Chores
+
+* **deps:** bump trunk-io/trunk-action from 1.0.7 to 1.1.1 ([#66](https://github.com/3ware/workflows/issues/66)) ([8301bf7](https://github.com/3ware/workflows/commit/8301bf7411fa49f6c0b5c16a05aa583870c07edf))
+
 ## [1.9.15](https://github.com/3ware/workflows/compare/v1.9.14...v1.9.15) (2023-11-23)
 
 
