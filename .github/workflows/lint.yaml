@@ -31,7 +31,7 @@ jobs:
     needs: [find-terraform]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
           persist-credentials: true # lint fails to authenticate when false
 
@@ -50,4 +50,4 @@ jobs:
 
       - name: Lint with trunk
         if: ${{ always() }} # Run anyway, even if no terraform
-        uses: trunk-io/trunk-action@b033203e937f42022e351f1313cf84123c4472df # v1.0.7
+        uses: trunk-io/trunk-action@e5f1a3f123a2440f9cd28e036495a1c1f2a20568 # v1.1.1
