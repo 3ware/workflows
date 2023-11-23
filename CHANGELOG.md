@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.15](https://github.com/3ware/workflows/compare/v1.9.14...v1.9.15) (2023-11-23)
+
+
+### Chores
+
+* **deps:** bump actions/checkout from 3.3.0 to 3.5.2 ([#64](https://github.com/3ware/workflows/issues/64)) ([eb4640f](https://github.com/3ware/workflows/commit/eb4640f943bcf4920c103f86f6be07d6b26343c4))
+
 ## [1.9.14](https://github.com/3ware/workflows/compare/v1.9.13...v1.9.14) (2023-11-23)
 
 
