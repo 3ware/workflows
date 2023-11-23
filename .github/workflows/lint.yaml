@@ -11,7 +11,6 @@ on:
     secrets:
       TFC_API_TOKEN:
         required: true
-      
 
 # Disable permissions for all available scopes
 permissions: {}
