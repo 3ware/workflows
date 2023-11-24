@@ -41,15 +41,15 @@ jobs:
       - name: Get Terraform Version
         id: terraform-version
         if: ${{ needs.find-terraform.outputs.terraform-dir != '' }}
-        #echo "VERSION=echo $(terraform --version) | awk '{print substr($2, 2)}'" >> "$GITHUB_OUTPUT"
         run: |
           tfswitch --chdir=${{ needs.find-terraform.outputs.terraform-dir }}
+          echo "VERSION=echo $(terraform --version) | awk NR==1'{print substr($2, 2)}'" >> "$GITHUB_OUTPUT"
 
       - name: Setup Terraform
         if: ${{ needs.find-terraform.outputs.terraform-dir != '' }}
         uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1 # v2.0.3
         with:
-          # terraform_version: ${{ steps.terraform-version.outputs.VERSION }}
+          terraform_version: ${{ steps.terraform-version.outputs.VERSION }}
           cli_config_credentials_token: ${{ secrets.TFC_API_TOKEN }}
 
       # Initialise terraform in the directory where terraform file have changed.
