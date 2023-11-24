@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.0](https://github.com/3ware/workflows/compare/v1.9.18...v1.10.0) (2023-11-24)
+
+
+### Features
+
+* 72-tfswitch ([#73](https://github.com/3ware/workflows/issues/73)) ([9262dff](https://github.com/3ware/workflows/commit/9262dff00c203fa4c19788be2d2e745c34f81795))
+
 ## [1.9.18](https://github.com/3ware/workflows/compare/v1.9.17...v1.9.18) (2023-11-23)
 
 
