@@ -42,7 +42,7 @@ jobs:
         id: terraform-version
         if: ${{ needs.find-terraform.outputs.terraform-dir != '' }}
         run: |
-          tfswitch
+          tfswitch --chdir=${{ needs.find-terraform.outputs.terraform-dir }}
           echo "VERSION=echo $(terraform --version) | awk '{print substr($2, 2)}'" >> "$GITHUB_OUTPUT"
 
       - name: Setup Terraform
