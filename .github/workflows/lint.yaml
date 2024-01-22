@@ -54,6 +54,7 @@ jobs:
         uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1 # v2.0.3
         with:
           terraform_version: ${{ steps.terraform-version.outputs.VERSION }}
+          cli_config_credentials_token: ${{ secrets.TFC_API_TOKEN }}
 
       # Initialise terraform in the directory where terraform file have changed.
       - name: Initialise Terraform
