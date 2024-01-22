@@ -4,6 +4,10 @@ on:
     types: [opened, synchronize]
     branches: [main]
   workflow_call:
+    inputs:
+      terraform-dir:
+        type: string
+        required: false
     secrets:
       TFC_API_TOKEN:
         required: false
@@ -12,10 +16,10 @@ on:
 permissions: {}
 
 jobs:
-  find-terraform:
-    permissions:
-      contents: read
-    uses: ./.github/workflows/get-terraform-dir.yaml
+  # find-terraform:
+  #   permissions:
+  #     contents: read
+  #   uses: ./.github/workflows/get-terraform-dir.yaml
 
   lint:
     runs-on: ubuntu-latest
@@ -27,7 +31,7 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.head_ref }}
       cancel-in-progress: true
-    needs: [find-terraform]
+    #needs: [find-terraform]
     steps:
       - name: Checkout repository
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
@@ -35,27 +39,26 @@ jobs:
           persist-credentials: true # lint fails to authenticate when false
 
       - name: Setup tfswitch
-        if: ${{ needs.find-terraform.outputs.terraform-dir != '' }}
-        uses: stv-io/action-tfswitch@b6c5e07f48a6de1934acf5e9c67bd3b21423e9e1 # v1.0.0
+        if: ${{ inputs.terraform-dir != '' }}
+        uses: stv-io/action-tfswitch@add-version-output # output testing
 
       - name: Get Terraform Version
         id: terraform-version
-        if: ${{ needs.find-terraform.outputs.terraform-dir != '' }}
+        if: ${{ inputs.terraform-dir != '' }}
         run: |
-          tfswitch --chdir=${{ needs.find-terraform.outputs.terraform-dir }}
+          tfswitch --chdir=${{ inputs.terraform-dir }}
           echo "VERSION=$(terraform --version | awk NR==1'{print substr($2, 2)}')" >> "$GITHUB_OUTPUT"
 
       - name: Setup Terraform
-        if: ${{ needs.find-terraform.outputs.terraform-dir != '' }}
+        if: ${{ inputs.terraform-dir != '' }}
         uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1 # v2.0.3
         with:
           terraform_version: ${{ steps.terraform-version.outputs.VERSION }}
-          cli_config_credentials_token: ${{ secrets.TFC_API_TOKEN }}
 
       # Initialise terraform in the directory where terraform file have changed.
       - name: Initialise Terraform
-        if: ${{ needs.find-terraform.outputs.terraform-dir != ''}}
-        working-directory: ${{ needs.find-terraform.outputs.terraform-dir }}
+        if: ${{ inputs.terraform-dir != ''}}
+        working-directory: ${{ inputs.terraform-dir }}
         run: terraform init
 
       - name: Lint with trunk
