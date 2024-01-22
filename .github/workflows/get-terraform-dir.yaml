@@ -45,6 +45,7 @@ jobs:
             **/*.tf
             **/*.tfvars
           dir_names: true
+          json: true
 
       - name: List terraform directory
         if: ${{ steps.changed-dir.conclusion == 'success'}}
