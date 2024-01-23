@@ -15,11 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
-<<<<<<< HEAD
-      dir: ${{ steps.changed-dir.outputs.all_changed_files }}
-=======
       terraform-dir: ${{ steps.terraform-dir.outputs.all_changed_files }}
->>>>>>> 5df7362 (refactor: Rename outputs and set correct version)
     steps:
       - name: Checkout repository
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
@@ -40,13 +36,8 @@ jobs:
 
       # Find the directory where files have been changed.
       - name: Get terraform directory
-<<<<<<< HEAD
-        id: changed-dir
-        uses: tj-actions/changed-files@04124efe7560d15e11ea2ba96c0df2989f68f1f4 # v35.6.1
-=======
         id: terraform-dir
         uses: tj-actions/changed-files@cbda684547adc8c052d50711417fa61b428a9f88 # v41.1.2
->>>>>>> 5df7362 (refactor: Rename outputs and set correct version)
         # Step fails if nothing found.
         continue-on-error: true # Allows workflow to proceed if no files found
         with:
@@ -57,12 +48,6 @@ jobs:
           json: true
 
       - name: List terraform directory
-<<<<<<< HEAD
-        if: ${{ steps.changed-dir.conclusion == 'success'}}
-        run: |
-          echo "${{ steps.changed-dir.outputs.all_changed_files }}"
-=======
         if: ${{ steps.terraform-dir.conclusion == 'success'}}
         run: |
           echo "${{ steps.terraform-dir.outputs.all_changed_files }}"
->>>>>>> 5df7362 (refactor: Rename outputs and set correct version)
