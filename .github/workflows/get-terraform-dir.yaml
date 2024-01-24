@@ -22,23 +22,10 @@ jobs:
         with:
           persist-credentials: true # changed-files unable to authenticate if false
 
-      # - name: Get changed files
-      #   id: changed-files
-      #   uses: tj-actions/changed-files@cbda684547adc8c052d50711417fa61b428a9f88 # v41.1.2
-
-      # - name: List all changed files
-      #   env:
-      #     ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
-      #   run: |
-      #     for file in "$ALL_CHANGED_FILES"; do
-      #       echo "$file was changed"
-      #     done
-
-      # Find the directory where files have been changed.
+      # Find the directory where terraform files have been changed.
       - name: Get terraform directory
         id: get-terraform-dir
         uses: tj-actions/changed-files@cbda684547adc8c052d50711417fa61b428a9f88 # v41.1.2
-        # Step fails if nothing found.
         continue-on-error: true # Allows workflow to proceed if no files found
         with:
           files: |
@@ -49,18 +36,18 @@ jobs:
 
       - name: List terraform directory
         if: ${{ steps.get-terraform-dir.conclusion == 'success'}}
-        run: echo "${{ steps.get-terraform-dir.outputs.all_changed_files }}"
+        env:
+          TF_DIR_ARRAY: ${{ steps.get-terraform-dir.outputs.all_changed_files }}
+        run: echo "TF_DIR_ARRAY"="$TF_DIR_ARRAY" >> "$GITHUB_ENV"
 
       # This output is used as input for the lint workflow matrix strategy
-      # The native output, eg: ["terraform/github","terraform/tfe"] doesn't work
-      # Convert the output to one that does: ['terraform/tfe','terraform/github']
+      # The native output, eg: ["terraform/dir1","terraform/dir2"] doesn't work
+      # Convert the output to one that does: ['terraform/dir1','terraform/dir2']
       - name: Format Terraform directory output
         id: terraform-dir
         if: ${{ steps.get-terraform-dir.conclusion == 'success'}}
-        env:
-          GET_TF_DIR: ${{ steps.get-terraform-dir.outputs.all_changed_files }}
         run: |
-          TF_DIR_FMT=$(echo "$GET_TF_DIR" | sed s:\":\':g)
+          TF_DIR_FMT=$(echo "$TF_DIR_ARRAY" | sed s:\":\':g)
           echo "TF_DIR=$TF_DIR_FMT" >> "$GITHUB_OUTPUT"
 
       - name: Summary if successful
@@ -69,5 +56,5 @@ jobs:
           TF_DIR: ${{ steps.terraform-dir.outputs.TF_DIR }}
         run: |
           echo "### Terraform directories found :white_check_mark:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $$GITHUB_STEP_SUMMARY
-          echo "${{ env.TF_DIR }} >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "$TF_DIR" >> $GITHUB_STEP_SUMMARY
