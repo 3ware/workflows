@@ -62,3 +62,12 @@ jobs:
         run: |
           TF_DIR_FMT=$(echo "$GET_TF_DIR" | sed s:\":\':g)
           echo "TF_DIR=$TF_DIR_FMT" >> "$GITHUB_OUTPUT"
+
+      - name: Summary if successful
+        if: ${{ steps.get-terraform-dir.conclusion == 'success'}}
+        env:
+          TF_DIR: ${{ steps.terraform-dir.outputs.TF_DIR }}
+        run: |
+          echo "### Terraform directories found :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $$GITHUB_STEP_SUMMARY
+          echo "${{ env.TF_DIR }} >> $GITHUB_STEP_SUMMARY
