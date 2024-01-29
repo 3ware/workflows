@@ -35,23 +35,32 @@ jobs:
           json: true
 
       - name: List terraform directory
+        id: terraform-dir
         if: ${{ steps.get-terraform-dir.conclusion == 'success'}}
         env:
           TF_DIR_ARRAY: ${{ steps.get-terraform-dir.outputs.all_changed_files }}
-        run: echo "TF_DIR_ARRAY"="$TF_DIR_ARRAY" >> "$GITHUB_ENV"
+        run: |
+          echo "TF_DIR=$(echo $TF_DIR_ARRAY | jq -c)" >> $GITHUB_OUTPUT
+
+      # - name: Format Output
+      #   id: format-output
+      #   if: ${{ steps.ls-terraform-dir.conclusion == 'success'}}
+      #   env:
+      #     TF_DIR_JSON: ${{ steps.ls-terraform-dir.outputs.TF_DIR_IN}}
+      #   run: echo "TF_DIR_OUT=$(jq -cn --argjson dirs "$TF_DIR_IN" '{tfdirs: $dirs}')" >> $GITHUB_OUTPUT
 
       # This output is used as input for the lint workflow matrix strategy
       # The native output, eg: ["terraform/dir1","terraform/dir2"] doesn't work
       # Convert the output to one that does: ['terraform/dir1','terraform/dir2']
-      - name: Format Terraform directory output
-        id: terraform-dir
-        if: ${{ steps.get-terraform-dir.conclusion == 'success'}}
-        run: |
-          TF_DIR_FMT=$(echo "$TF_DIR_ARRAY" | sed s:\":\':g)
-          echo "TF_DIR=$TF_DIR_FMT" >> "$GITHUB_OUTPUT"
+      # - name: Format Terraform directory output
+      #   id: terraform-dir
+      #   if: ${{ steps.get-terraform-dir.conclusion == 'success'}}
+      #   run: |
+      #     TF_DIR_FMT=$(echo "$TF_DIR_ARRAY" | sed s:\":\':g)
+      #     echo "TF_DIR=$TF_DIR_FMT" >> "$GITHUB_OUTPUT"
 
       - name: Summary if successful
-        if: ${{ steps.get-terraform-dir.conclusion == 'success'}}
+        if: ${{ steps.terraform-dir.conclusion == 'success'}}
         env:
           TF_DIR: ${{ steps.terraform-dir.outputs.TF_DIR }}
         run: |
