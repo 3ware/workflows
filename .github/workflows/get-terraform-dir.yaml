@@ -33,6 +33,7 @@ jobs:
             **/*.tfvars
           dir_names: true
           json: true
+          escape_json: false
 
       - name: List terraform directory
         id: terraform-dir
