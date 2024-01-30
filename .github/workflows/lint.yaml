@@ -40,7 +40,7 @@ jobs:
         if: ${{ inputs.terraform-dir != '' }}
         run: |
           tfswitch --chdir=${{ inputs.terraform-dir }}
-          echo "TERRAFORM_VERSION=$(terraform --version -json | jq -r .terraform_version" >> "$GITHUB_ENV"
+          echo "TERRAFORM_VERSION=$(terraform --version -json | jq -r .terraform_version)" >> "$GITHUB_ENV"
 
       - name: Setup Terraform
         if: ${{ inputs.terraform-dir != '' }}
