@@ -34,7 +34,7 @@ jobs:
 
       - name: Setup tfswitch
         if: ${{ inputs.terraform-dir != '' }}
-        uses: stv-io/action-tfswitch@add-version-output # output testing
+        uses: stv-io/action-tfswitch@b6c5e07f48a6de1934acf5e9c67bd3b21423e9e1 # v1.0.0
 
       - name: Get Terraform Version
         if: ${{ inputs.terraform-dir != '' }}
