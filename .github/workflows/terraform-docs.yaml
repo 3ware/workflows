@@ -9,6 +9,7 @@ jobs:
   get-temp-token:
     if: github.actor != '3ware-release[bot]'
     uses: ./.github/workflows/get-workflow-token.yaml
+    secrets: inherit
   find-terraform:
     if: github.actor != '3ware-release[bot]'
     uses: ./.github/workflows/get-terraform-dir.yaml
