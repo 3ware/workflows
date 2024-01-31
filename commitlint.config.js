@@ -12,7 +12,8 @@ module.exports = {
       "always",
       [
         "commitlint",
-        "dp-review",
+        "delete-workflow-run",
+        "depend-review",
         "get-terraform-dir",
         "get-workflow-token",
         "lint",
