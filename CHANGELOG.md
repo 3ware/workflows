@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.0](https://github.com/3ware/workflows/compare/v1.10.0...v1.11.0) (2024-01-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* Update workflows to accept multiple terraform directories (#74)
+
+### Enhancement
+
+* Update workflows to accept multiple terraform directories ([#74](https://github.com/3ware/workflows/issues/74)) ([f4fdf57](https://github.com/3ware/workflows/commit/f4fdf57f1177ddf17d73134a8957dacaa73f3328))
+
 ## [1.10.0](https://github.com/3ware/workflows/compare/v1.9.18...v1.10.0) (2023-11-24)
 
 
