@@ -42,7 +42,7 @@ jobs:
           TF_DIR_ARRAY: ${{ steps.get-terraform-dir.outputs.all_changed_files }}
         run: |
           echo "$TF_DIR_ARRAY"
-          echo "TF_DIR=$TF_DIR_ARRAY" >> $GITHUB_OUTPUT
+          echo "TF_DIR=$TF_DIR_ARRAY" >> "$GITHUB_OUTPUT"
 
       - name: Summary if successful
         if: ${{ steps.terraform-dir.conclusion == 'success'}}
