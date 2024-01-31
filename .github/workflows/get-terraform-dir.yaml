@@ -4,7 +4,7 @@ on:
     outputs:
       terraform-dir:
         description: The terraform directory to initialise
-        value: ${{ jobs.terraform-directory.outputs.dir }}
+        value: ${{ jobs.terraform-directory.outputs.terraform-dir }}
 
 # Declare default permissions as read only.
 permissions:
@@ -15,37 +15,40 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
-      dir: ${{ steps.changed-dir.outputs.all_changed_files }}
+      terraform-dir: ${{ steps.terraform-dir.outputs.TF_DIR }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
           persist-credentials: true # changed-files unable to authenticate if false
 
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@6b1da8ffbd4b4322392509155e438dbefe620220 # v35.7.1
-
-      - name: List all changed files
-        run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo "$file was changed"
-          done
-
-      # Find the directory where files have been changed.
+      # Find the directory where terraform files have been changed.
       - name: Get terraform directory
-        id: changed-dir
-        uses: tj-actions/changed-files@04124efe7560d15e11ea2ba96c0df2989f68f1f4 # v35.6.1
-        # Step fails if nothing found.
+        id: get-terraform-dir
+        uses: tj-actions/changed-files@cbda684547adc8c052d50711417fa61b428a9f88 # v41.1.2
         continue-on-error: true # Allows workflow to proceed if no files found
         with:
           files: |
             **/*.tf
             **/*.tfvars
           dir_names: true
-          dir_names_exclude_root: true
+          json: true
+          escape_json: false
 
       - name: List terraform directory
-        if: ${{ steps.changed-dir.conclusion == 'success'}}
+        id: terraform-dir
+        if: ${{ steps.get-terraform-dir.conclusion == 'success'}}
+        env:
+          TF_DIR_ARRAY: ${{ steps.get-terraform-dir.outputs.all_changed_files }}
         run: |
-          echo "${{ steps.changed-dir.outputs.all_changed_files }}"
+          echo "$TF_DIR_ARRAY"
+          echo "TF_DIR=$TF_DIR_ARRAY" >> "$GITHUB_OUTPUT"
+
+      - name: Summary if successful
+        if: ${{ steps.terraform-dir.conclusion == 'success'}}
+        env:
+          TF_DIR: ${{ steps.terraform-dir.outputs.TF_DIR }}
+        run: |
+          echo "### Terraform directories found :white_check_mark:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "$TF_DIR" >> $GITHUB_STEP_SUMMARY
