@@ -13,7 +13,6 @@ permissions:
 jobs:
   get-temp-token:
     uses: ./.github/workflows/get-workflow-token.yaml
-    secrets: inherit
 
   semantic-release:
     runs-on: ubuntu-latest
@@ -24,7 +23,7 @@ jobs:
     needs: [get-temp-token]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
         with:
           persist-credentials: false
 
@@ -40,8 +39,7 @@ jobs:
           KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
 
       - name: Create GitHub release and update CHANGELOG
-        if: ${{ ! env.ACT }}
-        uses: cycjimmy/semantic-release-action@8f6ceb9d5aae5578b1dcda6af00008235204e7fa # v3.2.0
+        uses: cycjimmy/semantic-release-action@61680d0e9b02ff86f5648ade99e01be17f0260a4 # v4.0.0
         with:
           semantic_version: 19.0.0
           extra_plugins: |
@@ -50,15 +48,3 @@ jobs:
             conventional-changelog-conventionalcommits@5.0.0
         env:
           GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
-
-      - name: Local test release
-        if: ${{ env.ACT }}
-        uses: cycjimmy/semantic-release-action@8f6ceb9d5aae5578b1dcda6af00008235204e7fa # v3.2.0
-        with:
-          semantic_version: 19.0.0
-          extra_plugins: |
-            @semantic-release/changelog@6.0.0
-            @semantic-release/git@10.0.0
-            conventional-changelog-conventionalcommits@5.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
