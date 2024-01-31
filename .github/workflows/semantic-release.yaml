@@ -13,7 +13,6 @@ permissions:
 jobs:
   get-temp-token:
     uses: ./.github/workflows/get-workflow-token.yaml
-    secrets: inherit
 
   semantic-release:
     runs-on: ubuntu-latest
