@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.13.0](https://github.com/3ware/workflows/compare/v1.12.0...v1.13.0) (2024-01-31)
+
+
+### Features
+
+* Create delete-workflow-run action ([#77](https://github.com/3ware/workflows/issues/77)) ([aaaefb2](https://github.com/3ware/workflows/commit/aaaefb267f06a73dfd2a44a469354e756fbc3766))
+
 ## [1.12.0](https://github.com/3ware/workflows/compare/v1.11.0...v1.12.0) (2024-01-31)
 
 
