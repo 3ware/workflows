@@ -40,7 +40,6 @@ jobs:
           KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
 
       - name: Create GitHub release and update CHANGELOG
-        if: ${{ ! env.ACT }}
         uses: cycjimmy/semantic-release-action@8f6ceb9d5aae5578b1dcda6af00008235204e7fa # v3.2.0
         with:
           semantic_version: 19.0.0
@@ -50,15 +49,3 @@ jobs:
             conventional-changelog-conventionalcommits@5.0.0
         env:
           GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
-
-      - name: Local test release
-        if: ${{ env.ACT }}
-        uses: cycjimmy/semantic-release-action@8f6ceb9d5aae5578b1dcda6af00008235204e7fa # v3.2.0
-        with:
-          semantic_version: 19.0.0
-          extra_plugins: |
-            @semantic-release/changelog@6.0.0
-            @semantic-release/git@10.0.0
-            conventional-changelog-conventionalcommits@5.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
