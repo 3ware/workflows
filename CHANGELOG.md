@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.0](https://github.com/3ware/workflows/compare/v1.11.0...v1.12.0) (2024-01-31)
+
+
+### Bug Fixes
+
+* workflow secrets ([#76](https://github.com/3ware/workflows/issues/76)) ([6af0241](https://github.com/3ware/workflows/commit/6af0241fdfa835151b641160196e0966fe3e556a))
+
+
+### Enhancement
+
+* Workflow file updates ([#75](https://github.com/3ware/workflows/issues/75)) ([6404f02](https://github.com/3ware/workflows/commit/6404f02ac4801e08a4c8c0aab608e61a69abb93d))
+
 ## [1.11.0](https://github.com/3ware/workflows/compare/v1.10.0...v1.11.0) (2024-01-31)
 
 
