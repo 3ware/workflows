@@ -8,11 +8,11 @@ permissions:
 jobs:
   get-temp-token:
     if: github.actor != '3ware-release[bot]'
-    uses: ./.github/workflows/get-workflow-token.yaml
+    uses: 3ware/workflows/.github/workflows/get-terraform-dir.yaml@ec67f76d4016824ab0c5e80194d9b17a2eae0d73 # v1.13.0
     secrets: inherit
   find-terraform:
     if: github.actor != '3ware-release[bot]'
-    uses: ./.github/workflows/get-terraform-dir.yaml
+    uses: 3ware/workflows/.github/workflows/get-terraform-dir.yaml@ec67f76d4016824ab0c5e80194d9b17a2eae0d73 # v1.13.0
 
   terraform-docs:
     runs-on: ubuntu-latest
