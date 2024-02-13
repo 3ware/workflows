@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     concurrency:
-      group: ${{ github.workflow }}-${{ github.head_ref }}
+      group: ${{ github.workflow }}-${{ github.head_ref }}-${{ fromJSON(needs.find-terraform.outputs.terraform-dir) }}
       cancel-in-progress: true
     # only run this workflow if not triggered by 3ware-release
     # this prevents workflow loop
