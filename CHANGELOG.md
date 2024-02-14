@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0](https://github.com/3ware/workflows/compare/v1.13.0...v2.0.0) (2024-02-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* **terraform-docs:** Add required input for `terraform-dir` (#78)
+
+### Enhancement
+
+* **terraform-docs:** Add required input for `terraform-dir` ([#78](https://github.com/3ware/workflows/issues/78)) ([bb05220](https://github.com/3ware/workflows/commit/bb052200a37f54caebc01c9e07d993a2523fce0f))
+
 ## [1.13.0](https://github.com/3ware/workflows/compare/v1.12.0...v1.13.0) (2024-01-31)
 
 
