@@ -23,7 +23,7 @@ module.exports = {
         "terraform-docs",
       ],
     ],
-    "signed-off-by": [1, "always", "Signed-off-by:"],
+    //"signed-off-by": [1, "always", "Signed-off-by:"],
     "subject-case": [1, "always", "sentence-case"],
     "subject-empty": [2, "never"],
     "subject-full-stop": [2, "never", "."],
