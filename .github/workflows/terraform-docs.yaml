@@ -1,5 +1,10 @@
 name: Generate terraform docs
-on: workflow_call
+on:
+  workflow_call:
+    inputs:
+      terraform-dir:
+        type: string
+        required: false
 
 # Declare default permissions as read only.
 permissions:
@@ -10,25 +15,19 @@ jobs:
     if: github.actor != '3ware-release[bot]'
     uses: 3ware/workflows/.github/workflows/get-workflow-token.yaml@ec67f76d4016824ab0c5e80194d9b17a2eae0d73 # v1.13.0
     secrets: inherit
-  find-terraform:
-    if: github.actor != '3ware-release[bot]'
-    uses: 3ware/workflows/.github/workflows/get-terraform-dir.yaml@ec67f76d4016824ab0c5e80194d9b17a2eae0d73 # v1.13.0
 
   terraform-docs:
-    needs: [get-temp-token, find-terraform]
-    strategy:
-      matrix:
-        terraform-dir: ${{ fromJSON(needs.find-terraform.outputs.terraform-dir) }}
+    needs: [get-temp-token]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     concurrency:
-      group: ${{ github.workflow }}-${{ github.head_ref }}-${{ fromJSON(needs.find-terraform.outputs.terraform-dir) }}
+      group: ${{ github.workflow }}-${{ github.head_ref }}-${{ inputs.terraform-dir }}
       cancel-in-progress: true
     # only run this workflow if not triggered by 3ware-release
     # this prevents workflow loop
     if: github.actor != '3ware-release[bot]'
     env:
-      WORKING_DIR: ${{ matrix.terraform-dir }}
+      WORKING_DIR: ${{ inputs.terraform-dir }}
       TF_DOCS_FILE: README.md
 
     steps:
@@ -53,7 +52,7 @@ jobs:
         id: terraform-docs
         uses: terraform-docs/gh-actions@f6d59f89a280fa0a3febf55ef68f146784b20ba0 # v1.0.0
         with:
-          working-dir: ${{ needs.find-terraform.outputs.terraform-dir }}
+          working-dir: ${{ inputs.terraform-dir }}
           output-file: ${{ env.TF_DOCS_FILE }}
           output-method: inject
 
