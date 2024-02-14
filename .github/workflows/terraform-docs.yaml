@@ -4,7 +4,7 @@ on:
     inputs:
       terraform-dir:
         type: string
-        required: false
+        required: true
 
 # Declare default permissions as read only.
 permissions:
