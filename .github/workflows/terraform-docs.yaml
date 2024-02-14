@@ -70,7 +70,7 @@ jobs:
           COMMIT_SCOPE: $(awk -F"/" '{print $NF}' <<< ${{ inputs.terraform-dir }})
           FILE_TO_COMMIT: "${{ env.FILE_PATH }}"
         run: |
-          export MESSAGE="docs(${{ env.COMMIT_SCOPE }}) Update README.md"
+          export MESSAGE="docs(${{ env.COMMIT_SCOPE }}): Update README.md"
           export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
           export CONTENT=$( base64 -i $FILE_TO_COMMIT )
           gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
