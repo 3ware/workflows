@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.1](https://github.com/3ware/workflows/compare/v2.0.0...v2.0.1) (2024-02-21)
+
+
+### Bug Fixes
+
+* **terraform-docs:** Remove `head_ref` from relevent jobs ([#80](https://github.com/3ware/workflows/issues/80)) ([dcd1b28](https://github.com/3ware/workflows/commit/dcd1b28273683662ba6da21bf77a848264a1e121))
+
 ## [2.0.0](https://github.com/3ware/workflows/compare/v1.13.0...v2.0.0) (2024-02-14)
 
 
