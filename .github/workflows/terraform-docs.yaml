@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     concurrency:
-      group: ${{ github.workflow }}-${{ github.head_ref }}-${{ inputs.terraform-dir }}
+      group: ${{ github.workflow }}-${{ inputs.terraform-dir }}
       cancel-in-progress: true
     # only run this workflow if not triggered by 3ware-release
     # this prevents workflow loop
@@ -34,7 +34,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           persist-credentials: false
 
       - name: Decrypt the installation access token
