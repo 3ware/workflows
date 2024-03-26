@@ -54,7 +54,7 @@ jobs:
           echo "TF_DIR=$(echo $TF_DIR_JSON | sed 's:[][""]::g' | sed 's:,:\n:g')" >> "$GITHUB_ENV"
           echo "### Terraform file changes detected :white_check_mark:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Terraform changes have been made in the following directories: >> $GITHUB_STEP_SUMMARY
+          echo "Terraform changes have been made in the following directories:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -63,6 +63,6 @@ jobs:
       - name: Terraform directory summary
         if: ${{ steps.get-terraform-dir.outputs.all_changed_files == '[]' }}
         run: |
-          echo "### Terraform file changes undetected :negative_squared_cross_mark:" >> $GITHUB_STEP_SUMMARY
+          echo "### Terraform file changes not detected :negative_squared_cross_mark:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Terraform has not been changed." >> $GITHUB_STEP_SUMMARY
