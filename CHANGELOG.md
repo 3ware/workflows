@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0](https://github.com/3ware/workflows/compare/v2.0.1...v2.1.0) (2024-03-26)
+
+
+### Enhancement
+
+* **lint:** Replace setup terraform with setup opentofu ([#83](https://github.com/3ware/workflows/issues/83)) ([c7bafd6](https://github.com/3ware/workflows/commit/c7bafd6d1e7f2b2a1cf6dd6a1cdbe9503888bf7c))
+
 ## [2.0.1](https://github.com/3ware/workflows/compare/v2.0.0...v2.0.1) (2024-02-21)
 
 
