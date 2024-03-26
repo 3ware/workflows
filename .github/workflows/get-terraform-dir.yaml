@@ -47,17 +47,15 @@ jobs:
       - name: Terraform directory summary
         if: ${{ steps.get-terraform-dir.outputs.all_changed_files != '[]' }}
         run: |
-          echo "### Terraform file changes detected :white_check_mark:" >> $GITHUB_STEP_SUMMARY
-          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "# :white_check_mark: Terraform file changes detected" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Terraform changes have been detected in the following directories:" >> $GITHUB_STEP_SUMMARY
+          echo "## Terraform changes have been detected in the following directories:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           printf '%s\n' "$TF_DIR" >> $GITHUB_STEP_SUMMARY
 
       - name: Terraform directory summary
         if: ${{ steps.get-terraform-dir.outputs.all_changed_files == '[]' }}
         run: |
-          echo "### Terraform file changes not detected :negative_squared_cross_mark:" >> $GITHUB_STEP_SUMMARY
-          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "# :negative_squared_cross_mark: Terraform file changes not detected" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Terraform has not been changed." >> $GITHUB_STEP_SUMMARY
