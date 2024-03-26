@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.2.0](https://github.com/3ware/workflows/compare/v2.1.0...v2.2.0) (2024-03-26)
+
+
+### Features
+
+* **get-terraform-dir:** Improve job summaries ([#84](https://github.com/3ware/workflows/issues/84)) ([4189af8](https://github.com/3ware/workflows/commit/4189af8d0654ffc9ea7e7a404698e1eb6cd88ae2))
+* **terraform-docs:** Upgrade to v1.1.0 ([#85](https://github.com/3ware/workflows/issues/85)) ([d3fe3fe](https://github.com/3ware/workflows/commit/d3fe3fe0504425f4dd860349eda38275324aa905))
+
 ## [2.1.0](https://github.com/3ware/workflows/compare/v2.0.1...v2.1.0) (2024-03-26)
 
 
