@@ -55,8 +55,11 @@ jobs:
           output-file: ${{ env.TF_DOCS_FILE }}
           output-method: inject
 
-      - name: Set file path env
-        run: echo "FILE_PATH=${{ env.WORKING_DIR }}/${{ env.TF_DOCS_FILE }}" >> $GITHUB_ENV
+      - name: Set file path environment variable
+        if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
+        run: |
+          echo "Number of files changed = ${{ steps.terraform-docs.outputs.num_changed }}"
+          echo "FILE_PATH=${{ env.WORKING_DIR }}/${{ env.TF_DOCS_FILE }}" >> $GITHUB_ENV
 
       # Use the REST API to commit changes, so we get automatic commit signing
       # Only run this job if the file has changed to prevent empty commits
