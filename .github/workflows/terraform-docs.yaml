@@ -11,13 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  # get-temp-token:
-  #   if: github.actor != '3ware-release[bot]'
-  #   uses: 3ware/workflows/.github/workflows/get-workflow-token.yaml@ec67f76d4016824ab0c5e80194d9b17a2eae0d73 # v1.13.0
-  #   secrets: inherit
-
   terraform-docs:
-    # needs: [get-temp-token]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -25,9 +19,6 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ inputs.terraform-dir }}
       cancel-in-progress: true
-    # only run this workflow if not triggered by 3ware-release
-    # this prevents workflow loop
-    # if: github.actor != '3ware-release[bot]'
     env:
       WORKING_DIR: ${{ inputs.terraform-dir }}
       TF_DOCS_FILE: README.md
@@ -35,19 +26,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
-        # with:
-        #   persist-credentials: false
-
-      # - name: Decrypt the installation access token
-      #   id: decrypt-token
-      #   run: |
-      #     DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$KEY" \
-      #     --output - <(echo "${{ needs.get-temp-token.outputs.temp-token }}" \
-      #     | base64 --decode))
-      #     echo "::add-mask::$DECRYPTED_TOKEN"
-      #     echo "temp-token=$DECRYPTED_TOKEN" >> "$GITHUB_OUTPUT"
-      #   env:
-      #     KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
 
       - name: Render terraform docs
         id: terraform-docs
@@ -69,31 +47,13 @@ jobs:
         id: push-with-sig
         uses: planetscale/ghcommit-action@v0.1.6
         with:
-          commit_message: "docs(${{ env.COMMIT_SCOPE }}): Update ${{ env.TF_DOCS_FILE }}"
+          # TODO: update commit message with skip ci or similar
+          commit_message: "docs(${{ env.COMMIT_SCOPE }}): Update ${{ env.TF_DOCS_FILE }} [skip ci]"
           repo: ${{ github.repository }}
           branch: ${{ github.head_ref || github.ref_name }}
           file_pattern: ${{ env.FILE_TO_COMMIT }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Use the REST API to commit changes, so we get automatic commit signing
-      # Only run this job if the file has changed to prevent empty commits
-      # - name: Push changes back to PR with signature
-      #   id: push-with-sig
-      #   if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
-      #   env:
-      #     GH_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
-      #     DESTINATION_BRANCH: ${{ github.event.pull_request.head.ref }}
-      #   run: |
-      #     export MESSAGE="docs($COMMIT_SCOPE): Update $TF_DOCS_FILE"
-      #     export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_PATH )
-      #     export CONTENT=$( base64 -i $FILE_PATH )
-      #     gh api --method PUT /repos/:owner/:repo/contents/$FILE_PATH \
-      #       --field message="$MESSAGE" \
-      #       --field content="$CONTENT" \
-      #       --field encoding="base64" \
-      #       --field branch="$DESTINATION_BRANCH" \
-      #       --field sha="$SHA"
 
       - name: Summary if successful
         if: ${{ steps.push-with-sig.conclusion == 'success' }}
@@ -102,7 +62,8 @@ jobs:
         run: |
           echo "# :white_check_mark: Terraform docs updated $FILE_PATH" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "$FILE_PATH added to $BRANCH" >> $GITHUB_STEP_SUMMARY
+          echo "$FILE_TO_COMMIT added to $BRANCH" >> $GITHUB_STEP_SUMMARY
+          # TODO: this link doesn't work goes to `issues` not `pull`
           echo "[#${{ github.event.pull_request.number }}](https://github.com/3ware/workflows/pull/${{ github.event.pull_request.number }})" >> $GITHUB_STEP_SUMMARY
 
       - name: Summary if skipped
