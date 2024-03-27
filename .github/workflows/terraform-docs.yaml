@@ -41,13 +41,13 @@ jobs:
           echo "Number of files changed = ${{ steps.terraform-docs.outputs.num_changed }}"
           echo "FILE_TO_COMMIT=${{ env.WORKING_DIR }}/${{ env.TF_DOCS_FILE }}" >> "$GITHUB_ENV"
           echo "COMMIT_SCOPE=$(awk -F"/" '{print $NF}' <<< ${{ inputs.terraform-dir }})" >> "$GITHUB_ENV"
+          echo "PR_NUMBER=${{ github.event.pull_request_review.pull_request.number }}" >> "$GITHUB_ENV"
 
       - name: Push verified commit
         if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
         id: push-with-sig
         uses: planetscale/ghcommit-action@v0.1.6
         with:
-          # TODO: update commit message with skip ci or similar
           commit_message: "docs(${{ env.COMMIT_SCOPE }}): Update ${{ env.TF_DOCS_FILE }} [skip ci]"
           repo: ${{ github.repository }}
           branch: ${{ github.head_ref || github.ref_name }}
@@ -62,9 +62,9 @@ jobs:
         run: |
           echo "# :white_check_mark: Terraform docs updated $FILE_PATH" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "$FILE_TO_COMMIT added to $BRANCH" >> $GITHUB_STEP_SUMMARY
+          echo "$FILE_TO_COMMIT updated for $COMMIT_SCOPE module on $BRANCH" via pull request: >> $GITHUB_STEP_SUMMARY
           # TODO: this link doesn't work goes to `issues` not `pull`
-          echo "[#${{ github.event.pull_request.number }}](https://github.com/3ware/workflows/pull/${{ github.event.pull_request.number }})" >> $GITHUB_STEP_SUMMARY
+          echo "[#${{ github.event.pull_request.number }}](${{ github.event.pull_request.url }})" >> $GITHUB_STEP_SUMMARY
 
       - name: Summary if skipped
         # TODO: check this works
