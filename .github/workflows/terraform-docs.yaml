@@ -69,10 +69,10 @@ jobs:
         id: push-with-sig
         uses: planetscale/ghcommit-action@v0.1.6
         with:
-          commit_message: "docs($COMMIT_SCOPE): Update $TF_DOCS_FILE"
+          commit_message: "docs(${{ env.COMMIT_SCOPE }}): Update ${{ env.TF_DOCS_FILE }}"
           repo: ${{ github.repository }}
           branch: ${{ github.head_ref || github.ref_name }}
-          file_pattern: $FILE_TO_COMMIT
+          file_pattern: ${{ env.FILE_TO_COMMIT }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
