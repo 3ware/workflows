@@ -55,11 +55,12 @@ jobs:
           output-file: ${{ env.TF_DOCS_FILE }}
           output-method: inject
 
-      - name: Set file path environment variable
+      - name: Set environment variables
         if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
         run: |
           echo "Number of files changed = ${{ steps.terraform-docs.outputs.num_changed }}"
-          echo "FILE_PATH=${{ env.WORKING_DIR }}/${{ env.TF_DOCS_FILE }}" >> $GITHUB_ENV
+          echo "FILE_PATH=${{ env.WORKING_DIR }}/${{ env.TF_DOCS_FILE }}" >> "$GITHUB_ENV"
+          echo "COMMIT_SCOPE=$(awk -F"/" '{print $NF}' <<< ${{ inputs.terraform-dir }})" >> "$GITHUB_ENV"
 
       # Use the REST API to commit changes, so we get automatic commit signing
       # Only run this job if the file has changed to prevent empty commits
@@ -69,9 +70,8 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
           DESTINATION_BRANCH: ${{ github.event.pull_request.head.ref }}
-          COMMIT_SCOPE: $(awk -F"/" '{print $NF}' <<< ${{ inputs.terraform-dir }})
         run: |
-          export MESSAGE="docs(${{ env.COMMIT_SCOPE }}): Update ${{ env.TF_DOCS_FILE }}"
+          export MESSAGE="docs($COMMIT_SCOPE): Update $TF_DOCS_FILE"
           export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_PATH )
           export CONTENT=$( base64 -i $FILE_PATH )
           gh api --method PUT /repos/:owner/:repo/contents/$FILE_PATH \
