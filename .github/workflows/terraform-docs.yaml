@@ -70,12 +70,11 @@ jobs:
           GH_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
           DESTINATION_BRANCH: ${{ github.event.pull_request.head.ref }}
           COMMIT_SCOPE: $(awk -F"/" '{print $NF}' <<< ${{ inputs.terraform-dir }})
-          FILE_TO_COMMIT: "${{ env.FILE_PATH }}"
         run: |
-          export MESSAGE="docs(${{ env.COMMIT_SCOPE }}): Update README.md"
-          export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
-          export CONTENT=$( base64 -i $FILE_TO_COMMIT )
-          gh api --method PUT /repos/:owner/:repo/contents/$FILE_TO_COMMIT \
+          export MESSAGE="docs(${{ env.COMMIT_SCOPE }}): Update ${{ env.TF_DOCS_FILE }}"
+          export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_PATH )
+          export CONTENT=$( base64 -i $FILE_PATH )
+          gh api --method PUT /repos/:owner/:repo/contents/$FILE_PATH \
             --field message="$MESSAGE" \
             --field content="$CONTENT" \
             --field encoding="base64" \
