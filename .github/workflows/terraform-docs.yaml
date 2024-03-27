@@ -81,19 +81,20 @@ jobs:
             --field branch="$DESTINATION_BRANCH" \
             --field sha="$SHA"
 
-      - name: Summary if skipped
-        if: ${{ steps.push-with-sig.conclusion == 'skipped' }}
-        run: |
-          echo "### Push Skipped" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Changes were not made to ${{ env.FILE_PATH }} on this run" >> $GITHUB_STEP_SUMMARY
-
       - name: Summary if successful
         if: ${{ steps.push-with-sig.conclusion == 'success' }}
         env:
           BRANCH: ${{ github.head_ref  }}
         run: |
-          echo "### Terraform Docs updated :rocket:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $$GITHUB_STEP_SUMMARY
-          echo "${{ env.FILE_PATH }} added to $BRANCH" >> $GITHUB_STEP_SUMMARY
+          echo "# :white_check_mark: Terraform docs updated $FILE_PATH" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "$FILE_PATH added to $BRANCH" >> $GITHUB_STEP_SUMMARY
           echo "[#${{ github.event.pull_request.number }}](https://github.com/3ware/workflows/pull/${{ github.event.pull_request.number }})" >> $GITHUB_STEP_SUMMARY
+
+      - name: Summary if skipped
+        # TODO: check this works
+        if: ${{ steps.push-with-sig.conclusion == 'skipped' }}
+        run: |
+          echo "# :negative_squared_cross_mark: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Changes were not required on this workflow run" >> $GITHUB_STEP_SUMMARY
