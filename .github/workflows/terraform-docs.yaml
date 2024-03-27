@@ -62,7 +62,7 @@ jobs:
         run: |
           echo "# :white_check_mark: Terraform docs updated $FILE_PATH" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "$FILE_TO_COMMIT updated for $COMMIT_SCOPE module on $BRANCH" via pull request: >> $GITHUB_STEP_SUMMARY
+          echo "$TF_DOCS_FILE updated for $COMMIT_SCOPE module on $BRANCH" via pull request: >> $GITHUB_STEP_SUMMARY
           # TODO: this link doesn't work goes to `issues` not `pull`
           echo "[#${{ github.event.pull_request.number }}](${{ github.event.pull_request.url }})" >> $GITHUB_STEP_SUMMARY
 
