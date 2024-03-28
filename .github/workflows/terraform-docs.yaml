@@ -66,11 +66,9 @@ jobs:
           echo "# :white_check_mark: Terraform docs updated $FILE_PATH" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "$TF_DOCS_FILE updated for $COMMIT_SCOPE module on $BRANCH" via pull request: >> $GITHUB_STEP_SUMMARY
-          # TODO: this link doesn't work goes to `issues` not `pull`
           echo "[#${{ github.event.pull_request.number }}](${{ github.event.pull_request.html_url }})" >> $GITHUB_STEP_SUMMARY
 
       - name: Summary if skipped
-        # TODO: check this works
         if: ${{ steps.push-with-sig.conclusion == 'skipped' }}
         run: |
           echo "# :negative_squared_cross_mark: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
