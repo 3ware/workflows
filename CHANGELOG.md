@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.0](https://github.com/3ware/workflows/compare/v2.2.0...v2.3.0) (2024-03-28)
+
+
+### Enhancement
+
+* **terraform-docs:** Upgrade and improvements ([#87](https://github.com/3ware/workflows/issues/87)) ([5df4a0f](https://github.com/3ware/workflows/commit/5df4a0f26bfedff1d69720ddd42dc8cc6b9e8ae8))
+
 ## [2.2.0](https://github.com/3ware/workflows/compare/v2.1.0...v2.2.0) (2024-03-26)
 
 
