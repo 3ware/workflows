@@ -2,7 +2,7 @@ name: Validate PR title
 
 on:
   pull_request_target:
-    types: [opened, edited, synchronize]
+    types: [opened, edited]
   workflow_call: {}
 
 # Disable permissions for all available scopes
