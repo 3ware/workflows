@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.4.0](https://github.com/3ware/workflows/compare/v2.3.0...v2.4.0) (2024-03-28)
+
+
+### Features
+
+* **release:** Add job summaries ([#89](https://github.com/3ware/workflows/issues/89)) ([5ca3d6b](https://github.com/3ware/workflows/commit/5ca3d6b8954a06e6636ec6cf5d19b2f6de2084be))
+
 ## [2.3.0](https://github.com/3ware/workflows/compare/v2.2.0...v2.3.0) (2024-03-28)
 
 
