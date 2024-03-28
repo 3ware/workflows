@@ -19,7 +19,7 @@ module.exports = {
         "lint",
         "pr-title",
         "scorecard",
-        "semantic-release",
+        "release",
         "terraform-docs",
       ],
     ],
