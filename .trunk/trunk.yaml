@@ -32,6 +32,7 @@ lint:
         - CHANGELOG.md
 actions:
   enabled:
+    - commitlint
     - trunk-announce
     - trunk-check-pre-push
     - trunk-fmt-pre-commit
