@@ -71,4 +71,4 @@ jobs:
         run: |
           echo "# :negative_squared_cross_mark: No release published" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "There are no relevant changes, so no new version is released"
+          echo "There are no relevant changes, so no new version is released" >> $GITHUB_STEP_SUMMARY
