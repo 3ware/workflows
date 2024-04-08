@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.5.0](https://github.com/3ware/workflows/compare/v2.4.0...v2.5.0) (2024-04-08)
+
+
+### Features
+
+* **pr-title:** Add job summary and PR comments ([#91](https://github.com/3ware/workflows/issues/91)) ([7f2488f](https://github.com/3ware/workflows/commit/7f2488fa06ddb351518e386fd69dcc7a68dc9178))
+
 ## [2.4.0](https://github.com/3ware/workflows/compare/v2.3.0...v2.4.0) (2024-03-28)
 
 
