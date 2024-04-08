@@ -11,9 +11,10 @@ on:
 # Disable permissions for all available scopes
 permissions: {}
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref }}
-  cancel-in-progress: true
+# concurrency:
+#   #TODO: hash this out and re test
+#   group: ${{ github.workflow }}-${{ github.head_ref }}
+#   cancel-in-progress: true
 
 jobs:
   validate-pr-title:
@@ -52,12 +53,12 @@ jobs:
       - name: Summary
         if: always() && (steps.lint-pr-title.outputs.error_message == null)
         run: |
-          echo "# :white_check_mark: PR title is valid" >> $GITHUB_STEP_SUMMARY
+          echo "# :white_check_mark: Pull Request title is valid" >> $GITHUB_STEP_SUMMARY
 
       - name: Summary
         if: always() && (steps.lint-pr-title.outputs.error_message != null)
         run: |
-          echo "# :bangbang: PR title is invalid" >> $GITHUB_STEP_SUMMARY
+          echo "# :bangbang: Pull Request title is invalid" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "add something here depending on what the below looks like" >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.lint-pr-title.outputs.error_message }}" >> $GITHUB_STEP_SUMMARY
