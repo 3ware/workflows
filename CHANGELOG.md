@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.6.0](https://github.com/3ware/workflows/compare/v2.5.0...v2.6.0) (2024-08-23)
+
+
+### Enhancement
+
+* **lint:** Terraform / Tofu  changes ([#93](https://github.com/3ware/workflows/issues/93)) ([bfff713](https://github.com/3ware/workflows/commit/bfff7133bd44623dd376b00a819d6c624248ec02))
+
 ## [2.5.0](https://github.com/3ware/workflows/compare/v2.4.0...v2.5.0) (2024-04-08)
 
 
