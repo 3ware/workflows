@@ -33,24 +33,21 @@ jobs:
         if: ${{ inputs.terraform-dir != '' }}
         uses: stv-io/action-tfswitch@b6c5e07f48a6de1934acf5e9c67bd3b21423e9e1 # v1.0.0
 
-      - name: Get Terraform Version
+      - name: Get tf version
         if: ${{ inputs.terraform-dir != '' }}
+        id: tf-version
         run: |
           tfswitch --chdir=${{ inputs.terraform-dir }}
-          echo "TERRAFORM_VERSION=$(terraform --version -json | jq -r .terraform_version)" >> "$GITHUB_ENV"
-      #TODO tofu terraform decision
-      - name: Setup Terraform
+          terraform --version
+
+      - name: Setup Tofu
         if: ${{ inputs.terraform-dir != '' }}
         uses: opentofu/setup-opentofu@ae80d4ecaab946d8f5ff18397fbf6d0686c6d46a # v1.0.3
         with:
-          # Using workflow command, eg: $TERRAFORM_VERSION does not work
-          # env context must be used
-          # linting error stating: "context might be invalid" will hopefully be fixed soon
-          # https://github.com/github/vscode-github-actions/issues/47
-          tofu_version: ${{ env.TERRAFORM_VERSION }}
+          tofu_version: ${{ steps.tf-version.outputs.terraform_version }}
 
       # Initialise terraform in the directory where terraform file have changed.
-      - name: Initialise Terraform
+      - name: Initialise Tofu
         if: ${{ inputs.terraform-dir != ''}}
         working-directory: ${{ inputs.terraform-dir }}
         run: tofu init --backend=false
