@@ -8,9 +8,6 @@ on:
       terraform-dir:
         type: string
         required: false
-    secrets:
-      TFC_API_TOKEN:
-        required: false
 
 # Disable permissions for all available scopes
 permissions: {}
@@ -51,14 +48,13 @@ jobs:
           # linting error stating: "context might be invalid" will hopefully be fixed soon
           # https://github.com/github/vscode-github-actions/issues/47
           tofu_version: ${{ env.TERRAFORM_VERSION }}
-          cli_config_credentials_token: ${{ secrets.TFC_API_TOKEN }}
 
       # Initialise terraform in the directory where terraform file have changed.
       - name: Initialise Terraform
         if: ${{ inputs.terraform-dir != ''}}
         working-directory: ${{ inputs.terraform-dir }}
-        run: tofu init
+        run: tofu init --backend=false
 
       - name: Lint with trunk
         if: ${{ always() }} # Run anyway, even if no terraform
-        uses: trunk-io/trunk-action@34242ec4eb8cf594887600f1f9b889e7c630ec18 # v1.19.0
+        uses: trunk-io/trunk-action@da67635060feab46c164bc130690e61864a5d13b # v1.1.13
