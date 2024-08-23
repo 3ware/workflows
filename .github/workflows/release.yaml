@@ -51,7 +51,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
 
-      - name: Summary
+      - name: Summary with release
         if: ${{ steps.release.outputs.new_release_published == 'true' }}
         run: |
           echo "# :white_check_mark: New release published" >> $GITHUB_STEP_SUMMARY
@@ -62,7 +62,7 @@ jobs:
           echo ""
           echo "${{ steps.release.outputs.new_release_notes }}" >>$GITHUB_STEP_SUMMARY
 
-      - name: Summary
+      - name: Summary without release
         if: ${{ steps.release.outputs.new_release_published == 'false' }}
         run: |
           echo "# :negative_squared_cross_mark: No release published" >> $GITHUB_STEP_SUMMARY
