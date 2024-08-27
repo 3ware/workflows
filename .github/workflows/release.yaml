@@ -6,9 +6,8 @@ on:
   push:
     branches: [main]
 
-# Declare default permissions as read only.
-permissions:
-  contents: read
+# Disable permissions for all available scopes
+permissions: {}
 
 jobs:
   get-temp-token:
