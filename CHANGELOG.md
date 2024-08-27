@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.0](https://github.com/3ware/workflows/compare/v2.6.0...v3.0.0) (2024-08-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* **release:** Remove `contents: read` permissions (#95)
+
+### Features
+
+* **release:** Remove `contents: read` permissions ([#95](https://github.com/3ware/workflows/issues/95)) ([10aa9ec](https://github.com/3ware/workflows/commit/10aa9ec56dd2ba84d1871c4bc5732953d3cbcce0))
+
 ## [2.6.0](https://github.com/3ware/workflows/compare/v2.5.0...v2.6.0) (2024-08-23)
 
 
