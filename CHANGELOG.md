@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.0](https://github.com/3ware/workflows/compare/v3.0.1...v3.1.0) (2024-08-28)
+
+
+### Features
+
+* **get-workflow-token:** Add condition to check the GitHub repository owner ([#99](https://github.com/3ware/workflows/issues/99)) ([7450cd6](https://github.com/3ware/workflows/commit/7450cd68c5857aa281b43fbc950d0a28b26e3c98))
+
 ## [3.0.1](https://github.com/3ware/workflows/compare/v3.0.0...v3.0.1) (2024-08-28)
 
 
