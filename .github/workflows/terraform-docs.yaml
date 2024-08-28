@@ -1,4 +1,4 @@
-name: Generate terraform docs
+name: Terraform docs
 on:
   workflow_call:
     inputs:
@@ -58,7 +58,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Summary if successful
+      - name: Summary with commit failure
+        if: ${{ failure() && steps.push-with-sig.outcome == 'failure' }}
+        run: |
+          echo "# :bangbang: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Commit failure" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Terraform documentation has not been updated" >> $GITHUB_STEP_SUMMARY
+          echo "Please review the logs" >> $GITHUB_STEP_SUMMARY
+
+      - name: Summary with document changes
         if: ${{ steps.push-with-sig.conclusion == 'success' }}
         env:
           BRANCH: ${{ github.head_ref  }}
@@ -68,9 +78,9 @@ jobs:
           echo "$TF_DOCS_FILE updated for $COMMIT_SCOPE module on $BRANCH" via pull request: >> $GITHUB_STEP_SUMMARY
           echo "[#${{ github.event.pull_request.number }}](${{ github.event.pull_request.html_url }})" >> $GITHUB_STEP_SUMMARY
 
-      - name: Summary if skipped
-        if: ${{ steps.push-with-sig.conclusion == 'skipped' }}
+      - name: Summary without document changes
+        if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
         run: |
           echo "# :negative_squared_cross_mark: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Changes were not required on this workflow run" >> $GITHUB_STEP_SUMMARY
+          echo "Terraform changes were not detected on this workflow run" >> $GITHUB_STEP_SUMMARY
