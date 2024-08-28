@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.1](https://github.com/3ware/workflows/compare/v3.0.0...v3.0.1) (2024-08-28)
+
+
+### Bug Fixes
+
+* **release:** Checkout step authentication ([#97](https://github.com/3ware/workflows/issues/97)) ([dfe4a62](https://github.com/3ware/workflows/commit/dfe4a62274f759e167efb1e055a6aa338e94e9ff))
+
 ## [3.0.0](https://github.com/3ware/workflows/compare/v2.6.0...v3.0.0) (2024-08-27)
 
 
