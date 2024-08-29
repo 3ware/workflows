@@ -25,7 +25,7 @@ jobs:
       # Find the directory where terraform files have been changed.
       - name: Get terraform directory
         id: get-terraform-dir
-        uses: tj-actions/changed-files@cbda684547adc8c052d50711417fa61b428a9f88 # v41.1.2
+        uses: tj-actions/changed-files@4918e1183080b35a085c91c8abc9e6adc4de61a1 # v42.1.0
         continue-on-error: true # Allows workflow to proceed if no files found
         with:
           files: |
@@ -34,24 +34,24 @@ jobs:
             **/*.tftpl
             **/*.hcl
           dir_names: true
-          json: true
-          escape_json: false
+          matrix: true
 
-      - name: Format Get terraform directory output
-        if: ${{ steps.get-terraform-dir.outputs.all_changed_files != '[]' }}
-        env:
-          TF_DIR_JSON: ${{ steps.get-terraform-dir.outputs.all_changed_files }}
-        run: |
-          echo "TF_DIR=$(echo ${{ env.TF_DIR_JSON }} | sed 's:[][""]::g' | sed 's:,:\n:g')" >> "$GITHUB_ENV"
+      # TODO: Find solution to multiple directories being returned
+      # - name: Format Get terraform directory output
+      #   if: ${{ steps.get-terraform-dir.outputs.all_changed_files != '[]' }}
+      #   env:
+      #     TF_DIR_JSON: ${{ steps.get-terraform-dir.outputs.all_changed_files }}
+      #   run: |
+      #     echo "TF_DIR=$(echo ${{ env.TF_DIR_JSON }} | sed 's:[][""]::g' | sed 's:,:\n:g')" >> "$GITHUB_ENV"
 
-      - name: Terraform directory summary
-        if: ${{ steps.get-terraform-dir.outputs.all_changed_files != '[]' }}
-        run: |
-          echo "# :white_check_mark: Terraform file changes detected" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## Terraform changes have been detected in the following directories:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          printf '%s\n' "$TF_DIR" >> $GITHUB_STEP_SUMMARY
+      # - name: Terraform directory summary
+      #   if: ${{ steps.get-terraform-dir.outputs.all_changed_files != '[]' }}
+      #   run: |
+      #     echo "# :white_check_mark: Terraform file changes detected" >> $GITHUB_STEP_SUMMARY
+      #     echo "" >> $GITHUB_STEP_SUMMARY
+      #     echo "## Terraform changes have been detected in the following directories:" >> $GITHUB_STEP_SUMMARY
+      #     echo "" >> $GITHUB_STEP_SUMMARY
+      #     printf '%s\n' "$TF_DIR" >> $GITHUB_STEP_SUMMARY
 
       - name: Terraform directory summary
         if: ${{ steps.get-terraform-dir.outputs.all_changed_files == '[]' }}
