@@ -38,17 +38,13 @@ jobs:
         id: tf-version
         run: |
           tfswitch --chdir=${{ inputs.terraform-dir }}
-          terraform --version
-
-      - name: echo version
-        run: |
-          echo  ${{ steps.tf-version.outputs.terraform_version }}
+          echo "TERRAFORM_VERSION=$(terraform --version -json | jq -r .terraform_version)" >> "$GITHUB_ENV"
 
       - name: Setup Tofu
         if: ${{ inputs.terraform-dir != '' }}
         uses: opentofu/setup-opentofu@ae80d4ecaab946d8f5ff18397fbf6d0686c6d46a # v1.0.3
         with:
-          tofu_version: ${{ steps.tf-version.outputs.terraform_version }}
+          tofu_version: ${{ env.TERRAFORM_VERSION }}
 
       # Initialise terraform in the directory where terraform file have changed.
       - name: Initialise Tofu
