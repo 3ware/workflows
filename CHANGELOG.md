@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.1](https://github.com/3ware/workflows/compare/v3.1.0...v3.1.1) (2024-08-29)
+
+
+### Bug Fixes
+
+* **lint:** Write the terraform version to an environment variable ([#100](https://github.com/3ware/workflows/issues/100)) ([206c279](https://github.com/3ware/workflows/commit/206c279ba8190b1d2c277bab58903cf326b40f04))
+
 ## [3.1.0](https://github.com/3ware/workflows/compare/v3.0.1...v3.1.0) (2024-08-28)
 
 
