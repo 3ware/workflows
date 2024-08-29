@@ -4,7 +4,7 @@ on:
     outputs:
       terraform-dir:
         description: The terraform directory to initialise
-        value: ${{ jobs.terraform-directory.outputs.terraform-dir }}
+        value: ${{ jobs.terraform-directory.outputs.terraform-matrix }}
 
 # Declare default permissions as read only.
 permissions:
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
-      terraform-dir: ${{ steps.get-terraform-dir.outputs.all_changed_files }}
+      terraform-matrix: ${{ steps.get-terraform-matrix.outputs.all_changed_files }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
@@ -23,8 +23,9 @@ jobs:
           persist-credentials: true # changed-files unable to authenticate if false
 
       # Find the directory where terraform files have been changed.
-      - name: Get terraform directory
-        id: get-terraform-dir
+      # Output a JSON object which can be used for matrix strategies
+      - name: Get terraform directory matrix
+        id: get-terraform-matrix
         uses: tj-actions/changed-files@4918e1183080b35a085c91c8abc9e6adc4de61a1 # v42.1.0
         continue-on-error: true # Allows workflow to proceed if no files found
         with:
@@ -36,25 +37,31 @@ jobs:
           dir_names: true
           matrix: true
 
-      # TODO: Find solution to multiple directories being returned
-      # - name: Format Get terraform directory output
-      #   if: ${{ steps.get-terraform-dir.outputs.all_changed_files != '[]' }}
-      #   env:
-      #     TF_DIR_JSON: ${{ steps.get-terraform-dir.outputs.all_changed_files }}
-      #   run: |
-      #     echo "TF_DIR=$(echo ${{ env.TF_DIR_JSON }} | sed 's:[][""]::g' | sed 's:,:\n:g')" >> "$GITHUB_ENV"
+      # Find the directory where terraform files have been changed.
+      # Output text for use with the job summary steps
+      - name: Get terraform directory Summary
+        id: get-terraform-sum
+        uses: tj-actions/changed-files@4918e1183080b35a085c91c8abc9e6adc4de61a1 # v42.1.0
+        continue-on-error: true # Allows workflow to proceed if no files found
+        with:
+          files: |
+            **/*.tf
+            **/*.tfvars
+            **/*.tftpl
+            **/*.hcl
+          dir_names: true
 
       - name: Terraform directory summary
-        if: ${{ steps.get-terraform-dir.outputs.all_changed_files != '[]' }}
+        if: ${{ steps.get-terraform-sum.outputs.all_changed_files != '[]' }}
         run: |
           echo "# :white_check_mark: Terraform file changes detected" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Terraform changes have been detected in the following directories:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          printf '%s\n' ${{ fromJSON(steps.get-terraform-dir.outputs.all_changed_files) }} >> $GITHUB_STEP_SUMMARY
+          printf '%s\n' ${{ steps.get-terraform-sum.outputs.all_changed_files }} >> $GITHUB_STEP_SUMMARY
 
       - name: Terraform directory summary
-        if: ${{ steps.get-terraform-dir.outputs.all_changed_files == '[]' }}
+        if: ${{ steps.get-terraform-sum.outputs.all_changed_files == '[]' }}
         run: |
           echo "# :negative_squared_cross_mark: Terraform file changes not detected" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
