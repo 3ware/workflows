@@ -10,6 +10,8 @@ on:
 permissions:
   contents: read
 
+# TODO: Define single list of files to use in both steps
+# See: https://github.com/3ware/workflows/issues/101
 jobs:
   terraform-directory:
     runs-on: ubuntu-latest
