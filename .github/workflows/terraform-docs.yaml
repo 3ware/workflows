@@ -41,10 +41,8 @@ jobs:
       - name: Set environment variables
         if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
         run: |
-          echo "Number of files changed = ${{ steps.terraform-docs.outputs.num_changed }}"
           echo "FILE_TO_COMMIT=${{ env.WORKING_DIR }}/${{ env.TF_DOCS_FILE }}" >> "$GITHUB_ENV"
           echo "COMMIT_SCOPE=$(awk -F"/" '{print $NF}' <<< ${{ inputs.terraform-dir }})" >> "$GITHUB_ENV"
-          echo "PR_NUMBER=${{ github.event.pull_request_review.pull_request.number }}" >> "$GITHUB_ENV"
 
       - name: Push verified commit
         if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
