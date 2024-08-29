@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.2](https://github.com/3ware/workflows/compare/v3.1.1...v3.1.2) (2024-08-29)
+
+
+### Bug Fixes
+
+* **get-terraform-dir:** Resolve error when multiple directories returned ([#102](https://github.com/3ware/workflows/issues/102)) ([b0ed4ae](https://github.com/3ware/workflows/commit/b0ed4ae8b62061bdea3058b2ca1e7a4613405ec9))
+
 ## [3.1.1](https://github.com/3ware/workflows/compare/v3.1.0...v3.1.1) (2024-08-29)
 
 
