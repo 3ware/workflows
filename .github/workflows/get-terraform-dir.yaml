@@ -57,9 +57,8 @@ jobs:
         run: |
           echo '${{ toJSON(steps.get-terraform-sum.outputs)}}'
 
-      - name: Terraform directory summary
-        # TODO step running anyway.
-        if: ${{ steps.get-terraform-sum.outputs.all_changed_files != '[]' }}
+      - name: Terraform directory summary - changes
+        if: ${{ steps.get-terraform-sum.outputs.all_changed_files_count != 0 }}
         run: |
           echo "# :white_check_mark: Terraform file changes detected" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -67,9 +66,9 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           printf '%s\n' ${{ steps.get-terraform-sum.outputs.all_changed_files }} >> $GITHUB_STEP_SUMMARY
 
-      - name: Terraform directory summary
-        if: ${{ steps.get-terraform-sum.outputs.all_changed_files == '[]' }}
+      - name: Terraform directory summary - no changes
+        if: ${{ steps.get-terraform-sum.outputs.all_changed_files_count == 0 }}
         run: |
           echo "# :negative_squared_cross_mark: Terraform file changes not detected" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Terraform has not been changed." >> $GITHUB_STEP_SUMMARY
+          echo "Terraform has not been changed on this run" >> $GITHUB_STEP_SUMMARY
