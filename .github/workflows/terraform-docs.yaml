@@ -22,13 +22,14 @@ jobs:
     env:
       WORKING_DIR: ${{ inputs.terraform-dir }}
       TF_DOCS_FILE: README.md
-      BRANCH: ${{ github.event.pull_request.head.ref }}
+      BRANCH: ${{ github.head_ref || github.ref_name }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          # Use default ref
+          # ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: true # terraform-docs unable to authenticate if false
 
       - name: Render terraform docs
@@ -72,8 +73,7 @@ jobs:
         run: |
           echo "# :white_check_mark: Terraform docs updated $FILE_PATH" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "$TF_DOCS_FILE updated for $COMMIT_SCOPE module on $BRANCH" via pull request: >> $GITHUB_STEP_SUMMARY
-          echo "[#${{ github.event.pull_request.number }}](${{ github.event.pull_request.html_url }})" >> $GITHUB_STEP_SUMMARY
+          echo "$TF_DOCS_FILE updated for $COMMIT_SCOPE module on $BRANCH" >> $GITHUB_STEP_SUMMARY
 
       - name: Summary without document changes
         if: ${{ steps.terraform-docs.outputs.num_changed == 0 }}
