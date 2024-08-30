@@ -19,7 +19,7 @@ The repository contains [GitHub Action](https://docs.github.com/en/actions) [reu
       - [Use the token for authentication](#use-the-token-for-authentication)
     - [lint](#lint)
     - [pr-title](#pr-title)
-    - [semantic-release](#semantic-release)
+    - [release](#release)
     - [terraform-docs](#terraform-docs)
 
 ## Workflows
@@ -108,20 +108,20 @@ calling-workflow:
     GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
 ```
 
-Thanks to this [this blog post](https://nitratine.net/blog/post/how-to-pass-secrets-between-runners-in-github-actions/) and [stack overflow answer](https://stackoverflow.com/a/75387551/18073694) for the wise words. See [get-workflow-token](https://github.com/3ware/workflows/blob/main/.github/workflows/get-workflow-token.yaml) and [semantic-release](https://github.com/3ware/workflows/blob/main/.github/workflows/semantic-release.yaml) for complete workflows.
+Thanks to this [this blog post](https://nitratine.net/blog/post/how-to-pass-secrets-between-runners-in-github-actions/) and [stack overflow answer](https://stackoverflow.com/a/75387551/18073694) for the wise words. See [get-workflow-token](https://github.com/3ware/workflows/blob/main/.github/workflows/get-workflow-token.yaml) and [release](https://github.com/3ware/workflows/blob/main/.github/workflows/semantic-release.yaml) for complete workflows.
 
 ### lint
 
-Linting is performed using [trunk.io](https://github.com/trunk-io/trunk-action). This action makes use of the [get-terraform-dir](#get-terraform-dir) workflow, to find the terraform working directory and initialise terraform, if any terraform files have been updated, so validation and linting using [tflint](https://github.com/terraform-linters/tflint) can be performed.
+Linting is performed using [trunk.io](https://github.com/trunk-io/trunk-action). This action makes use of the [get-terraform-dir](#get-terraform-dir) workflow to find the terraform working directory and initialise terraform, if any terraform files have been updated, so validation and linting, using [tflint](https://github.com/terraform-linters/tflint), can be performed.
 
 ### pr-title
 
-This workflow ensures that Pull Request titles follow the [conventional syntax](https://www.conventionalcommits.org/en/v1.0.0-beta.2/) using the [semantic-pull-request](https://github.com/marketplace/actions/semantic-pull-request) action. When the Pull Request is Squashed & Merged into main, the Pull Request title is used as the commit message, which is analysed by [semantic-release](#semantic-release)
+This workflow ensures that Pull Request titles follow the [conventional syntax](https://www.conventionalcommits.org/en/v1.0.0-beta.2/) using the [semantic-pull-request](https://github.com/marketplace/actions/semantic-pull-request) action. When the Pull Request is Squashed & Merged into main, the Pull Request title is used as the commit message, which is analysed by the [release](#release) workflow.
 
-### semantic-release
+### release
 
 [Semantic Release](https://github.com/marketplace/actions/action-for-semantic-release) generates tags and releases by mapping conventional commit messages to major, minor and patch version numbers. This action requires an authentication token to push the changes it generates to protected branches. It makes use of the [get-workflow-token](#get-workflow-token) for this, instead of using a PAT.
 
 ### terraform-docs
 
-[Terraform docs](https://github.com/marketplace/actions/terraform-docs-gh-actions) generates terraform module documentation and commits the updated _README_ to the repository. This workflow uses [get-workflow-token](#get-workflow-token) for authentication and the `gh cli` for commits, as opposed to the native functionality because commits can be signed using the former. See [this gist](https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c).
+[Terraform docs](https://github.com/marketplace/actions/terraform-docs-gh-actions) generates terraform module documentation and commits the updated _README_ to the repository. This workflow uses [get-workflow-token](#get-workflow-token) for authentication and [ghcommit-action](https://github.com/planetscale/ghcommit-action) to push the updated README with a verified commit.

@@ -7,9 +7,8 @@ on:
         description: The temporary installation access token
         value: ${{ jobs.get-temp-token.outputs.token }}
 
-# Declare default permissions as read only.
-permissions:
-  contents: read
+# Disable permissions for all available scopes
+permissions: {}
 
 jobs:
   get-temp-token:

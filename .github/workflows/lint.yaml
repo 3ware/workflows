@@ -8,9 +8,6 @@ on:
       terraform-dir:
         type: string
         required: false
-    secrets:
-      TFC_API_TOKEN:
-        required: false
 
 # Disable permissions for all available scopes
 permissions: {}
@@ -36,29 +33,25 @@ jobs:
         if: ${{ inputs.terraform-dir != '' }}
         uses: stv-io/action-tfswitch@b6c5e07f48a6de1934acf5e9c67bd3b21423e9e1 # v1.0.0
 
-      - name: Get Terraform Version
+      - name: Get tf version
         if: ${{ inputs.terraform-dir != '' }}
+        id: tf-version
         run: |
           tfswitch --chdir=${{ inputs.terraform-dir }}
           echo "TERRAFORM_VERSION=$(terraform --version -json | jq -r .terraform_version)" >> "$GITHUB_ENV"
 
-      - name: Setup Terraform
+      - name: Setup Tofu
         if: ${{ inputs.terraform-dir != '' }}
         uses: opentofu/setup-opentofu@ae80d4ecaab946d8f5ff18397fbf6d0686c6d46a # v1.0.3
         with:
-          # Using workflow syntax, eg: $TERRAFORM_VERSION does not work
-          # env context must be used
-          # linting error stating: "context might be invalid" will hopefully be fixed soon
-          # https://github.com/github/vscode-github-actions/issues/47
           tofu_version: ${{ env.TERRAFORM_VERSION }}
-          cli_config_credentials_token: ${{ secrets.TFC_API_TOKEN }}
 
       # Initialise terraform in the directory where terraform file have changed.
-      - name: Initialise Terraform
+      - name: Initialise Tofu
         if: ${{ inputs.terraform-dir != ''}}
         working-directory: ${{ inputs.terraform-dir }}
-        run: tofu init
+        run: tofu init --backend=false
 
       - name: Lint with trunk
         if: ${{ always() }} # Run anyway, even if no terraform
-        uses: trunk-io/trunk-action@34242ec4eb8cf594887600f1f9b889e7c630ec18 # v1.19.0
+        uses: trunk-io/trunk-action@da67635060feab46c164bc130690e61864a5d13b # v1.1.13

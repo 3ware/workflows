@@ -6,9 +6,8 @@ on:
   push:
     branches: [main]
 
-# Declare default permissions as read only.
-permissions:
-  contents: read
+# Disable permissions for all available scopes
+permissions: {}
 
 jobs:
   get-temp-token:
@@ -23,11 +22,6 @@ jobs:
       cancel-in-progress: true
     needs: [get-temp-token]
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
-        with:
-          persist-credentials: false
-
       - name: Decrypt the installation access token
         id: decrypt-token
         run: |
@@ -38,6 +32,12 @@ jobs:
           echo "temp-token=$DECRYPTED_TOKEN" >> $GITHUB_OUTPUT
         env:
           KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
+
+      - name: Checkout repository
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+        with:
+          token: ${{ steps.decrypt-token.outputs.temp-token }}
+          persist-credentials: false
 
       - name: Create GitHub release and update CHANGELOG
         id: release
@@ -51,7 +51,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
 
-      - name: Summary
+      - name: Summary with release
         if: ${{ steps.release.outputs.new_release_published == 'true' }}
         run: |
           echo "# :white_check_mark: New release published" >> $GITHUB_STEP_SUMMARY
@@ -62,7 +62,7 @@ jobs:
           echo ""
           echo "${{ steps.release.outputs.new_release_notes }}" >>$GITHUB_STEP_SUMMARY
 
-      - name: Summary
+      - name: Summary without release
         if: ${{ steps.release.outputs.new_release_published == 'false' }}
         run: |
           echo "# :negative_squared_cross_mark: No release published" >> $GITHUB_STEP_SUMMARY

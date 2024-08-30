@@ -2,6 +2,59 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.3](https://github.com/3ware/workflows/compare/v3.1.2...v3.1.3) (2024-08-30)
+
+
+### Bug Fixes
+
+* **get-terraform-dir:** Resolve incorrect job summary step being run ([#103](https://github.com/3ware/workflows/issues/103)) ([f261ac4](https://github.com/3ware/workflows/commit/f261ac42450b5bf0cec7cef45acb8efd38a3e6db))
+
+## [3.1.2](https://github.com/3ware/workflows/compare/v3.1.1...v3.1.2) (2024-08-29)
+
+
+### Bug Fixes
+
+* **get-terraform-dir:** Resolve error when multiple directories returned ([#102](https://github.com/3ware/workflows/issues/102)) ([b0ed4ae](https://github.com/3ware/workflows/commit/b0ed4ae8b62061bdea3058b2ca1e7a4613405ec9))
+
+## [3.1.1](https://github.com/3ware/workflows/compare/v3.1.0...v3.1.1) (2024-08-29)
+
+
+### Bug Fixes
+
+* **lint:** Write the terraform version to an environment variable ([#100](https://github.com/3ware/workflows/issues/100)) ([206c279](https://github.com/3ware/workflows/commit/206c279ba8190b1d2c277bab58903cf326b40f04))
+
+## [3.1.0](https://github.com/3ware/workflows/compare/v3.0.1...v3.1.0) (2024-08-28)
+
+
+### Features
+
+* **get-workflow-token:** Add condition to check the GitHub repository owner ([#99](https://github.com/3ware/workflows/issues/99)) ([7450cd6](https://github.com/3ware/workflows/commit/7450cd68c5857aa281b43fbc950d0a28b26e3c98))
+
+## [3.0.1](https://github.com/3ware/workflows/compare/v3.0.0...v3.0.1) (2024-08-28)
+
+
+### Bug Fixes
+
+* **release:** Checkout step authentication ([#97](https://github.com/3ware/workflows/issues/97)) ([dfe4a62](https://github.com/3ware/workflows/commit/dfe4a62274f759e167efb1e055a6aa338e94e9ff))
+
+## [3.0.0](https://github.com/3ware/workflows/compare/v2.6.0...v3.0.0) (2024-08-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* **release:** Remove `contents: read` permissions (#95)
+
+### Features
+
+* **release:** Remove `contents: read` permissions ([#95](https://github.com/3ware/workflows/issues/95)) ([10aa9ec](https://github.com/3ware/workflows/commit/10aa9ec56dd2ba84d1871c4bc5732953d3cbcce0))
+
+## [2.6.0](https://github.com/3ware/workflows/compare/v2.5.0...v2.6.0) (2024-08-23)
+
+
+### Enhancement
+
+* **lint:** Terraform / Tofu  changes ([#93](https://github.com/3ware/workflows/issues/93)) ([bfff713](https://github.com/3ware/workflows/commit/bfff7133bd44623dd376b00a819d6c624248ec02))
+
 ## [2.5.0](https://github.com/3ware/workflows/compare/v2.4.0...v2.5.0) (2024-04-08)
 
 
