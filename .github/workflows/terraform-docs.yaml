@@ -51,7 +51,7 @@ jobs:
         with:
           commit_message: "docs(${{ env.COMMIT_SCOPE }}): Update ${{ env.TF_DOCS_FILE }} [skip ci]"
           repo: ${{ github.repository }}
-          branch: ${{ github.head_ref || github.ref_name }}
+          branch: ${{ github.event.pull_request.head.ref }}
           file_pattern: ${{ env.FILE_TO_COMMIT }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
