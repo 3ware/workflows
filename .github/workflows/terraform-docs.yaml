@@ -1,4 +1,4 @@
-name: Generate terraform docs
+name: Terraform docs
 on:
   workflow_call:
     inputs:
@@ -22,12 +22,14 @@ jobs:
     env:
       WORKING_DIR: ${{ inputs.terraform-dir }}
       TF_DOCS_FILE: README.md
+      BRANCH: ${{ github.head_ref || github.ref_name }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          # Use default ref
+          # ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: true # terraform-docs unable to authenticate if false
 
       - name: Render terraform docs
@@ -41,10 +43,8 @@ jobs:
       - name: Set environment variables
         if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
         run: |
-          echo "Number of files changed = ${{ steps.terraform-docs.outputs.num_changed }}"
           echo "FILE_TO_COMMIT=${{ env.WORKING_DIR }}/${{ env.TF_DOCS_FILE }}" >> "$GITHUB_ENV"
           echo "COMMIT_SCOPE=$(awk -F"/" '{print $NF}' <<< ${{ inputs.terraform-dir }})" >> "$GITHUB_ENV"
-          echo "PR_NUMBER=${{ github.event.pull_request_review.pull_request.number }}" >> "$GITHUB_ENV"
 
       - name: Push verified commit
         if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
@@ -53,24 +53,31 @@ jobs:
         with:
           commit_message: "docs(${{ env.COMMIT_SCOPE }}): Update ${{ env.TF_DOCS_FILE }} [skip ci]"
           repo: ${{ github.repository }}
-          branch: ${{ github.head_ref || github.ref_name }}
+          branch: ${{ env.BRANCH }}
           file_pattern: ${{ env.FILE_TO_COMMIT }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Summary if successful
+      - name: Summary with commit failure
+        if: ${{ failure() && steps.push-with-sig.outcome == 'failure' }}
+        run: |
+          echo "# :bangbang: ${{ env.TF_DOCS_FILE }} not updated for the $COMMIT_SCOPE module" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Commit failure" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Terraform documentation has not been updated" >> $GITHUB_STEP_SUMMARY
+          echo "Please review the logs" >> $GITHUB_STEP_SUMMARY
+
+      - name: Summary with document changes
         if: ${{ steps.push-with-sig.conclusion == 'success' }}
-        env:
-          BRANCH: ${{ github.head_ref  }}
         run: |
           echo "# :white_check_mark: Terraform docs updated $FILE_PATH" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "$TF_DOCS_FILE updated for $COMMIT_SCOPE module on $BRANCH" via pull request: >> $GITHUB_STEP_SUMMARY
-          echo "[#${{ github.event.pull_request.number }}](${{ github.event.pull_request.html_url }})" >> $GITHUB_STEP_SUMMARY
+          echo "$TF_DOCS_FILE updated for $COMMIT_SCOPE module on $BRANCH" >> $GITHUB_STEP_SUMMARY
 
-      - name: Summary if skipped
-        if: ${{ steps.push-with-sig.conclusion == 'skipped' }}
+      - name: Summary without document changes
+        if: ${{ steps.terraform-docs.outputs.num_changed == 0 }}
         run: |
           echo "# :negative_squared_cross_mark: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Changes were not required on this workflow run" >> $GITHUB_STEP_SUMMARY
+          echo "Terraform changes were not detected on this workflow run for the $COMMIT_SCOPE module" >> $GITHUB_STEP_SUMMARY
