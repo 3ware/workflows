@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.3](https://github.com/3ware/workflows/compare/v3.1.2...v3.1.3) (2024-08-30)
+
+
+### Bug Fixes
+
+* **get-terraform-dir:** Resolve incorrect job summary step being run ([#103](https://github.com/3ware/workflows/issues/103)) ([f261ac4](https://github.com/3ware/workflows/commit/f261ac42450b5bf0cec7cef45acb8efd38a3e6db))
+
 ## [3.1.2](https://github.com/3ware/workflows/compare/v3.1.1...v3.1.2) (2024-08-29)
 
 
