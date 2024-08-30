@@ -53,7 +53,12 @@ jobs:
             **/*.hcl
           dir_names: true
 
+      - name: Outputs
+        run: |
+          echo '${{ toJSON(steps.get-terraform-sum.outputs)}}'
+
       - name: Terraform directory summary
+        # TODO step running anyway.
         if: ${{ steps.get-terraform-sum.outputs.all_changed_files != '[]' }}
         run: |
           echo "# :white_check_mark: Terraform file changes detected" >> $GITHUB_STEP_SUMMARY
