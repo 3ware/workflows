@@ -27,8 +27,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
         with:
-          # Use default ref
-          # ref: ${{ github.event.pull_request.head.sha }}
+          # TODO: This could be an input so the workflow can be called by different event types
+          #* This will work for our for our workflow now
+          ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: true # terraform-docs unable to authenticate if false
 
       - name: Render terraform docs
