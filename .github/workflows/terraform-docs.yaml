@@ -29,7 +29,7 @@ jobs:
         with:
           # TODO: This could be an input so the workflow can be called by different event types
           #* This will work for our for our workflow now
-          ref: ${{ github.event.pull_request.head.sha }}
+          #ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: true # terraform-docs unable to authenticate if false
 
       - name: Render terraform docs
