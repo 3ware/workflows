@@ -4,7 +4,7 @@ on:
     inputs:
       terraform-dir:
         type: string
-        required: true
+        required: false
 
 # Disable permissions for all available scopes
 permissions: {}
@@ -36,7 +36,8 @@ jobs:
         id: terraform-docs
         uses: terraform-docs/gh-actions@7a62208a0090636af2df1b739da46d27fd90bdc6 # v1.1.0
         with:
-          working-dir: ${{ inputs.terraform-dir }}
+          find-dir: terraform
+          #working-dir: ${{ inputs.terraform-dir }}
           output-file: ${{ env.TF_DOCS_FILE }}
           output-method: inject
 
