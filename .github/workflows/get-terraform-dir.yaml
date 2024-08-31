@@ -6,14 +6,15 @@ on:
         description: The terraform directory to initialise
         value: ${{ jobs.terraform-directory.outputs.terraform-matrix }}
 
-# Declare default permissions as read only.
-permissions:
-  contents: read
+# Disable permissions for all available scopes
+permissions: {}
 
 # TODO: Define single list of files to use in both steps
 # See: https://github.com/3ware/workflows/issues/101
 jobs:
   terraform-directory:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:

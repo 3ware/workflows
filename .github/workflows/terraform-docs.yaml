@@ -6,9 +6,8 @@ on:
         type: string
         required: true
 
-# Declare default permissions as read only.
-permissions:
-  contents: read
+# Disable permissions for all available scopes
+permissions: {}
 
 jobs:
   terraform-docs:

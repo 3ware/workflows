@@ -10,8 +10,8 @@ on:
     types: [opened, synchronize]
     branches: [main]
 
-permissions:
-  contents: read
+# Disable permissions for all available scopes
+permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
@@ -19,6 +19,8 @@ concurrency:
 
 jobs:
   dependency-review:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository

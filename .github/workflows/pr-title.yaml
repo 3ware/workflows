@@ -27,7 +27,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Add PR comment on failure
-        if: always() && (steps.validate-pr-title.outputs.error_message != null)
+        if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
           header: pr-title-error
@@ -41,20 +41,20 @@ jobs:
             ```
 
       - name: Delete PR comment on resolution
-        if: always() && (steps.validate-pr-title.outputs.error_message == null)
+        if: ${{ always() && steps.validate-pr-title.outputs.error_message == null }}
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
           header: pr-title-error
           delete: true
 
       - name: Summary with valid title
-        if: always() && (steps.validate-pr-title.outputs.error_message == null)
+        if: ${{ always() && steps.validate-pr-title.outputs.error_message == null }}
         run: |
           echo "# :white_check_mark: Pull Request title is valid" >> $GITHUB_STEP_SUMMARY
           echo "The pull request title conforms to the conventional commit specification."
 
       - name: Summary without invalid title
-        if: always() && (steps.validate-pr-title.outputs.error_message != null)
+        if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
         run: |
           echo "# :bangbang: Pull Request title is invalid" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
