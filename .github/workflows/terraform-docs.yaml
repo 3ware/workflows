@@ -1,10 +1,6 @@
 name: Terraform docs
 on:
-  workflow_call:
-    inputs:
-      terraform-dir:
-        type: string
-        required: false
+  workflow_call: {}
 
 # Disable permissions for all available scopes
 permissions: {}
@@ -15,11 +11,10 @@ jobs:
     permissions:
       contents: write
     timeout-minutes: 5
-    concurrency:
-      group: ${{ github.workflow }}-${{ inputs.terraform-dir }}
-      cancel-in-progress: true
+    # concurrency:
+    #   group: ${{ github.workflow }}-${{ inputs.terraform-dir }}
+    #   cancel-in-progress: true
     env:
-      WORKING_DIR: ${{ inputs.terraform-dir }}
       TF_DOCS_FILE: README.md
       BRANCH: ${{ github.head_ref || github.ref_name }}
 
@@ -27,9 +22,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
         with:
-          # TODO: This could be an input so the workflow can be called by different event types
-          #* This will work for our for our workflow now
-          #ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.ref }}
           persist-credentials: true # terraform-docs unable to authenticate if false
 
       - name: Render terraform docs
@@ -37,28 +30,28 @@ jobs:
         uses: terraform-docs/gh-actions@7a62208a0090636af2df1b739da46d27fd90bdc6 # v1.1.0
         with:
           find-dir: terraform
-          #working-dir: ${{ inputs.terraform-dir }}
           output-file: ${{ env.TF_DOCS_FILE }}
           output-method: inject
 
-      - name: Set environment variables
-        if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
-        run: |
-          echo "FILE_TO_COMMIT=${{ env.WORKING_DIR }}/${{ env.TF_DOCS_FILE }}" >> "$GITHUB_ENV"
-          echo "COMMIT_SCOPE=$(awk -F"/" '{print $NF}' <<< ${{ inputs.terraform-dir }})" >> "$GITHUB_ENV"
+      # - name: Set environment variables
+      #   if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
+      #   run: |
+      #     echo "FILE_TO_COMMIT=${{ env.WORKING_DIR }}/${{ env.TF_DOCS_FILE }}" >> "$GITHUB_ENV"
+      #     echo "COMMIT_SCOPE=$(awk -F"/" '{print $NF}' <<< ${{ inputs.terraform-dir }})" >> "$GITHUB_ENV"
 
       - name: Push verified commit
         if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
         id: push-with-sig
         uses: planetscale/ghcommit-action@v0.1.6
         with:
-          commit_message: "docs(${{ env.COMMIT_SCOPE }}): Update ${{ env.TF_DOCS_FILE }} [skip ci]"
+          commit_message: "docs(terraform): Update ${{ env.TF_DOCS_FILE }} [skip ci]"
           repo: ${{ github.repository }}
           branch: ${{ env.BRANCH }}
-          file_pattern: ${{ env.FILE_TO_COMMIT }}
+          file_pattern: "**/${{ env.TF_DOCS_FILE }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      #TODO: Fix summaries, as environment variables removed for now
       - name: Summary with commit failure
         if: ${{ failure() && steps.push-with-sig.outcome == 'failure' }}
         run: |
