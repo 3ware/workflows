@@ -6,22 +6,36 @@ on:
 permissions: {}
 
 jobs:
+  get-temp-token:
+    uses: ./.github/workflows/get-workflow-token.yaml
+    secrets: inherit
+
   terraform-docs:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     timeout-minutes: 5
-    # concurrency:
-    #   group: ${{ github.workflow }}-${{ inputs.terraform-dir }}
-    #   cancel-in-progress: true
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.head_ref }}
+      cancel-in-progress: true
+    needs: [get-temp-token]
     env:
       TF_DOCS_FILE: README.md
       BRANCH: ${{ github.head_ref || github.ref_name }}
-
     steps:
+      - name: Decrypt the installation access token
+        id: decrypt-token
+        run: |
+          DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$KEY" \
+          --output - <(echo "${{ needs.get-temp-token.outputs.temp-token }}" \
+          | base64 --decode))
+          echo "::add-mask::$DECRYPTED_TOKEN"
+          echo "temp-token=$DECRYPTED_TOKEN" >> $GITHUB_OUTPUT
+        env:
+          KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
+
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
         with:
+          token: ${{ steps.decrypt-token.outputs.temp-token }}
           ref: ${{ github.event.pull_request.head.ref }}
           persist-credentials: true # terraform-docs unable to authenticate if false
 
@@ -29,7 +43,7 @@ jobs:
         id: terraform-docs
         uses: terraform-docs/gh-actions@7a62208a0090636af2df1b739da46d27fd90bdc6 # v1.1.0
         with:
-          find-dir: terraform
+          find-dir: terraform/
           output-file: ${{ env.TF_DOCS_FILE }}
           output-method: inject
 
@@ -49,7 +63,7 @@ jobs:
           branch: ${{ env.BRANCH }}
           file_pattern: "**/${{ env.TF_DOCS_FILE }}"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
 
       #TODO: Fix summaries, as environment variables removed for now
       - name: Summary with commit failure
