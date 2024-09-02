@@ -61,7 +61,7 @@ jobs:
           commit_message: "docs(terraform): Update ${{ env.TF_DOCS_FILE }} [skip ci]"
           repo: ${{ github.repository }}
           branch: ${{ env.BRANCH }}
-          file_pattern: "**/${{ env.TF_DOCS_FILE }}"
+          file_pattern: "terraform/**/${{ env.TF_DOCS_FILE }}"
         env:
           GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
 
