@@ -7,8 +7,7 @@ permissions: {}
 
 jobs:
   get-temp-token:
-    # TODO: Pin to version
-    uses: ./.github/workflows/get-workflow-token.yaml
+    uses: 3ware/workflows/.github/workflows/get-workflow-token.yaml@57a900982a56bebaf91e660a56adb7f021690d15 # v4.0.0
     secrets: inherit
 
   terraform-docs:
@@ -51,12 +50,6 @@ jobs:
           output-file: ${{ env.TF_DOCS_FILE }}
           output-method: inject
 
-      # - name: Set environment variables
-      #   if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
-      #   run: |
-      #     echo "FILE_TO_COMMIT=${{ env.WORKING_DIR }}/${{ env.TF_DOCS_FILE }}" >> "$GITHUB_ENV"
-      #     echo "COMMIT_SCOPE=$(awk -F"/" '{print $NF}' <<< ${{ inputs.terraform-dir }})" >> "$GITHUB_ENV"
-
       - name: Push verified commit
         if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
         id: push-with-sig
@@ -69,7 +62,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
 
-      #TODO: Fix summaries, as environment variables removed for now
       - name: Summary with commit failure
         if: ${{ failure() && steps.push-with-sig.outcome == 'failure' }}
         run: |
