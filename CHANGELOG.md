@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.1.0](https://github.com/3ware/workflows/compare/v4.0.0...v4.1.0) (2024-09-02)
+
+
+### Enhancement
+
+* **terraform-docs:** Use native `find-dir` functionality and 3ware-release token ([#106](https://github.com/3ware/workflows/issues/106)) ([25be5ab](https://github.com/3ware/workflows/commit/25be5abccffcbcd96e60cab728f4444c8d960aee))
+
 ## [4.0.0](https://github.com/3ware/workflows/compare/v3.2.0...v4.0.0) (2024-08-31)
 
 
