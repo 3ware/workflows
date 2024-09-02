@@ -1,8 +1,8 @@
 name: Lint
 on:
-  pull_request:
-    types: [opened, synchronize]
-    branches: [main]
+  # pull_request:
+  #   types: [opened, synchronize]
+  #   branches: [main]
   workflow_call:
     inputs:
       terraform-dir:

@@ -23,6 +23,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
         with:
+          # TODO: This could be an input so the workflow can be called by different event types
+          #* This will work for our for our workflow now
+          # ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: true # changed-files unable to authenticate if false
 
       # Find the directory where terraform files have been changed.
@@ -39,6 +42,10 @@ jobs:
             **/*.hcl
           dir_names: true
           matrix: true
+
+      - name: Outputs
+        run: |
+          echo '${{ toJSON(steps.get-terraform-matrix.outputs)}}'
 
       # Find the directory where terraform files have been changed.
       # Output text for use with the job summary steps

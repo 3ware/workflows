@@ -1,66 +1,71 @@
 name: Terraform docs
 on:
-  workflow_call:
-    inputs:
-      terraform-dir:
-        type: string
-        required: true
+  workflow_call: {}
 
 # Disable permissions for all available scopes
 permissions: {}
 
 jobs:
+  get-temp-token:
+    uses: 3ware/workflows/.github/workflows/get-workflow-token.yaml@57a900982a56bebaf91e660a56adb7f021690d15 # v4.0.0
+    secrets: inherit
+
   terraform-docs:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
     timeout-minutes: 5
     concurrency:
-      group: ${{ github.workflow }}-${{ inputs.terraform-dir }}
+      group: ${{ github.workflow }}-${{ github.head_ref }}
       cancel-in-progress: true
+    needs: [get-temp-token]
     env:
-      WORKING_DIR: ${{ inputs.terraform-dir }}
       TF_DOCS_FILE: README.md
-      BRANCH: ${{ github.head_ref || github.ref_name }}
-
+      # TODO: Define as an input, because calling workflow could use a different event type
+      BRANCH: ${{ github.base_ref }}
     steps:
+      - name: Decrypt the installation access token
+        id: decrypt-token
+        run: |
+          DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$KEY" \
+          --output - <(echo "${{ needs.get-temp-token.outputs.temp-token }}" \
+          | base64 --decode))
+          echo "::add-mask::$DECRYPTED_TOKEN"
+          echo "temp-token=$DECRYPTED_TOKEN" >> $GITHUB_OUTPUT
+        env:
+          KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
+
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
         with:
-          # Use default ref
-          # ref: ${{ github.event.pull_request.head.sha }}
+          token: ${{ steps.decrypt-token.outputs.temp-token }}
+          # ref: ${{ github.event.pull_request.head.ref }}
           persist-credentials: true # terraform-docs unable to authenticate if false
 
       - name: Render terraform docs
         id: terraform-docs
         uses: terraform-docs/gh-actions@7a62208a0090636af2df1b739da46d27fd90bdc6 # v1.1.0
         with:
-          working-dir: ${{ inputs.terraform-dir }}
+          find-dir: terraform/
           output-file: ${{ env.TF_DOCS_FILE }}
           output-method: inject
-
-      - name: Set environment variables
-        if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
-        run: |
-          echo "FILE_TO_COMMIT=${{ env.WORKING_DIR }}/${{ env.TF_DOCS_FILE }}" >> "$GITHUB_ENV"
-          echo "COMMIT_SCOPE=$(awk -F"/" '{print $NF}' <<< ${{ inputs.terraform-dir }})" >> "$GITHUB_ENV"
 
       - name: Push verified commit
         if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
         id: push-with-sig
         uses: planetscale/ghcommit-action@v0.1.6
         with:
-          commit_message: "docs(${{ env.COMMIT_SCOPE }}): Update ${{ env.TF_DOCS_FILE }} [skip ci]"
+          commit_message: "docs(terraform): Update ${{ env.TF_DOCS_FILE }}"
           repo: ${{ github.repository }}
           branch: ${{ env.BRANCH }}
-          file_pattern: ${{ env.FILE_TO_COMMIT }}
+          file_pattern: "terraform/**/${{ env.TF_DOCS_FILE }}"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
 
       - name: Summary with commit failure
         if: ${{ failure() && steps.push-with-sig.outcome == 'failure' }}
         run: |
-          echo "# :bangbang: ${{ env.TF_DOCS_FILE }} not updated for the $COMMIT_SCOPE module" >> $GITHUB_STEP_SUMMARY
+          echo "# :bangbang: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Commit failure" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -70,13 +75,13 @@ jobs:
       - name: Summary with document changes
         if: ${{ steps.push-with-sig.conclusion == 'success' }}
         run: |
-          echo "# :white_check_mark: Terraform docs updated $FILE_PATH" >> $GITHUB_STEP_SUMMARY
+          echo "# :white_check_mark: Terraform docs updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "$TF_DOCS_FILE updated for $COMMIT_SCOPE module on $BRANCH" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.terraform-docs.outputs.num_changed }} $TF_DOCS_FILE files updated on $BRANCH" >> $GITHUB_STEP_SUMMARY
 
       - name: Summary without document changes
         if: ${{ steps.terraform-docs.outputs.num_changed == 0 }}
         run: |
           echo "# :negative_squared_cross_mark: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Terraform changes were not detected on this workflow run for the $COMMIT_SCOPE module" >> $GITHUB_STEP_SUMMARY
+          echo "Terraform changes were not detected on this workflow" >> $GITHUB_STEP_SUMMARY

@@ -1,7 +1,6 @@
 name: Release
 
 on:
-  workflow_dispatch: {}
   workflow_call: {}
   push:
     branches: [main]
@@ -11,7 +10,7 @@ permissions: {}
 
 jobs:
   get-temp-token:
-    uses: ./.github/workflows/get-workflow-token.yaml
+    uses: 3ware/workflows/.github/workflows/get-workflow-token.yaml@57a900982a56bebaf91e660a56adb7f021690d15 # v4.0.0
     secrets: inherit
 
   semantic-release:
