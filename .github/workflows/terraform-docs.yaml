@@ -7,6 +7,7 @@ permissions: {}
 
 jobs:
   get-temp-token:
+    # TODO: Pin to version
     uses: ./.github/workflows/get-workflow-token.yaml
     secrets: inherit
 
@@ -21,7 +22,8 @@ jobs:
     needs: [get-temp-token]
     env:
       TF_DOCS_FILE: README.md
-      BRANCH: ${{ github.head_ref || github.ref_name }}
+      # TODO: Define as an input, because calling workflow could use a different event type
+      BRANCH: ${{ github.base_ref }}
     steps:
       - name: Decrypt the installation access token
         id: decrypt-token
@@ -71,7 +73,7 @@ jobs:
       - name: Summary with commit failure
         if: ${{ failure() && steps.push-with-sig.outcome == 'failure' }}
         run: |
-          echo "# :bangbang: ${{ env.TF_DOCS_FILE }} not updated for the $COMMIT_SCOPE module" >> $GITHUB_STEP_SUMMARY
+          echo "# :bangbang: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Commit failure" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -81,13 +83,13 @@ jobs:
       - name: Summary with document changes
         if: ${{ steps.push-with-sig.conclusion == 'success' }}
         run: |
-          echo "# :white_check_mark: Terraform docs updated $FILE_PATH" >> $GITHUB_STEP_SUMMARY
+          echo "# :white_check_mark: Terraform docs updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "$TF_DOCS_FILE updated for $COMMIT_SCOPE module on $BRANCH" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.terraform-docs.outputs.num_changed }} $TF_DOCS_FILE files updated on $BRANCH" >> $GITHUB_STEP_SUMMARY
 
       - name: Summary without document changes
         if: ${{ steps.terraform-docs.outputs.num_changed == 0 }}
         run: |
           echo "# :negative_squared_cross_mark: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Terraform changes were not detected on this workflow run for the $COMMIT_SCOPE module" >> $GITHUB_STEP_SUMMARY
+          echo "Terraform changes were not detected on this workflow" >> $GITHUB_STEP_SUMMARY
