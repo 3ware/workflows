@@ -53,7 +53,7 @@ jobs:
       - name: Push verified commit
         if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
         id: push-with-sig
-        uses: planetscale/ghcommit-action@v0.1.6
+        uses: planetscale/ghcommit-action@c7915d6c18d5ce4eb42b0eff3f10a29fe0766e4c # v0.1.44
         with:
           commit_message: "docs(terraform): Update ${{ env.TF_DOCS_FILE }}"
           repo: ${{ github.repository }}

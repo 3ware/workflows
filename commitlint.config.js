@@ -18,6 +18,7 @@ module.exports = {
         "get-workflow-token",
         "lint",
         "pr-title",
+        "security",
         "scorecard",
         "release",
         "terraform-docs",
