@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.2.0](https://github.com/3ware/workflows/compare/v4.1.0...v4.2.0) (2024-09-03)
+
+
+### Features
+
+* **scorecard:** Add new action ([#108](https://github.com/3ware/workflows/issues/108)) ([7d80bb6](https://github.com/3ware/workflows/commit/7d80bb6ddb08e21795223c8b78f67d764c02d443))
+
 ## [4.1.0](https://github.com/3ware/workflows/compare/v4.0.0...v4.1.0) (2024-09-02)
 
 
