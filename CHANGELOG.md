@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.2.2](https://github.com/3ware/workflows/compare/v4.2.1...v4.2.2) (2024-09-04)
+
+
+### Bug Fixes
+
+* **terraform-docs:** Remove `contents: read` permissions ([#110](https://github.com/3ware/workflows/issues/110)) ([032f9c0](https://github.com/3ware/workflows/commit/032f9c01fb716c1a82cb153440731d2fc2f60ecd))
+
 ## [4.2.1](https://github.com/3ware/workflows/compare/v4.2.0...v4.2.1) (2024-09-03)
 
 
