@@ -12,8 +12,6 @@ jobs:
 
   terraform-docs:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     timeout-minutes: 5
     concurrency:
       group: ${{ github.workflow }}-${{ github.head_ref }}
@@ -39,7 +37,6 @@ jobs:
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
         with:
           token: ${{ steps.decrypt-token.outputs.temp-token }}
-          # ref: ${{ github.event.pull_request.head.ref }}
           persist-credentials: true # terraform-docs unable to authenticate if false
 
       - name: Render terraform docs
