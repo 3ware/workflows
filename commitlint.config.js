@@ -13,7 +13,7 @@ module.exports = {
       [
         "commitlint",
         "delete-workflow-run",
-        "depend-review",
+        "dep-review",
         "get-terraform-dir",
         "get-workflow-token",
         "lint",
