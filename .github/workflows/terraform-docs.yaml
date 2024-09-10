@@ -1,6 +1,11 @@
 name: Terraform docs
 on:
-  workflow_call: {}
+  workflow_call:
+    inputs:
+      tf-directory:
+        description: Terraform / OpenTofu working directory
+        required: true
+        type: string
 
 # Disable permissions for all available scopes
 permissions: {}
@@ -43,7 +48,7 @@ jobs:
         id: terraform-docs
         uses: terraform-docs/gh-actions@7a62208a0090636af2df1b739da46d27fd90bdc6 # v1.1.0
         with:
-          find-dir: terraform/
+          find-dir: ${{ inputs.tf-directory }}
           output-file: ${{ env.TF_DOCS_FILE }}
           output-method: inject
 
