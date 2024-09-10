@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.3.0](https://github.com/3ware/workflows/compare/v4.2.2...v4.3.0) (2024-09-10)
+
+
+### Features
+
+* **terraform-docs:** Add input for `find-dir` ([#111](https://github.com/3ware/workflows/issues/111)) ([d52446c](https://github.com/3ware/workflows/commit/d52446c40171a595d8c48d8947cd85b5fe5e31ed))
+
 ## [4.2.2](https://github.com/3ware/workflows/compare/v4.2.1...v4.2.2) (2024-09-04)
 
 
