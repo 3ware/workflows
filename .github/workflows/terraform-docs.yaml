@@ -67,9 +67,9 @@ jobs:
       - name: Summary with commit failure
         if: ${{ failure() && steps.push-with-sig.outcome == 'failure' }}
         run: |
-          echo "### :bangbang: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
+          echo "#### :bangbang: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "#### Commit failure" >> $GITHUB_STEP_SUMMARY
+          echo "##### Commit failure" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Terraform documentation has not been updated" >> $GITHUB_STEP_SUMMARY
           echo "Please review the logs" >> $GITHUB_STEP_SUMMARY
@@ -77,13 +77,13 @@ jobs:
       - name: Summary with document changes
         if: ${{ steps.push-with-sig.conclusion == 'success' }}
         run: |
-          echo "### :white_check_mark: Terraform docs updated" >> $GITHUB_STEP_SUMMARY
+          echo "#### :white_check_mark: Terraform docs updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.terraform-docs.outputs.num_changed }} $TF_DOCS_FILE files updated on $BRANCH" >> $GITHUB_STEP_SUMMARY
 
       - name: Summary without document changes
         if: ${{ steps.terraform-docs.outputs.num_changed == 0 }}
         run: |
-          echo "### :negative_squared_cross_mark: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
+          echo "#### :negative_squared_cross_mark: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Terraform changes were not detected on this workflow" >> $GITHUB_STEP_SUMMARY
