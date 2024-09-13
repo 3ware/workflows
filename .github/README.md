@@ -1,6 +1,6 @@
 # 3ware reusable workflows
 
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/3ware/workflows/badge)](https://api.securityscorecards.dev/projects/github.com/3ware/workflows) [![semantic-release: conventionalcommits](https://img.shields.io/badge/semantic--release-conventionalcommits-blue?logo=semantic-release)](https://github.com/semantic-release/semantic-release) [![GitHub release](https://img.shields.io/github/release/3ware/workflows?include_prereleases=&sort=semver&color=yellow)](https://github.com/3ware/workflows/releases/) [![issues - workflows](https://img.shields.io/github/issues/3ware/workflows)](https://github.com/3ware/workflows/issues) [![CI](https://img.shields.io/github/actions/workflow/status/3ware/workflows/lint.yaml?label=CI&logo=githubactions&logoColor=white)](https://github.com/3ware/workflows/actions/workflows/lint.yaml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/3ware/workflows/badge)](https://api.securityscorecards.dev/projects/github.com/3ware/workflows) [![semantic-release: conventionalcommits](https://img.shields.io/badge/semantic--release-conventionalcommits-blue?logo=semantic-release)](https://github.com/semantic-release/semantic-release) [![GitHub release](https://img.shields.io/github/release/3ware/workflows?include_prereleases=&sort=semver&color=yellow)](https://github.com/3ware/workflows/releases/) [![issues - workflows](https://img.shields.io/github/issues/3ware/workflows)](https://github.com/3ware/workflows/issues) [![CI](https://img.shields.io/github/actions/workflow/status/3ware/workflows/lint.yaml?label=CI&logo=githubactions&logoColor=white)](https://github.com/3ware/workflows/actions/workflows/wait-for-checks.yaml)
 
 The repository contains [GitHub Action](https://docs.github.com/en/actions) [reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) that can be consumed by other repositories.
 
@@ -9,6 +9,7 @@ The repository contains [GitHub Action](https://docs.github.com/en/actions) [reu
 - [3ware reusable workflows](#3ware-reusable-workflows)
   - [Table of contents](#table-of-contents)
   - [Workflows](#workflows)
+    - [dependency-review](#dependency-review)
     - [get-terraform-dir](#get-terraform-dir)
     - [get-workflow-token](#get-workflow-token)
       - [Encrypt the token output](#encrypt-the-token-output)
@@ -17,12 +18,17 @@ The repository contains [GitHub Action](https://docs.github.com/en/actions) [reu
       - [Use encrypted token output in calling workflow](#use-encrypted-token-output-in-calling-workflow)
       - [Decrypt the token](#decrypt-the-token)
       - [Use the token for authentication](#use-the-token-for-authentication)
-    - [lint](#lint)
     - [pr-title](#pr-title)
     - [release](#release)
+    - [scorecard](#scorecard)
     - [terraform-docs](#terraform-docs)
+    - [wait-for-checks](#wait-for-checks)
 
 ## Workflows
+
+### dependency review
+
+GitHub provides a [dependency review action](https://github.com/actions/dependency-review-action) to scan pull requests for vulnerabilities.
 
 ### get-terraform-dir
 
@@ -110,10 +116,6 @@ calling-workflow:
 
 Thanks to this [this blog post](https://nitratine.net/blog/post/how-to-pass-secrets-between-runners-in-github-actions/) and [stack overflow answer](https://stackoverflow.com/a/75387551/18073694) for the wise words. See [get-workflow-token](https://github.com/3ware/workflows/blob/main/.github/workflows/get-workflow-token.yaml) and [release](https://github.com/3ware/workflows/blob/main/.github/workflows/semantic-release.yaml) for complete workflows.
 
-### lint
-
-Linting is performed using [trunk.io](https://github.com/trunk-io/trunk-action). This action makes use of the [get-terraform-dir](#get-terraform-dir) workflow to find the terraform working directory and initialise terraform, if any terraform files have been updated, so validation and linting, using [tflint](https://github.com/terraform-linters/tflint), can be performed.
-
 ### pr-title
 
 This workflow ensures that Pull Request titles follow the [conventional syntax](https://www.conventionalcommits.org/en/v1.0.0-beta.2/) using the [semantic-pull-request](https://github.com/marketplace/actions/semantic-pull-request) action. When the Pull Request is Squashed & Merged into main, the Pull Request title is used as the commit message, which is analysed by the [release](#release) workflow.
@@ -122,6 +124,14 @@ This workflow ensures that Pull Request titles follow the [conventional syntax](
 
 [Semantic Release](https://github.com/marketplace/actions/action-for-semantic-release) generates tags and releases by mapping conventional commit messages to major, minor and patch version numbers. This action requires an authentication token to push the changes it generates to protected branches. It makes use of the [get-workflow-token](#get-workflow-token) for this, instead of using a PAT.
 
+### scorecard
+
+GitHub recommends using the [OSSF Scorecard action](https://github.com/marketplace/actions/ossf-scorecard-action) action in their [Security Hardening Guide](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions#using-openssf-scorecards-to-secure-workflows) for GitHub Actions.
+
 ### terraform-docs
 
 [Terraform docs](https://github.com/marketplace/actions/terraform-docs-gh-actions) generates terraform module documentation and commits the updated _README_ to the repository. This workflow uses [get-workflow-token](#get-workflow-token) for authentication and [ghcommit-action](https://github.com/planetscale/ghcommit-action) to push the updated README with a verified commit.
+
+### wait-for-checks
+
+Since switching to [trunk-io's](https://docs.trunk.io/code-quality/setup-and-installation/github-integration) GitHub App for linting, the CI badge in this document was referencing a non-existent workflow. The [wait-for-checks](https://github.com/poseidon/wait-for-status-checks) workflow polls the checks api for the status of all the checks that run on a pull request and can be used as the sole required status check for a repository - and provide a reliable source for the CI badge.
