@@ -53,17 +53,17 @@ jobs:
       - name: Summary with release
         if: ${{ steps.release.outputs.new_release_published == 'true' }}
         run: |
-          echo "#### :white_check_mark: New release published" >> $GITHUB_STEP_SUMMARY
+          echo "### :white_check_mark: New release published" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Release bumped from v${{ steps.release.outputs.last_release_version }} to v${{ steps.release.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "##### CHANGELOG" >> $GITHUB_STEP_SUMMARY
-          echo ""
+          echo "#### CHANGELOG" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.release.outputs.new_release_notes }}" >>$GITHUB_STEP_SUMMARY
 
       - name: Summary without release
         if: ${{ steps.release.outputs.new_release_published == 'false' }}
         run: |
-          echo "#### :negative_squared_cross_mark: No release published" >> $GITHUB_STEP_SUMMARY
+          echo "### :negative_squared_cross_mark: No release published" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "There are no relevant changes, so no new version is released" >> $GITHUB_STEP_SUMMARY
