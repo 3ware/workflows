@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.4.1](https://github.com/3ware/workflows/compare/v4.4.0...v4.4.1) (2024-09-13)
+
+
+### Bug Fixes
+
+* **checks:** Pin action version to SHA ([#114](https://github.com/3ware/workflows/issues/114)) ([3365244](https://github.com/3ware/workflows/commit/3365244795907aebcaa695f1f1c1132b5c146045))
+
 ## [4.4.0](https://github.com/3ware/workflows/compare/v4.3.0...v4.4.0) (2024-09-13)
 
 
