@@ -11,6 +11,7 @@ module.exports = {
       1,
       "always",
       [
+        "checks",
         "commitlint",
         "delete-workflow-run",
         "dep-review",
