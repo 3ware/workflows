@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.4.0](https://github.com/3ware/workflows/compare/v4.3.0...v4.4.0) (2024-09-13)
+
+
+### Features
+
+* **checks:** Add wait-for-checks workflow ([#113](https://github.com/3ware/workflows/issues/113)) ([e4714c3](https://github.com/3ware/workflows/commit/e4714c39ebf3ee43146b8b2ef19484dfd30cbc98))
+
 ## [4.3.0](https://github.com/3ware/workflows/compare/v4.2.2...v4.3.0) (2024-09-10)
 
 
