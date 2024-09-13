@@ -50,13 +50,13 @@ jobs:
       - name: Summary with valid title
         if: ${{ always() && steps.validate-pr-title.outputs.error_message == null }}
         run: |
-          echo "# :white_check_mark: Pull Request title is valid" >> $GITHUB_STEP_SUMMARY
+          echo "### :white_check_mark: Pull Request title is valid" >> $GITHUB_STEP_SUMMARY
           echo "The pull request title conforms to the conventional commit specification."
 
       - name: Summary without invalid title
         if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
         run: |
-          echo "# :bangbang: Pull Request title is invalid" >> $GITHUB_STEP_SUMMARY
+          echo "### :bangbang: Pull Request title is invalid" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "The pull request title does not conform to the conventional commit specification." >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.validate-pr-title.outputs.error_message }}" >> $GITHUB_STEP_SUMMARY
