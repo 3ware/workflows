@@ -16,7 +16,6 @@ module.exports = {
         "dep-review",
         "get-terraform-dir",
         "get-workflow-token",
-        "lint",
         "pr-title",
         "security",
         "scorecard",
