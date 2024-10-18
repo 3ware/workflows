@@ -45,7 +45,7 @@ jobs:
     env:
       TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.backend-credentials }}
       # Org = 3ware, Project = gitops-2024, so ommitting from workspace name
-      TF_WORKSPACE: app-${{ inputs.environment }}-${{ inputs.region }}
+      TF_WORKSPACE: app-${{ inputs.region }}-${{ inputs.environment }}
 
     environment: ${{ inputs.environment }}
 
@@ -63,7 +63,14 @@ jobs:
         with:
           aws-region: ${{ inputs.region }}
           role-to-assume: ${{ secrets.provider-credentials }}
+<<<<<<< HEAD
           role-session-name: "$REPOSITORY-${{ inputs.environment }}-terraform-deploy"
+||||||| parent of 23d89a5 (fix(terraform-ci): Update TF_WORKSPACE environment variable convention)
+          role-session-name: "${{ env.REPOSITORY }}-${{ inputs.environment }}-terraform-deploy"
+=======
+          # $REPOSITORY, as described in the github docs, does not work
+          role-session-name: "${{ env.REPOSITORY }}-${{ inputs.environment }}-terraform-deploy"
+>>>>>>> 23d89a5 (fix(terraform-ci): Update TF_WORKSPACE environment variable convention)
 
       - name: Setup terraform
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
