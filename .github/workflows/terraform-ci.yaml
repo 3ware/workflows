@@ -14,11 +14,9 @@ on:
       auto-approve-apply:
         description: Auto approve terraform apply; useful in testing environments
         type: boolean
-        default: false
       test-destroy:
         description: Run terraform destroy
         type: boolean
-        default: false
     secrets:
       provider-credentials:
         description: The ARN of the role for which to fetch credentials
@@ -73,13 +71,16 @@ jobs:
           terraform_version: 1.9.7
           terraform_wrapper: true
 
-      - name: ${{ inputs.auto-approve-apply == 'false' && 'Plan' || 'Apply' }}
+      # Run this step with `apply -auto-approve` if the input is provided
+      # If no input is provided run `plan`
+      # This allows a calling workflow to define how this step is run with a safe default of running plan
+      - name: ${{ inputs.auto-approve-apply && 'Apply' || 'Plan' }}
         uses: devsectop/tf-via-pr@cc83c7bae8216e747bb8c074524665b2416822f5 # v11.4.6
         with:
           arg_chdir: terraform
-          arg_command: ${{ inputs.auto-approve-apply == 'false' && 'plan' || 'apply' }}
-          arg_auto_approve: ${{ inputs.auto-approve-apply == 'false' && 'false' || 'true' }}
-          arg_lock: ${{ inputs.auto-approve-apply == 'false' && 'false' || 'true' }}
+          arg_command: ${{ inputs.auto-approve-apply && 'apply' || 'plan' }}
+          arg_auto_approve: ${{ inputs.auto-approve-apply && 'true' || 'false' }}
+          arg_lock: ${{ inputs.auto-approve-apply && 'true' || 'false' }}
           arg_out: tfplan-${{ github.head_ref}}-PR${{ github.event.pull_request.number}}-out
           arg_var_file: ${{ inputs.environment }}.tfvars
 
@@ -146,6 +147,7 @@ jobs:
           exit 1
 
       - name: Destroy
+        #TODO: test this by passing in a false to see what happens
         if: ${{ inputs.test-destroy == true }}
         uses: devsectop/tf-via-pr@cc83c7bae8216e747bb8c074524665b2416822f5 # v11.4.6
         with:
