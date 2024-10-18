@@ -85,6 +85,15 @@ jobs:
           arg_var_file: ${{ inputs.environment }}.tfvars
 
       # TODO: Add pr comment explaining what to do run trigger apply
+
+      # Request a pull request review if auto-approve-apply is not set
+      - name: Add Pull Request Reviewer
+        if: ${{ !inputs.auto-approve-apply }}
+        uses: rhs/add-reviewer-gh-action@1.0.6
+        with:
+          reviewers: repo-maintainers
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       # TODO: Add label tf:plan-approved to PR on approval
 
       # - name: Apply
@@ -97,63 +106,63 @@ jobs:
       #     arg_lock: true
       #     arg_var_file: ${{ inputs.environment }}.tfvars
 
-      # This plan should not produce a diff
-      - name: Check idempotency
-        # TODO: logic here to not run in plan mode
-        id: idempotency
-        uses: devsectop/tf-via-pr@cc83c7bae8216e747bb8c074524665b2416822f5 # v11.4.6
-        with:
-          arg_chdir: terraform
-          arg_command: plan
-          arg_lock: false
-          arg_detailed_exitcode: true
-          arg_out: tfplan-${{ github.head_ref}}-PR${{ github.event.pull_request.number}}-check # Give this plan a different name
-          arg_var_file: ${{ inputs.environment }}.tfvars
+      # # This plan should not produce a diff
+      # - name: Check idempotency
+      #   # TODO: logic here to not run in plan mode
+      #   id: idempotency
+      #   uses: devsectop/tf-via-pr@cc83c7bae8216e747bb8c074524665b2416822f5 # v11.4.6
+      #   with:
+      #     arg_chdir: terraform
+      #     arg_command: plan
+      #     arg_lock: false
+      #     arg_detailed_exitcode: true
+      #     arg_out: tfplan-${{ github.head_ref}}-PR${{ github.event.pull_request.number}}-check # Give this plan a different name
+      #     arg_var_file: ${{ inputs.environment }}.tfvars
 
-      - name: Create Issue
-        if: ${{ steps.idempotency.outputs.exitcode == 2 }}
-        uses: dacbd/create-issue-action@cdb57ab6ff8862aa09fee2be6ba77a59581921c2 # v2.0.0
-        with:
-          token: ${{ github.token }}
-          title: ${{ github.workflow }} detected diff during deployment to ${{ inputs.environment }} environment
-          body: |
-            ${{ github.workflow }} workflow run [${{ github.run_id }}](https://github.com/3ware/gitops-2024/actions/runs/11378822294) produced a diff when run via pull request #${{ github.event.pull_request.number }}.
+      # - name: Create Issue
+      #   if: ${{ steps.idempotency.outputs.exitcode == 2 }}
+      #   uses: dacbd/create-issue-action@cdb57ab6ff8862aa09fee2be6ba77a59581921c2 # v2.0.0
+      #   with:
+      #     token: ${{ github.token }}
+      #     title: ${{ github.workflow }} detected diff during deployment to ${{ inputs.environment }} environment
+      #     body: |
+      #       ${{ github.workflow }} workflow run [${{ github.run_id }}](https://github.com/3ware/gitops-2024/actions/runs/11378822294) produced a diff when run via pull request #${{ github.event.pull_request.number }}.
 
-            <details>
-            <summary>Outline of changes:</summary>
-            <br>
+      #       <details>
+      #       <summary>Outline of changes:</summary>
+      #       <br>
 
-            ```
-            ${{ steps.idempotency.outputs.outline }}
-            ```
+      #       ```
+      #       ${{ steps.idempotency.outputs.outline }}
+      #       ```
 
-            </details>
+      #       </details>
 
-            <details>
-            <summary>${{ steps.idempotency.outputs.summary }}</summary>
-            <br>
+      #       <details>
+      #       <summary>${{ steps.idempotency.outputs.summary }}</summary>
+      #       <br>
 
-            ```
-            ${{ steps.idempotency.outputs.last_result }}
-            ```
+      #       ```
+      #       ${{ steps.idempotency.outputs.last_result }}
+      #       ```
 
-            </details>
+      #       </details>
 
-          labels: tf:diff
+      #     labels: tf:diff
 
-      - name: Diff Error
-        if: ${{ steps.idempotency.outputs.exitcode != 0 }}
-        run: |
-          exit 1
+      # - name: Diff Error
+      #   if: ${{ steps.idempotency.outputs.exitcode != 0 }}
+      #   run: |
+      #     exit 1
 
-      - name: Destroy
-        #TODO: test this by passing in a false to see what happens
-        if: ${{ inputs.test-destroy == true }}
-        uses: devsectop/tf-via-pr@cc83c7bae8216e747bb8c074524665b2416822f5 # v11.4.6
-        with:
-          arg_chdir: terraform
-          arg_command: apply
-          arg_auto_approve: true
-          arg_destroy: true
-          arg_lock: true
-          arg_var_file: ${{ inputs.environment }}.tfvars
+      # - name: Destroy
+      #   #TODO: test this by passing in a false to see what happens
+      #   if: ${{ inputs.test-destroy == true }}
+      #   uses: devsectop/tf-via-pr@cc83c7bae8216e747bb8c074524665b2416822f5 # v11.4.6
+      #   with:
+      #     arg_chdir: terraform
+      #     arg_command: apply
+      #     arg_auto_approve: true
+      #     arg_destroy: true
+      #     arg_lock: true
+      #     arg_var_file: ${{ inputs.environment }}.tfvars
