@@ -50,6 +50,11 @@ jobs:
     environment: ${{ inputs.environment }}
 
     steps:
+      - name: Set environment variables
+        # Replace '/' with '-' Most things like dashes and do not like forward slashes
+        run: |
+          echo REPOSITORY=$(echo ${{ github.repository }} | tr / .) >> "GITHUB_ENV"
+
       - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
@@ -58,7 +63,7 @@ jobs:
         with:
           aws-region: ${{ inputs.region }}
           role-to-assume: ${{ secrets.provider-credentials }}
-          role-session-name: ${{ github.repository }}-terraform-deploy
+          role-session-name: "$REPOSITORY-${{ inputs.environment }}-terraform-deploy"
 
       - name: Setup terraform
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
