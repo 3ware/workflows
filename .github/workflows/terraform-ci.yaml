@@ -32,7 +32,7 @@ permissions: {}
 
 jobs:
   plan-and-apply:
-    name: Terraform Deploy
+    name: ${{ inputs.environment }}
     runs-on: ubuntu-latest
     permissions:
       actions: read # Required to download repository artifact.
