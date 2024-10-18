@@ -93,7 +93,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr ready --repo  ${{ github.repository }} ${{ github.event.pull_request.number }}
+          gh pr edit ${{ github.event.pull_request.number }} --add-label "approval required"
+          gh pr ready ${{ github.event.pull_request.number }}
 
       # - name: Apply
       #   # TODO: Run when approved via comment
