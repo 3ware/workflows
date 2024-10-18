@@ -53,7 +53,7 @@ jobs:
       - name: Set environment variables
         # Replace '/' with '-' Most things like dashes and do not like forward slashes
         run: |
-          echo REPOSITORY=$(echo ${{ github.repository }} | tr / .) >> "GITHUB_ENV"
+          echo "REPOSITORY=$(echo ${{ github.repository }} | tr / .)" >> "$GITHUB_ENV"
 
       - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
@@ -63,20 +63,8 @@ jobs:
         with:
           aws-region: ${{ inputs.region }}
           role-to-assume: ${{ secrets.provider-credentials }}
-<<<<<<< HEAD
-<<<<<<< HEAD
-          role-session-name: "$REPOSITORY-${{ inputs.environment }}-terraform-deploy"
-||||||| parent of 23d89a5 (fix(terraform-ci): Update TF_WORKSPACE environment variable convention)
-          role-session-name: "${{ env.REPOSITORY }}-${{ inputs.environment }}-terraform-deploy"
-=======
           # $REPOSITORY, as described in the github docs, does not work
           role-session-name: "${{ env.REPOSITORY }}-${{ inputs.environment }}-terraform-deploy"
->>>>>>> 23d89a5 (fix(terraform-ci): Update TF_WORKSPACE environment variable convention)
-||||||| parent of 5799e6b (fix(terraform-ci): Use `${{ env. }}` syntax for repository)
-          role-session-name: "$REPOSITORY-${{ inputs.environment }}-terraform-deploy"
-=======
-          role-session-name: "${{ env.REPOSITORY }}-${{ inputs.environment }}-terraform-deploy"
->>>>>>> 5799e6b (fix(terraform-ci): Use `${{ env. }}` syntax for repository)
 
       - name: Setup terraform
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
