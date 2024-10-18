@@ -99,6 +99,7 @@ jobs:
 
       # This plan should not produce a diff
       - name: Check idempotency
+        # TODO: logic here to not run in plan mode
         id: idempotency
         uses: devsectop/tf-via-pr@cc83c7bae8216e747bb8c074524665b2416822f5 # v11.4.6
         with:
@@ -114,8 +115,7 @@ jobs:
         uses: dacbd/create-issue-action@cdb57ab6ff8862aa09fee2be6ba77a59581921c2 # v2.0.0
         with:
           token: ${{ github.token }}
-          # TODO: use jobs.<job-id>.environment when reusable; context not available here
-          title: ${{ github.workflow }} detected diff during deployment to **PLACEHOLDER** environment
+          title: ${{ github.workflow }} detected diff during deployment to ${{ inputs.environment }} environment
           body: |
             ${{ github.workflow }} workflow run [${{ github.run_id }}](https://github.com/3ware/gitops-2024/actions/runs/11378822294) produced a diff when run via pull request #${{ github.event.pull_request.number }}.
 
