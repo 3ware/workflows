@@ -91,7 +91,7 @@ jobs:
         if: ${{ !inputs.auto-approve-apply }}
         uses: rhs/add-reviewer-gh-action@1.0.6
         with:
-          reviewers: repo-maintainers
+          team_reviewers: repo-maintainers
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # TODO: Add label tf:plan-approved to PR on approval
