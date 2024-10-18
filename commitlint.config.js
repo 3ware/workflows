@@ -19,6 +19,7 @@ module.exports = {
         "pr-title",
         "ossf",
         "release",
+        "terraform-ci",
         "terraform-dir",
         "terraform-docs",
         "workflows",
