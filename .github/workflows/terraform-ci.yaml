@@ -81,19 +81,19 @@ jobs:
           arg_command: ${{ inputs.auto-approve-apply && 'apply' || 'plan' }}
           arg_auto_approve: ${{ inputs.auto-approve-apply && 'true' || 'false' }}
           arg_lock: ${{ inputs.auto-approve-apply && 'true' || 'false' }}
-          arg_out: tfplan-${{ github.head_ref}}-PR${{ github.event.pull_request.number}}-out
+          arg_out: tfplan-${{ github.head_ref}}-PR${{ github.event.pull_request.number }}-out
           arg_var_file: ${{ inputs.environment }}.tfvars
 
       # TODO: Add pr comment explaining what to do run trigger apply
 
       # Request a pull request review if auto-approve-apply is not set
-      - name: Add Pull Request Reviewer
+      #! CODEOWNERS file should exist in the calling workflow repository to auto assign the reviewer
+      - name: Request Pull Request Review
         if: ${{ !inputs.auto-approve-apply }}
-        uses: necojackarc/auto-request-review@v0.13.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      # TODO: Add label tf:plan-approved to PR on approval
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr ready --repo  ${{ github.repository }} ${{ github.event.pull_request.number }}
 
       # - name: Apply
       #   # TODO: Run when approved via comment
