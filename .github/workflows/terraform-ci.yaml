@@ -89,10 +89,9 @@ jobs:
       # Request a pull request review if auto-approve-apply is not set
       - name: Add Pull Request Reviewer
         if: ${{ !inputs.auto-approve-apply }}
-        uses: ryaugusta/pr-add-reviewers-action@v1
+        uses: necojackarc/auto-request-review@v0.13.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          team_reviewers: repo-maintainers
 
       # TODO: Add label tf:plan-approved to PR on approval
 
