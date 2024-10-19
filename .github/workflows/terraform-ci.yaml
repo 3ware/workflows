@@ -75,6 +75,7 @@ jobs:
       # If no input is provided run `plan`
       # This allows a calling workflow to define how this step is run with a safe default of running plan
       - name: ${{ inputs.auto-approve-apply && 'Apply' || 'Plan' }}
+        if: ${{ github.event_name == 'pull_request' }}
         uses: devsectop/tf-via-pr@cc83c7bae8216e747bb8c074524665b2416822f5 # v11.4.6
         with:
           arg_chdir: terraform
@@ -92,7 +93,7 @@ jobs:
       #! https://github.com/cli/cli/issues/8910
       # gh pr ready ${{ github.event.pull_request.number }}
       - name: Request Pull Request Review
-        if: ${{ !inputs.auto-approve-apply }}
+        if: ${{ !inputs.auto-approve-apply && github.event_name == 'pull_request' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
