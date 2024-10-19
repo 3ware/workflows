@@ -88,23 +88,26 @@ jobs:
 
       # Request a pull request review if auto-approve-apply is not set
       #! CODEOWNERS file should exist in the calling workflow repository to auto assign the reviewer
+      #! Rather frustratinlg, this doesn't work:
+      #! https://github.com/cli/cli/issues/8910
+      # gh pr ready ${{ github.event.pull_request.number }}
       - name: Request Pull Request Review
         if: ${{ !inputs.auto-approve-apply }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr edit ${{ github.event.pull_request.number }} --add-label "approval required"
-          gh pr ready ${{ github.event.pull_request.number }}
 
-      # - name: Apply
-      #   # TODO: Run when approved via comment
-      #   uses: devsectop/tf-via-pr@cc83c7bae8216e747bb8c074524665b2416822f5 # v11.4.6
-      #   with:
-      #     arg_chdir: terraform
-      #     arg_command: apply
-      #     arg_auto_approve: ${{ inputs.auto-approve-apply }}
-      #     arg_lock: true
-      #     arg_var_file: ${{ inputs.environment }}.tfvars
+      - name: Apply
+        if: ${{ github.event_name == 'merge_group' }}
+        uses: devsectop/tf-via-pr@cc83c7bae8216e747bb8c074524665b2416822f5 # v11.4.6
+        with:
+          arg_chdir: terraform
+          arg_command: apply
+          arg_auto_approve: ${{ inputs.auto-approve-apply }}
+          arg_lock: true
+          arg_var_file: ${{ inputs.environment }}.tfvars
+          plan_parity: true
 
       # # This plan should not produce a diff
       # - name: Check idempotency
@@ -157,6 +160,7 @@ jobs:
 
       # - name: Destroy
       #   #TODO: test this by passing in a false to see what happens
+      #   #TODO: Should never run on production
       #   if: ${{ inputs.test-destroy == true }}
       #   uses: devsectop/tf-via-pr@cc83c7bae8216e747bb8c074524665b2416822f5 # v11.4.6
       #   with:
