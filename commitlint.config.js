@@ -21,6 +21,7 @@ module.exports = {
         "release",
         "terraform-dir",
         "terraform-docs",
+        "trunk",
         "workflows",
       ],
     ],
