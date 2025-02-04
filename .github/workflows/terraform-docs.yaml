@@ -29,14 +29,14 @@ jobs:
     steps:
       - name: Decrypt the installation access token
         id: decrypt-token
+        env:
+          KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
         run: |
           DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$KEY" \
           --output - <(echo "${{ needs.get-temp-token.outputs.temp-token }}" \
           | base64 --decode))
           echo "::add-mask::$DECRYPTED_TOKEN"
           echo "temp-token=$DECRYPTED_TOKEN" >> $GITHUB_OUTPUT
-        env:
-          KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
 
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
