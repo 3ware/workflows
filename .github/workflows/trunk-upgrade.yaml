@@ -28,6 +28,8 @@ jobs:
 
       - name: Decrypt the installation access token
         id: decrypt-token
+        env:
+          KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
         run: |
           DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$KEY" \
           --output - <(echo "${{ needs.get-temp-token.outputs.temp-token }}" \
