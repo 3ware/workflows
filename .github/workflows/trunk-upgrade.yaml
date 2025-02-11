@@ -41,4 +41,4 @@ jobs:
         uses: trunk-io/trunk-action/upgrade@8e4c812061ece3fa253bbfa5a80ee1caefa19eb1 # v1.22.9
         with:
           github-token: ${{ steps.decrypt-token.outputs.temp-token }}
-          prefix: "ci(trunk):"
+          prefix: "ci(trunk): "
