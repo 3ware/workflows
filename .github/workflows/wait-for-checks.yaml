@@ -33,7 +33,7 @@ jobs:
     steps:
       - name: Auto Approve PR
         if: ${{ github.actor == '3ware-release[bot]' && github.head_ref == 'trunk-io/update-trunk' }}
-        uses: hmarr/auto-approve-action@v4
+        uses: hmarr/auto-approve-action@f0939ea97e9205ef24d872e76833fa908a770363 # v4.0.0
         with:
           github-token: ${{ secrets.PR_APPROVAL_PAT }}
           review-message: All checks passed. Auto Approved.
