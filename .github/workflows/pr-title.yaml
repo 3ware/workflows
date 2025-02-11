@@ -13,8 +13,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
 
-env:
-  PR_TITLE_LENGTH: 72
+# env:
+#   PR_TITLE_LENGTH: 72
 
 jobs:
   validate-pr-title:
@@ -28,15 +28,26 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: amannn/action-semantic-pull-request@47b15d52c5c30e94a17ec87eb8dd51ff5221fed9 # v5.3.0
+        with:
+          # Use the conventional commit pattern with maximum length of 72 characters
+          headerPattern: '^(?=.{1,72}$)(\w*)(?:\(([\w\$\.\-\* ]*)\))?\: (.*)$'
+          headerPatternCorrespondence: type, scope, subject
+          requireScope: true
+          subjectPattern: ^([A-Z]).+$ # Subject must start with an upper case character
+          subjectPatternError: |
+            The subject "{subject}" found in the pull request title "{title}"
+            didn't match the configured pattern. The subject must be sentence case.
+            Please start the subject with an upper case character.
+          # TODO: Required scopes for this repo and as an input when called
 
       # Using an action here because github.event.pull_request.title is flagged as potentially untrusted and assigning to an
       # intermediate variable did not resolve this. GitHub recommends using an action to mitigate script injection attacks.
       # https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions#good-practices-for-mitigating-script-injection-attacks
-      - name: PR title length
-        id: pr-title-length
-        uses: deepakputhraya/action-pr-title@3864bebc79c5f829d25dd42d3c6579d040b0ef16 # v1.0.2
-        with:
-          max_length: ${{ env.PR_TITLE_LENGTH }}
+      # - name: PR title length
+      #   id: pr-title-length
+      #   uses: deepakputhraya/action-pr-title@3864bebc79c5f829d25dd42d3c6579d040b0ef16 # v1.0.2
+      #   with:
+      #     max_length: ${{ env.PR_TITLE_LENGTH }}
 
       - name: Add PR comment on conventional failure
         if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
@@ -54,33 +65,33 @@ jobs:
 
             Please update the pull request title to follow the Conventional Commits specification.
 
-      #TODO: test this, what happens to the PR comment if both tests fail?
-      - name: Add PR comment on length failure
-        if: ${{ always() && steps.pr-title-length.outcome == 'failure' }}
-        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
-        with:
-          header: pr-title-error
-          message: |
-            Pull request titles should be less than ${{ env.PR_TITLE_LENGTH }} characters.
+      # - name: Add PR comment on length failure
+      #   if: ${{ always() && steps.pr-title-length.outcome == 'failure' }}
+      #   uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
+      #   with:
+      #     header: pr-title-error
+      #     message: |
+      #       Pull request titles should be less than ${{ env.PR_TITLE_LENGTH }} characters.
 
-            The maximum length for a pull request title is ${{ env.PR_TITLE_LENGTH }} characters because 'Squash & Merge' is used to merge pull requests -
-            and commit messages should be a maximum of ${{ env.PR_TITLE_LENGTH }} characters.
+      #       The maximum length for a pull request title is ${{ env.PR_TITLE_LENGTH }} characters because 'Squash & Merge' is used to merge pull requests -
+      #       and commit messages should be a maximum of ${{ env.PR_TITLE_LENGTH }} characters.
 
-            Please update the pull request title to be fewer than ${{ env.PR_TITLE_LENGTH }} characters.
+      #       Please update the pull request title to be fewer than ${{ env.PR_TITLE_LENGTH }} characters.
 
       - name: Delete PR comment on resolution
-        if: ${{ always() && steps.validate-pr-title.outputs.error_message == null && steps.pr-title-length.outcome == 'success' }}
+        # if: ${{ always() && steps.validate-pr-title.outputs.error_message == null && steps.pr-title-length.outcome == 'success' }}
+        if: ${{ always() && steps.validate-pr-title.outputs.error_message == null }}
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
           header: pr-title-error
           delete: true
 
       - name: Summary with valid title
-        if: ${{ always() && steps.validate-pr-title.outputs.error_message == null && steps.pr-title-length.outcome == 'success' }}
+        # if: ${{ always() && steps.validate-pr-title.outputs.error_message == null && steps.pr-title-length.outcome == 'success' }}
+        if: ${{ always() && steps.validate-pr-title.outputs.error_message == null }}
         run: |
           echo "### :white_check_mark: Pull Request title is valid" >> $GITHUB_STEP_SUMMARY
           echo "The pull request title conforms to the conventional commit specification." >> $GITHUB_STEP_SUMMARY
-          echo "The pull request title is less than ${{ env.PR_TITLE_LENGTH }} characters." >> $GITHUB_STEP_SUMMARY
 
       - name: Summary with invalid title
         if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
@@ -90,9 +101,9 @@ jobs:
           echo "The pull request title does not conform to the conventional commit specification." >> $GITHUB_STEP_SUMMARY
           echo ${{ steps.validate-pr-title.outputs.error_message }} >> $GITHUB_STEP_SUMMARY
 
-      - name: Summary with invalid length
-        if: ${{ always() && steps.pr-title-length.outcome == 'failure' }}
-        run: |
-          echo "### :x: Pull Request title length is invalid" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "The pull request title is longer than ${{ env.PR_TITLE_LENGTH }} characters." >> $GITHUB_STEP_SUMMARY
+      # - name: Summary with invalid length
+      #   if: ${{ always() && steps.pr-title-length.outcome == 'failure' }}
+      #   run: |
+      #     echo "### :x: Pull Request title length is invalid" >> $GITHUB_STEP_SUMMARY
+      #     echo "" >> $GITHUB_STEP_SUMMARY
+      #     echo "The pull request title is longer than ${{ env.PR_TITLE_LENGTH }} characters." >> $GITHUB_STEP_SUMMARY
