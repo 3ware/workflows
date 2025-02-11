@@ -1,7 +1,7 @@
 name: Checks
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, edited, synchronize]
     branches: [main]
 
@@ -23,3 +23,17 @@ jobs:
         uses: poseidon/wait-for-status-checks@6988432d64ad3f9c2608db4ca16fded1b7d36ead # v0.5.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+
+  # Approve PR raised by 3ware-release[bot] to upgrade trunk on trunk branches
+  # after all checks have passed.
+  auto-approve-pr:
+    needs: [enforce-all-checks]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Auto Approve PR
+        if: ${{ github.actor == '3ware-release[bot]' && github.head_ref == 'trunk-io/update-trunk' }}
+        uses: hmarr/auto-approve-action@v4
+        with:
+          github-token: ${{ secrets.PR_APPROVAL_PAT }}
+          review-message: All checks passed. Auto Approved.
