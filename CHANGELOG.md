@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.5.0](https://github.com/3ware/workflows/compare/v4.4.1...v4.5.0) (2025-02-11)
+
+
+### Features
+
+* **checks:** Add auto-approve job for trunk upgrade PRs ([#120](https://github.com/3ware/workflows/issues/120)) ([75adb76](https://github.com/3ware/workflows/commit/75adb76e237b26dc1a6d127c6d2a87995c05dd38))
+
 ## [4.4.1](https://github.com/3ware/workflows/compare/v4.4.0...v4.4.1) (2024-09-13)
 
 
