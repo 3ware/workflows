@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.5.1](https://github.com/3ware/workflows/compare/v4.5.0...v4.5.1) (2025-02-11)
+
+
+### Bug Fixes
+
+* **checks:** Amend job execution conditions ([#122](https://github.com/3ware/workflows/issues/122)) ([84c17f9](https://github.com/3ware/workflows/commit/84c17f9bc266071c559d3e39897a371326a02472))
+
 ## [4.5.0](https://github.com/3ware/workflows/compare/v4.4.1...v4.5.0) (2025-02-11)
 
 
