@@ -1,6 +1,9 @@
 name: Checks
 
 on:
+  pull_request:
+    types: [opened, edited, synchronize]
+    branches: [main]
   pull_request_target:
     types: [opened, edited, synchronize]
     branches: [main]
@@ -14,6 +17,7 @@ concurrency:
 
 jobs:
   enforce-all-checks:
+    if: ${{ github.event_name == 'pull_request' }}
     permissions:
       checks: read
     runs-on: ubuntu-latest
@@ -27,12 +31,12 @@ jobs:
   # Approve PR raised by 3ware-release[bot] to upgrade trunk on trunk branches
   # after all checks have passed.
   auto-approve-pr:
+    if: ${{ github.actor == '3ware-release[bot]' && github.head_ref == 'trunk-io/update-trunk' }}
     needs: [enforce-all-checks]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Auto Approve PR
-        if: ${{ github.actor == '3ware-release[bot]' && github.head_ref == 'trunk-io/update-trunk' }}
         uses: hmarr/auto-approve-action@f0939ea97e9205ef24d872e76833fa908a770363 # v4.0.0
         with:
           github-token: ${{ secrets.PR_APPROVAL_PAT }}
