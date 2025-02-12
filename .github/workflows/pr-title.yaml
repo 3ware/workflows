@@ -110,7 +110,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "The pull request title does not conform to the conventional commit specification." >> $GITHUB_STEP_SUMMARY
           echo "Please see pull request comments for more details on how to resolve this:" >> $GITHUB_STEP_SUMMARY
-          echo "[Pull Request Comment](${{ env.PR_URL }}#issue-comment-${{ env.COMMENT_ID }})" >> $GITHUB_STEP_SUMMARY
+          echo "[Pull Request Comment](${{ env.PR_URL }}#issuecomment-${{ env.COMMENT_ID }})" >> $GITHUB_STEP_SUMMARY
 
       # - name: Summary with invalid length
       #   if: ${{ always() && steps.pr-title-length.outcome == 'failure' }}
