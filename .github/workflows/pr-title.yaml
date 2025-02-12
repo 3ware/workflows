@@ -57,6 +57,22 @@ jobs:
             The subject must be sentence case.
             Please start the subject with an upper case character.
 
+      - name: Format PR comment
+        if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
+        run: |
+          {
+          echo 'MESSAGE<<EOF'
+              env.PR_TITLE_LENGTH > 72 && '❌ The pull request title is too long. It must be 72 characters or less.' ||
+              '❌ Pull request titles should follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/). Details:'
+
+              ```
+              ${{ steps.validate-pr-title.outputs.error_message }}
+              ```
+
+              'Please update the pull request title to match the conventional commit specification.'
+          echo EOF
+          } >> $GITHUB_ENV
+
       - name: Add PR comment on conventional failure
         if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
         id: pr-comment
@@ -64,18 +80,7 @@ jobs:
         with:
           header: pr-title-error
           message: |
-            ${{
-              env.PR_TITLE_LENGTH > 72 && '❌ The pull request title is too long. It must be 72 characters or less.' ||
-              (
-              '❌ Pull request titles should follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/). Details:
-
-              ```
-              ${{ steps.validate-pr-title.outputs.error_message }}
-              ```
-
-              Please update the pull request title to follow the Conventional Commits specification.'
-              )
-            }}
+            $MESSAGE
 
       - name: Delete PR comment on resolution
         if: ${{ always() && steps.validate-pr-title.outputs.error_message == null }}
