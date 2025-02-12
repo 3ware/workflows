@@ -31,8 +31,11 @@ jobs:
           echo "PR_TITLE_LENGTH=$(gh api /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | jq '.title' | wc -c)" >> "$GITHUB_ENV"
 
       - name: PR title length failure message
-        if: ${{ env.PR_TITLE_LENGTH > env.MAX_PR_TITLE_LENGTH }}
+        #if: ${{ env.PR_TITLE_LENGTH > env.MAX_PR_TITLE_LENGTH }}
         run: |
+          echo ${{ env.PR_TITLE_LENGTH }}
+          echo ${{ env.MAX_PR_TITLE_LENGTH }}
+          echo ${{ env.PR_TITLE_LENGTH > env.MAX_PR_TITLE_LENGTH }}
           echo "PR_COMMENT=❌ The pull request title is too long. It must be ${{ env.MAX_PR_TITLE_LENGTH }} characters or less" >> "$GITHUB_ENV"
 
       - name: Validate PR title conforms to conventional spec
