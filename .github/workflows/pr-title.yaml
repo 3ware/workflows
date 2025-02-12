@@ -72,11 +72,12 @@ jobs:
 
                 ```
                 ${{ steps.validate-pr-title.outputs.error_message }}
-                ```'
+                ```
+
+                Please update the pull request title to follow the Conventional Commits specification.'
               )
             }}
 
-            Please update the pull request title to follow the Conventional Commits specification.
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
           header: pr-title-error
