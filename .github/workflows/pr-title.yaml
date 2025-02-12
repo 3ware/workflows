@@ -68,7 +68,7 @@ jobs:
         run: |
           {
             echo 'PR_COMMENT<<EOF'
-            ❌ Pull request titles should follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/). Details:
+            ❌ Pull request titles should follow the [Conventional Commits specification]\(https://www.conventionalcommits.org/en/v1.0.0/\). Details:
 
             ```
             ${{ steps.validate-pr-title.outputs.error_message }}
