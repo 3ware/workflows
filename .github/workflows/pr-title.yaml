@@ -57,6 +57,7 @@ jobs:
 
       - name: Add PR comment on conventional failure
         if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
+        id: pr-comment
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
           header: pr-title-error
@@ -101,11 +102,15 @@ jobs:
 
       - name: Summary with invalid title
         if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
+        env:
+          COMMENT_ID: ${{ steps.pr-comment.outputs.created_comment_id }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
         run: |
           echo "### :x: Pull Request title is invalid" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "The pull request title does not conform to the conventional commit specification." >> $GITHUB_STEP_SUMMARY
-          echo ${{ steps.validate-pr-title.outputs.error_message }} >> $GITHUB_STEP_SUMMARY
+          echo "Please see pull request comments for more details on how to resolve this:" >> $GITHUB_STEP_SUMMARY
+          echo "[Pull Request Comment](${{ env.PR_URL }}#issue-comment-${{ env.COMMENT_ID }})" >> $GITHUB_STEP_SUMMARY
 
       # - name: Summary with invalid length
       #   if: ${{ always() && steps.pr-title-length.outcome == 'failure' }}
