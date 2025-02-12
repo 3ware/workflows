@@ -13,8 +13,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
 
-# env:
-#   PR_TITLE_LENGTH: 72
+env:
+  MAX_PR_TITLE_LENGTH: 72
 
 jobs:
   validate-pr-title:
@@ -30,11 +30,14 @@ jobs:
         run: |
           echo "PR_TITLE_LENGTH=$(gh api /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | jq '.title' | wc -c)" >> "$GITHUB_ENV"
 
-      - name: Echo PR title length
+      - name: PR title length failure message
+        if: ${{ env.PR_TITLE_LENGTH > env.MAX_PR_TITLE_LENGTH }}
         run: |
-          echo "The length of the PR title is $PR_TITLE_LENGTH characters"
+          echo "PR_COMMENT=❌ The pull request title is too long. It must be ${{ env.MAX_PR_TITLE_LENGTH }} characters or less" >> "$GITHUB_ENV"
 
       - name: Validate PR title conforms to conventional spec
+        # Run this step if the PR title is less than or equal to the maximum length of 72 characters
+        if: ${{ env.PR_TITLE_LENGTH <= env.MAX_PR_TITLE_LENGTH }}
         id: validate-pr-title
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,8 +46,10 @@ jobs:
         uses: amannn/action-semantic-pull-request@47b15d52c5c30e94a17ec87eb8dd51ff5221fed9 # v5.3.0
         with:
           # Use the conventional commit pattern with maximum length of 72 characters
-          headerPattern: '^(?=.{1,72}$)(\w*)(?:\(([\w\$\.\-\* ]*)\))?\: (.*)$'
-          headerPatternCorrespondence: type, scope, subject
+          # Omitting length check from this action. The logic for the error message
+          # in the pr comment action is too complex
+          #headerPattern: '^(?=.{1,72}$)(\w*)(?:\(([\w\$\.\-\* ]*)\))?\: (.*)$'
+          #headerPatternCorrespondence: type, scope, subject
           requireScope: true
           # TODO: Required scopes for this repo and as an input when called
           # scopes: Ideally get them from the commitlint config file to avoid duplication
@@ -57,46 +62,52 @@ jobs:
             The subject must be sentence case.
             Please start the subject with an upper case character.
 
-      - name: Format PR comment
+      - name: PR title validation failure message
+        # Overwrite the PR_COMMENT env variable if the error message is not null
         if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
         run: |
           {
-          echo 'MESSAGE<<EOF'
-              env.PR_TITLE_LENGTH > 72 && '❌ The pull request title is too long. It must be 72 characters or less.' ||
-              '❌ Pull request titles should follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/). Details:'
+            echo 'PR_COMMENT<<EOF'
+            ❌ Pull request titles should follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/). Details:
 
-              ```
-              ${{ steps.validate-pr-title.outputs.error_message }}
-              ```
+            ```
+            ${{ steps.validate-pr-title.outputs.error_message }}
+            ```
 
-              'Please update the pull request title to match the conventional commit specification.'
-          echo EOF
-          } >> $GITHUB_ENV
+            Please update the pull request title to match the conventional commit specification.
+            echo 'EOF'
+          } >> "$GITHUB_ENV"
 
-      - name: Add PR comment on conventional failure
-        if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
+      - name: Add PR comment on failure
+        # Only add a comment if the error message is not null or the PR title is too long
+        if: ${{ always() && steps.validate-pr-title.outputs.error_message != null || env.PR_TITLE_LENGTH > env.MAX_PR_TITLE_LENGTH }}
         id: pr-comment
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
           header: pr-title-error
+          # Use the PR_COMMENT env variable to set the comment message
+          # This will be set to the error message if the PR title is invalid
+          # Or to the PR title length error message if the PR title is too long
           message: |
-            $MESSAGE
+            "$PR_COMMENT"
 
       - name: Delete PR comment on resolution
-        if: ${{ always() && steps.validate-pr-title.outputs.error_message == null }}
+        # Delete comment if the error message is null or the PR title is the correct length
+        if: ${{ always() && steps.validate-pr-title.outputs.error_message == null || env.PR_TITLE_LENGTH <= env.MAX_PR_TITLE_LENGTH }}
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
           header: pr-title-error
           delete: true
 
       - name: Summary with valid title
+        # A length check is not required here because the validate-pr-title step will only run if the title is less than or equal to the max length
         if: ${{ always() && steps.validate-pr-title.outputs.error_message == null }}
         run: |
           echo "### :white_check_mark: Pull Request title is valid" >> $GITHUB_STEP_SUMMARY
           echo "The pull request title conforms to the conventional commit specification." >> $GITHUB_STEP_SUMMARY
 
       - name: Summary with invalid title
-        if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
+        if: ${{ always() && steps.validate-pr-title.outputs.error_message != null || env.PR_TITLE_LENGTH > env.MAX_PR_TITLE_LENGTH}}
         env:
           # Set to comment ID if a comment was created, otherwise set to previous comment ID
           COMMENT_ID: ${{ steps.pr-comment.outputs.created_comment_id || steps.pr-comment.outputs.previous_comment_id }}
