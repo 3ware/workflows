@@ -27,10 +27,12 @@ jobs:
         id: pr-title-length
         env:
           GH_TOKEN: ${{ github.token }}
-        run: echo "PR_TITLE_LENGTH=$(gh api /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | jq '.title' | wc -c)" >> "$GITHUB_ENV"
+        run: |
+          echo "PR_TITLE_LENGTH=$(gh api /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | jq '.title' | wc -c)" >> "$GITHUB_ENV"
 
       - name: Echo PR title length
-        run: echo "$PR_TITLE_LENGTH"
+        run: |
+          echo "The length of the PR title is $PR_TITLE_LENGTH characters"
 
       - name: Validate PR title conforms to conventional spec
         id: validate-pr-title
@@ -58,20 +60,29 @@ jobs:
       - name: Add PR comment on conventional failure
         if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
         id: pr-comment
+        env:
+          # Have a custom message if the length of the pull request title is too long, otherwise use the error message from the action
+          MESSAGE: |-
+            ${{
+              env.PR_TITLE_LENGTH > 72 && '❌ The pull request title is too long. It must be 72 characters or less.' ||
+              (
+                '❌ Pull request titles should follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
+
+                Details:
+
+                ```
+                ${{ steps.validate-pr-title.outputs.error_message }}
+                ```'
+              )
+            }}
+
+            Please update the pull request title to follow the Conventional Commits specification.
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
           header: pr-title-error
           #TODO: Add custom error for title length. The error from the action is confusing. if statement here?
           message: |
-            Pull request titles should follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
-
-            Details:
-
-            ```
-            ${{ steps.validate-pr-title.outputs.error_message }}
-            ```
-
-            Please update the pull request title to follow the Conventional Commits specification.
+            ${{ env.MESSAGE }}
 
       - name: Delete PR comment on resolution
         if: ${{ always() && steps.validate-pr-title.outputs.error_message == null }}
