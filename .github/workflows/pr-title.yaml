@@ -101,7 +101,8 @@ jobs:
       - name: Summary with invalid title
         if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
         env:
-          COMMENT_ID: ${{ steps.pr-comment.outputs.created_comment_id }}
+          # Set to comment ID if a comment was created, otherwise set to previous comment ID
+          COMMENT_ID: ${{ steps.pr-comment.outputs.created_comment_id || steps.pr-comment.outputs.previous_comment_id }}
           PR_URL: ${{ github.event.pull_request.html_url }}
         run: |
           echo "### :x: Pull Request title is invalid" >> $GITHUB_STEP_SUMMARY
