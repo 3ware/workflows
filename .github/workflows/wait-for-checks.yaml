@@ -4,9 +4,6 @@ on:
   pull_request:
     types: [opened, edited, synchronize]
     branches: [main]
-  pull_request_target:
-    types: [opened, edited, synchronize]
-    branches: [main]
 
 # Disable permissions for all available scopes
 permissions: {}
@@ -17,7 +14,6 @@ concurrency:
 
 jobs:
   enforce-all-checks:
-    if: ${{ github.event_name == 'pull_request' }}
     permissions:
       checks: read
     runs-on: ubuntu-latest
