@@ -58,7 +58,7 @@ jobs:
           echo "The pull request title is too long. Please update the title to be ${{ env.MAX_PR_TITLE_LENGTH }} characters or less." >> $GITHUB_STEP_SUMMARY
           exit 1
 
-  validate-pr-title:
+  pr-title-convention:
     # Run if PR title length job does not exit
     needs: [pr-title-length]
     permissions:
