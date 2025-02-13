@@ -13,13 +13,17 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
 
+defaults:
+  run:
+    shell: bash
+
 env:
   MAX_PR_TITLE_LENGTH: 72
 
 jobs:
-  validate-pr-title:
+  pr-title-length:
     permissions:
-      pull-requests: write
+      pull-requests: read
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -30,17 +34,35 @@ jobs:
         run: |
           echo "PR_TITLE_LENGTH=$(gh api /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | jq '.title' | wc -c)" >> "$GITHUB_ENV"
 
-      - name: PR title length failure message
-        #if: ${{ env.PR_TITLE_LENGTH > env.MAX_PR_TITLE_LENGTH }}
-        run: |
-          echo ${{ env.PR_TITLE_LENGTH }}
-          echo ${{ env.MAX_PR_TITLE_LENGTH }}
-          echo ${{ env.PR_TITLE_LENGTH > env.MAX_PR_TITLE_LENGTH }}
-          echo "PR_COMMENT=❌ The pull request title is too long. It must be ${{ env.MAX_PR_TITLE_LENGTH }} characters or less" >> "$GITHUB_ENV"
+      - name: Add PR comment on failure
+        # Only add a comment if the PR title is too long
+        # fromJson is required to convert the string to a number
+        if: ${{ fromJson(env.PR_TITLE_LENGTH) > fromJson(env.MAX_PR_TITLE_LENGTH) }}
+        id: pr-comment
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
+        with:
+          header: pr-title-error
+          message: |
+            Hi and thank you for opening this pull request! 👋🏼
 
+            We require pull request titles be limited to ${{ env.MAX_PR_TITLE_LENGTH }} characters.
+            This is because we use `Squash and Merge` for pull requests with the title as the commit message.
+
+            Please update the title to be fewer than ${{ env.MAX_PR_TITLE_LENGTH }} characters. If you need help, feel free to ask! 😊
+
+      - name: Exit if PR title is too long
+        if: ${{ fromJson(env.PR_TITLE_LENGTH) > fromJson(env.MAX_PR_TITLE_LENGTH) }}
+        run: exit 1
+
+  validate-pr-title:
+    # Run if PR title length job does not exit
+    needs: [pr-title-length]
+    permissions:
+      pull-requests: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
       - name: Validate PR title conforms to conventional spec
-        # Run this step if the PR title is less than or equal to the maximum length of 72 characters
-        if: ${{ env.PR_TITLE_LENGTH <= env.MAX_PR_TITLE_LENGTH }}
         id: validate-pr-title
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -48,11 +70,6 @@ jobs:
         # https://github.com/amannn/action-semantic-pull-request/issues/248
         uses: amannn/action-semantic-pull-request@47b15d52c5c30e94a17ec87eb8dd51ff5221fed9 # v5.3.0
         with:
-          # Use the conventional commit pattern with maximum length of 72 characters
-          # Omitting length check from this action. The logic for the error message
-          # in the pr comment action is too complex
-          #headerPattern: '^(?=.{1,72}$)(\w*)(?:\(([\w\$\.\-\* ]*)\))?\: (.*)$'
-          #headerPatternCorrespondence: type, scope, subject
           requireScope: true
           # TODO: Required scopes for this repo and as an input when called
           # scopes: Ideally get them from the commitlint config file to avoid duplication
@@ -65,34 +82,25 @@ jobs:
             The subject must be sentence case.
             Please start the subject with an upper case character.
 
-      - name: PR title validation failure message
-        # Overwrite the PR_COMMENT env variable if the error message is not null
+      - name: Add PR comment on failure
+        # Only add a comment if the error message is not null or the PR title is too long
         if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
-        run: |
-          {
-            echo 'PR_COMMENT<<EOF'
-            '❌ Pull request titles should follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/). Details:'
+        id: pr-comment
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
+        with:
+          header: pr-title-error
+          message: |
+            Hi and thank you for opening this pull request! 👋🏼
+
+            We require pull request titles to follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) and it looks like your proposed title needs to be adjusted.
+
+            Details:
 
             ```
             ${{ steps.validate-pr-title.outputs.error_message }}
             ```
 
-            'Please update the pull request title to match the conventional commit specification.'
-            echo 'EOF'
-          } >> "$GITHUB_ENV"
-
-      - name: Add PR comment on failure
-        # Only add a comment if the error message is not null or the PR title is too long
-        if: ${{ always() && steps.validate-pr-title.outputs.error_message != null || env.PR_TITLE_LENGTH > env.MAX_PR_TITLE_LENGTH }}
-        id: pr-comment
-        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
-        with:
-          header: pr-title-error
-          # Use the PR_COMMENT env variable to set the comment message
-          # This will be set to the error message if the PR title is invalid
-          # Or to the PR title length error message if the PR title is too long
-          message: |
-            "$PR_COMMENT"
+            Please update the title to follow the conventional commit specification. If you need help, feel free to ask! 😊
 
       - name: Delete PR comment on resolution
         # Delete comment if the error message is null or the PR title is the correct length
@@ -110,7 +118,7 @@ jobs:
           echo "The pull request title conforms to the conventional commit specification." >> $GITHUB_STEP_SUMMARY
 
       - name: Summary with invalid title
-        if: ${{ always() && steps.validate-pr-title.outputs.error_message != null || env.PR_TITLE_LENGTH > env.MAX_PR_TITLE_LENGTH}}
+        if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
         env:
           # Set to comment ID if a comment was created, otherwise set to previous comment ID
           COMMENT_ID: ${{ steps.pr-comment.outputs.created_comment_id || steps.pr-comment.outputs.previous_comment_id }}
