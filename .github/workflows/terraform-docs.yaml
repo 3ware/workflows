@@ -55,19 +55,19 @@ jobs:
       - name: Push verified commit
         if: ${{ steps.terraform-docs.outputs.num_changed != 0 }}
         id: push-with-sig
+        env:
+          GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
         uses: planetscale/ghcommit-action@c7915d6c18d5ce4eb42b0eff3f10a29fe0766e4c # v0.1.44
         with:
           commit_message: "docs(terraform): Update ${{ env.TF_DOCS_FILE }}"
           repo: ${{ github.repository }}
           branch: ${{ env.BRANCH }}
           file_pattern: "terraform/**/${{ env.TF_DOCS_FILE }}"
-        env:
-          GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
 
       - name: Summary with commit failure
         if: ${{ failure() && steps.push-with-sig.outcome == 'failure' }}
         run: |
-          echo "### :bangbang: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
+          echo "### :x: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "#### Commit failure" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
