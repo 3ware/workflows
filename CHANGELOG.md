@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.7.1](https://github.com/3ware/workflows/compare/v4.7.0...v4.7.1) (2025-02-13)
+
+
+### Bug Fixes
+
+* **checks:** Add ignore for auto-approve-pr check ([#130](https://github.com/3ware/workflows/issues/130)) ([ea4dba9](https://github.com/3ware/workflows/commit/ea4dba9c3bd24bedf01bf4d0456bc106c0893e15))
+
 ## [4.7.0](https://github.com/3ware/workflows/compare/v4.6.0...v4.7.0) (2025-02-13)
 
 
