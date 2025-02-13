@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.6.0](https://github.com/3ware/workflows/compare/v4.5.1...v4.6.0) (2025-02-13)
+
+
+### Features
+
+* **pr-title:** Add check for title length ([#121](https://github.com/3ware/workflows/issues/121)) ([4e7167e](https://github.com/3ware/workflows/commit/4e7167e8ff52c49ca112defa909cbfa20f898d43))
+
 ## [4.5.1](https://github.com/3ware/workflows/compare/v4.5.0...v4.5.1) (2025-02-11)
 
 
