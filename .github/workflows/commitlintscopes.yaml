@@ -1,0 +1,40 @@
+name: Scope
+
+on:
+  push: {}
+
+# Disable permissions for all available scopes
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  scopes:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+      - name: Get commitlint scopes from configuration file
+        id: commit_scope
+        uses: zoexx/github-action-json-file-properties@1.0.6 # Can see but can't access the output for this action
+        #uses: notiz-dev/github-action-json-property@release # this works but worried it isn't being maintained. 2 PRs open for node 20 upgrade.
+        with:
+          file_path: .commitlintrc.json
+          prop_path: rules
+
+      # Wrap the JSON output in single quotes
+      # Filter the output with jq. 2 represents the 2nd array of the scope-enum property
+      # which contains the lists of scopes.
+      # Trim " and , from the output and write to an environment variable | tr -d [\",])
+      # This works, but seems GITHUB_ENV cannot be tested properly with act
+      - run: |
+          echo '${{ steps.commit_scope.outputs.scope_enum }}' | jq -r '.[2]' | tr -d [\",]
