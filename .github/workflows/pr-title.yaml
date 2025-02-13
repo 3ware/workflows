@@ -3,7 +3,7 @@ name: Validate PR title
 on:
   pull_request:
     types: [opened, edited, synchronize]
-    branches: [main]
+    #branches: [main]
   workflow_call: {}
 
 # Disable permissions for all available scopes
@@ -13,8 +13,54 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
 
+defaults:
+  run:
+    shell: bash
+
+env:
+  MAX_PR_TITLE_LENGTH: 72
+
 jobs:
+  pr-title-length:
+    permissions:
+      pull-requests: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Get PR title length
+        id: pr-title-length
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "PR_TITLE_LENGTH=$(gh api /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | jq '.title' | wc -c)" >> "$GITHUB_ENV"
+
+      - name: Add PR comment on failure
+        # Only add a comment if the PR title is too long
+        # fromJson is required to convert the string to a number
+        if: ${{ fromJson(env.PR_TITLE_LENGTH) > fromJson(env.MAX_PR_TITLE_LENGTH) }}
+        id: pr-comment
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
+        with:
+          header: pr-title-error
+          message: |
+            Hi and thank you for opening this pull request! 👋🏼
+
+            We require pull request titles be limited to ${{ env.MAX_PR_TITLE_LENGTH }} characters.
+            This is because we use `Squash and Merge` for pull requests with the title as the commit message.
+
+            Please update the title to be ${{ env.MAX_PR_TITLE_LENGTH }} characters or less. If you need help, feel free to ask! 😊
+
+      - name: Exit if PR title is too long
+        if: ${{ fromJson(env.PR_TITLE_LENGTH) > fromJson(env.MAX_PR_TITLE_LENGTH) }}
+        run: |
+          echo "### :x: Pull Request title is invalid" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The pull request title is too long. Please update the title to be ${{ env.MAX_PR_TITLE_LENGTH }} characters or less." >> $GITHUB_STEP_SUMMARY
+          exit 1
+
   validate-pr-title:
+    # Run if PR title length job does not exit
+    needs: [pr-title-length]
     permissions:
       pull-requests: write
     runs-on: ubuntu-latest
@@ -22,17 +68,36 @@ jobs:
     steps:
       - name: Validate PR title conforms to conventional spec
         id: validate-pr-title
-        uses: amannn/action-semantic-pull-request@47b15d52c5c30e94a17ec87eb8dd51ff5221fed9 # v5.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # Cannot test with act. See:
+        # https://github.com/amannn/action-semantic-pull-request/issues/248
+        uses: amannn/action-semantic-pull-request@47b15d52c5c30e94a17ec87eb8dd51ff5221fed9 # v5.3.0
+        with:
+          requireScope: true
+          # TODO: Required scopes for this repo and as an input when called
+          # TODO: Add scopes to PR comment if applicable
+          # scopes: Ideally get them from the commitlint config file to avoid duplication
+          # Maybe use this action; will require commitlint.config.js changing to .commitlintrc.json
+          # https://github.com/marketplace/actions/get-properties-from-json-file
+          subjectPattern: ^([A-Z]).+$ # Subject must start with an upper case character
+          subjectPatternError: |
+            The subject "{subject}" found in the pull request title
+            "{title}" didn't match the configured pattern.
+            The subject must be sentence case.
+            Please start the subject with an upper case character.
 
       - name: Add PR comment on failure
+        # Only add a comment if the error message is not null or the PR title is too long
         if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
+        id: pr-comment
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
           header: pr-title-error
           message: |
-            Pull request titles should follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) and it looks like the proposed title needs to be adjusted.
+            Hi and thank you for opening this pull request! 👋🏼
+
+            We require pull request titles to follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) and it looks like your proposed title needs to be adjusted.
 
             Details:
 
@@ -40,7 +105,10 @@ jobs:
             ${{ steps.validate-pr-title.outputs.error_message }}
             ```
 
+            Please update the title to follow the conventional commit specification. If you need help, feel free to ask! 😊
+
       - name: Delete PR comment on resolution
+        # Delete comment if the error message is null or the PR title is the correct length
         if: ${{ always() && steps.validate-pr-title.outputs.error_message == null }}
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
@@ -48,15 +116,21 @@ jobs:
           delete: true
 
       - name: Summary with valid title
+        # A length check is not required here because the validate-pr-title step will only run if the title is less than or equal to the max length
         if: ${{ always() && steps.validate-pr-title.outputs.error_message == null }}
         run: |
           echo "### :white_check_mark: Pull Request title is valid" >> $GITHUB_STEP_SUMMARY
           echo "The pull request title conforms to the conventional commit specification." >> $GITHUB_STEP_SUMMARY
 
-      - name: Summary without invalid title
+      - name: Summary with invalid title
         if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
+        env:
+          # Set to comment ID if a comment was created, otherwise set to previous comment ID
+          COMMENT_ID: ${{ steps.pr-comment.outputs.created_comment_id || steps.pr-comment.outputs.previous_comment_id }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
         run: |
-          echo "### :bangbang: Pull Request title is invalid" >> $GITHUB_STEP_SUMMARY
+          echo "### :x: Pull Request title is invalid" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "The pull request title does not conform to the conventional commit specification." >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.validate-pr-title.outputs.error_message }}" >> $GITHUB_STEP_SUMMARY
+          echo "Please see pull request comments for more details on how to resolve this:" >> $GITHUB_STEP_SUMMARY
+          echo "[Pull Request Comment](${{ env.PR_URL }}#issuecomment-${{ env.COMMENT_ID }})" >> $GITHUB_STEP_SUMMARY
