@@ -48,14 +48,14 @@ jobs:
             We require pull request titles be limited to ${{ env.MAX_PR_TITLE_LENGTH }} characters.
             This is because we use `Squash and Merge` for pull requests with the title as the commit message.
 
-            Please update the title to be fewer than ${{ env.MAX_PR_TITLE_LENGTH }} characters. If you need help, feel free to ask! 😊
+            Please update the title to be ${{ env.MAX_PR_TITLE_LENGTH }} characters or less. If you need help, feel free to ask! 😊
 
       - name: Exit if PR title is too long
         if: ${{ fromJson(env.PR_TITLE_LENGTH) > fromJson(env.MAX_PR_TITLE_LENGTH) }}
         run: |
           echo "### :x: Pull Request title is invalid" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "The pull request title is too long. Please update the title to be fewer than ${{ env.MAX_PR_TITLE_LENGTH }} characters." >> $GITHUB_STEP_SUMMARY
+          echo "The pull request title is too long. Please update the title to be ${{ env.MAX_PR_TITLE_LENGTH }} characters or less." >> $GITHUB_STEP_SUMMARY
           exit 1
 
   validate-pr-title:
