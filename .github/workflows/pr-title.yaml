@@ -52,7 +52,11 @@ jobs:
 
       - name: Exit if PR title is too long
         if: ${{ fromJson(env.PR_TITLE_LENGTH) > fromJson(env.MAX_PR_TITLE_LENGTH) }}
-        run: exit 1
+        run: |
+          echo "### :x: Pull Request title is invalid" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The pull request title is too long. Please update the title to be fewer than ${{ env.MAX_PR_TITLE_LENGTH }} characters." >> $GITHUB_STEP_SUMMARY
+          exit 1
 
   validate-pr-title:
     # Run if PR title length job does not exit
