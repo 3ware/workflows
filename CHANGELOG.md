@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.7.0](https://github.com/3ware/workflows/compare/v4.6.0...v4.7.0) (2025-02-13)
+
+
+### Features
+
+* **workflows:** Add reopened pull request event type ([#127](https://github.com/3ware/workflows/issues/127)) ([8d000d6](https://github.com/3ware/workflows/commit/8d000d655627ae2afa0681aeb7fe898eef53a771))
+
 ## [4.6.0](https://github.com/3ware/workflows/compare/v4.5.1...v4.6.0) (2025-02-13)
 
 
