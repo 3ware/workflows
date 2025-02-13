@@ -76,6 +76,7 @@ jobs:
         with:
           requireScope: true
           # TODO: Required scopes for this repo and as an input when called
+          # TODO: Add scopes to PR comment if applicable
           # scopes: Ideally get them from the commitlint config file to avoid duplication
           # Maybe use this action; will require commitlint.config.js changing to .commitlintrc.json
           # https://github.com/marketplace/actions/get-properties-from-json-file
