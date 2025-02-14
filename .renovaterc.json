@@ -1,13 +1,23 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "commitMessageLowerCase": "never",
+  "extends": ["config:recommended"],
+  "packageRules": [
+    {
+      "enabled": false,
+      "matchPackageNames": [".*"]
+    }
+  ],
   "vulnerabilityAlerts": {
-    "schedule": [],
-    "dependencyDashboardApproval": false,
-    "minimumReleaseAge": null,
-    "rangeStrategy": "auto",
+    "addLabels": ["security"],
     "branchTopic": "{{{datasource}}}-{{{depNameSanitized}}}-vulnerability",
+    "commitMessagePrefix": "fix(deps): ",
+    "dependencyDashboardApproval": false,
+    "enabled": true,
+    "minimumReleaseAge": null,
     "prCreation": "immediate",
-    "vulnerabilityFixStrategy": "lowest",
-    "addLabels": ["security"]
+    "rangeStrategy": "auto",
+    "schedule": [],
+    "vulnerabilityFixStrategy": "lowest"
   }
 }
