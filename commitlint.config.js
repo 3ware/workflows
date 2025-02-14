@@ -19,6 +19,7 @@ module.exports = {
         "pr-title",
         "ossf",
         "release",
+        "renovate",
         "terraform-dir",
         "terraform-docs",
         "trunk",
