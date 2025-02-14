@@ -32,7 +32,7 @@ jobs:
       # Output a JSON object which can be used for matrix strategies
       - name: Get terraform directory matrix
         id: get-terraform-matrix
-        uses: tj-actions/changed-files@4918e1183080b35a085c91c8abc9e6adc4de61a1 # v42.1.0
+        uses: tj-actions/changed-files@aa08304bd477b800d468db44fe10f6c61f7f7b11 # v42.1.0
         continue-on-error: true # Allows workflow to proceed if no files found
         with:
           files: |
@@ -51,7 +51,7 @@ jobs:
       # Output text for use with the job summary steps
       - name: Get terraform directory Summary
         id: get-terraform-sum
-        uses: tj-actions/changed-files@4918e1183080b35a085c91c8abc9e6adc4de61a1 # v42.1.0
+        uses: tj-actions/changed-files@aa08304bd477b800d468db44fe10f6c61f7f7b11 # v42.1.0
         continue-on-error: true # Allows workflow to proceed if no files found
         with:
           files: |
