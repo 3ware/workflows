@@ -12,7 +12,7 @@ permissions: {}
 
 jobs:
   get-temp-token:
-    uses: 3ware/workflows/.github/workflows/get-workflow-token.yaml@57a900982a56bebaf91e660a56adb7f021690d15 # v4.0.0
+    uses: 3ware/workflows/.github/workflows/get-workflow-token.yaml@e632405003ee5d036a2ee5330d206004741bfcee # v4.7.1
     secrets: inherit
 
   terraform-docs:
