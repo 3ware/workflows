@@ -39,7 +39,7 @@ jobs:
         # fromJson is required to convert the string to a number
         if: ${{ fromJson(env.PR_TITLE_LENGTH) > fromJson(env.MAX_PR_TITLE_LENGTH) }}
         id: pr-comment
-        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
         with:
           header: pr-title-error
           message: |
@@ -91,7 +91,7 @@ jobs:
         # Only add a comment if the error message is not null or the PR title is too long
         if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
         id: pr-comment
-        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
         with:
           header: pr-title-error
           message: |
@@ -110,7 +110,7 @@ jobs:
       - name: Delete PR comment on resolution
         # Delete comment if the error message is null or the PR title is the correct length
         if: ${{ always() && steps.validate-pr-title.outputs.error_message == null }}
-        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 # v2.9.1
         with:
           header: pr-title-error
           delete: true
