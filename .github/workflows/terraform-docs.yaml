@@ -57,7 +57,7 @@ jobs:
         id: push-with-sig
         env:
           GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
-        uses: planetscale/ghcommit-action@c7915d6c18d5ce4eb42b0eff3f10a29fe0766e4c # v0.1.44
+        uses: planetscale/ghcommit-action@73c7d0fefec75e06673b9de4fb62f1d45561e098 # v0.2.5
         with:
           commit_message: "docs(terraform): Update ${{ env.TF_DOCS_FILE }}"
           repo: ${{ github.repository }}
