@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.7.6](https://github.com/3ware/workflows/compare/v4.7.5...v4.7.6) (2025-02-19)
+
+
+### Dependencies
+
+* **deps:** Update peter-murray/workflow-application-token-action ([#157](https://github.com/3ware/workflows/issues/157)) ([2badfa1](https://github.com/3ware/workflows/commit/2badfa152ab2a969d4827e4547de09e370160f68))
+
 ## [4.7.5](https://github.com/3ware/workflows/compare/v4.7.4...v4.7.5) (2025-02-19)
 
 
