@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.7.2](https://github.com/3ware/workflows/compare/v4.7.1...v4.7.2) (2025-02-19)
+
+
+### Dependencies
+
+* **deps:** Update actions/dependency-review-action action ([#143](https://github.com/3ware/workflows/issues/143)) ([c4576d5](https://github.com/3ware/workflows/commit/c4576d525259cc7303ae43170cf0f61393afe94b))
+
 ## [4.7.1](https://github.com/3ware/workflows/compare/v4.7.0...v4.7.1) (2025-02-13)
 
 
