@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.7.5](https://github.com/3ware/workflows/compare/v4.7.4...v4.7.5) (2025-02-19)
+
+
+### Dependencies
+
+* **deps:** Update poseidon/wait-for-status-checks action ([#152](https://github.com/3ware/workflows/issues/152)) ([3ffa023](https://github.com/3ware/workflows/commit/3ffa0236dd37567f4a00d5fbe25115df86dddcff))
+
 ## [4.7.4](https://github.com/3ware/workflows/compare/v4.7.3...v4.7.4) (2025-02-19)
 
 
