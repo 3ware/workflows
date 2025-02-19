@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.7.4](https://github.com/3ware/workflows/compare/v4.7.3...v4.7.4) (2025-02-19)
+
+
+### Dependencies
+
+* **deps:** Update ossf/scorecard-action action ([#150](https://github.com/3ware/workflows/issues/150)) ([1425837](https://github.com/3ware/workflows/commit/14258376af8fc95332ea05a63ef23cda2931580a))
+
 ## [4.7.3](https://github.com/3ware/workflows/compare/v4.7.2...v4.7.3) (2025-02-19)
 
 
