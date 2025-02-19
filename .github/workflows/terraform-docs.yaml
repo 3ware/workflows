@@ -76,7 +76,7 @@ jobs:
           echo "Please review the logs" >> $GITHUB_STEP_SUMMARY
 
       - name: Summary with document changes
-        if: ${{ steps.push-with-sig.conclusion == 'success' }}
+        if: ${{ steps.push-with-sig.conclusion == 'success' && steps.push-with-sig.outputs.commit-hash != ''}}
         run: |
           echo "### :white_check_mark: Terraform docs updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
