@@ -64,8 +64,9 @@ jobs:
           branch: ${{ env.BRANCH }}
           file_pattern: "${{ inputs.tf-directory }}/**/${{ env.TF_DOCS_FILE }}"
 
+      # This step produces a job summary if the commit fails or if the documents are not updated
       - name: Summary with commit failure
-        if: ${{ failure() && steps.push-with-sig.outcome == 'failure' }}
+        if: ${{ (failure() && steps.push-with-sig.outcome == 'failure') || (success() && steps.push-with-sig.outputs.commit-hash == '') }}
         run: |
           echo "### :x: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
