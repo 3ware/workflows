@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.8.0](https://github.com/3ware/workflows/compare/v4.7.6...v4.8.0) (2025-02-24)
+
+
+### Enhancement
+
+* **terraform-docs:** Use tf-directory input throughout workflow  ([#154](https://github.com/3ware/workflows/issues/154)) ([eba1297](https://github.com/3ware/workflows/commit/eba1297f944d49185dce0f894bf8c07cc466d6a9))
+
 ## [4.7.6](https://github.com/3ware/workflows/compare/v4.7.5...v4.7.6) (2025-02-19)
 
 
