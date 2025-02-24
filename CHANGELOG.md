@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.7.6](https://github.com/3ware/workflows/compare/v4.7.5...v4.7.6) (2025-02-19)
+
+
+### Dependencies
+
+* **deps:** Update peter-murray/workflow-application-token-action ([#157](https://github.com/3ware/workflows/issues/157)) ([2badfa1](https://github.com/3ware/workflows/commit/2badfa152ab2a969d4827e4547de09e370160f68))
+
+## [4.7.5](https://github.com/3ware/workflows/compare/v4.7.4...v4.7.5) (2025-02-19)
+
+
+### Dependencies
+
+* **deps:** Update poseidon/wait-for-status-checks action ([#152](https://github.com/3ware/workflows/issues/152)) ([3ffa023](https://github.com/3ware/workflows/commit/3ffa0236dd37567f4a00d5fbe25115df86dddcff))
+
+## [4.7.4](https://github.com/3ware/workflows/compare/v4.7.3...v4.7.4) (2025-02-19)
+
+
+### Dependencies
+
+* **deps:** Update ossf/scorecard-action action ([#150](https://github.com/3ware/workflows/issues/150)) ([1425837](https://github.com/3ware/workflows/commit/14258376af8fc95332ea05a63ef23cda2931580a))
+
+## [4.7.3](https://github.com/3ware/workflows/compare/v4.7.2...v4.7.3) (2025-02-19)
+
+
+### Dependencies
+
+* **deps:** Update amannn/action-semantic-pull-request action ([#145](https://github.com/3ware/workflows/issues/145)) ([3023f84](https://github.com/3ware/workflows/commit/3023f84ddea7274aa9407d9a5ad6afaaac6068a7))
+
+## [4.7.2](https://github.com/3ware/workflows/compare/v4.7.1...v4.7.2) (2025-02-19)
+
+
+### Dependencies
+
+* **deps:** Update actions/dependency-review-action action ([#143](https://github.com/3ware/workflows/issues/143)) ([c4576d5](https://github.com/3ware/workflows/commit/c4576d525259cc7303ae43170cf0f61393afe94b))
+
 ## [4.7.1](https://github.com/3ware/workflows/compare/v4.7.0...v4.7.1) (2025-02-13)
 
 
