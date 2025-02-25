@@ -4,6 +4,7 @@ on:
   pull_request:
     types: [opened, edited, reopened, synchronize]
     branches: [main]
+  workflow_call: {}
 
 # Disable permissions for all available scopes
 permissions: {}
@@ -20,12 +21,15 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: GitHub Checks
-        uses: poseidon/wait-for-status-checks@6988432d64ad3f9c2608db4ca16fded1b7d36ead # v0.5.0
+        uses: poseidon/wait-for-status-checks@899c768d191b56eef585c18f8558da19e1f3e707 # v0.6.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           # check run "auto-approve-pr" is completed with conclusion "cancelled" (unsuccessful) when skipped
           # auto-approve-pr should run on the conclusion of enforce-all-checks, so checks should not check for auto-approve-pr
           ignore: auto-approve-pr
+          # ignore any pattern before '/ enforce-all-checks' for calling workflows
+          # For example if the calling workflow job name is 'Checks' the path to ignore is 'Checks / enforce-all-checks'
+          ignore_pattern: .*\/ enforce-all-checks
 
   # Approve PR raised by 3ware-release[bot] to upgrade trunk on trunk branches
   # after all checks have passed.
