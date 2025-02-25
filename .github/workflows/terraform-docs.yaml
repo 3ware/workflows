@@ -24,7 +24,6 @@ jobs:
     needs: [get-temp-token]
     env:
       TF_DOCS_FILE: README.md
-      # TODO: Define as an input, because calling workflow could use a different event type
       BRANCH: ${{ github.base_ref }}
     steps:
       - name: Decrypt the installation access token
