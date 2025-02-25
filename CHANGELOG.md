@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.10.0](https://github.com/3ware/workflows/compare/v4.9.0...v4.10.0) (2025-02-25)
+
+
+### Features
+
+* **trunk:** Add `workflow_call` trigger ([#155](https://github.com/3ware/workflows/issues/155)) ([6865d40](https://github.com/3ware/workflows/commit/6865d404241f5951c693f390ea7b08943a6bb758))
+
+## [4.9.0](https://github.com/3ware/workflows/compare/v4.8.0...v4.9.0) (2025-02-25)
+
+
+### Features
+
+* **checks:** Add workflow_call event to wait-for-checks workflow ([#156](https://github.com/3ware/workflows/issues/156)) ([cc574b5](https://github.com/3ware/workflows/commit/cc574b5ef75c8527b3b505e708164275f0e8e2f5))
+
 ## [4.8.0](https://github.com/3ware/workflows/compare/v4.7.6...v4.8.0) (2025-02-24)
 
 
