@@ -27,6 +27,8 @@ jobs:
           # check run "auto-approve-pr" is completed with conclusion "cancelled" (unsuccessful) when skipped
           # auto-approve-pr should run on the conclusion of enforce-all-checks, so checks should not check for auto-approve-pr
           ignore: auto-approve-pr
+          # ignore any pattern before / enforce-all-checks
+          ignore_pattern: .*\/enforce-all-checks
 
   # Approve PR raised by 3ware-release[bot] to upgrade trunk on trunk branches
   # after all checks have passed.
