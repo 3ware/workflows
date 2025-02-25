@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.10.0](https://github.com/3ware/workflows/compare/v4.9.0...v4.10.0) (2025-02-25)
+
+
+### Features
+
+* **trunk:** Add `workflow_call` trigger ([#155](https://github.com/3ware/workflows/issues/155)) ([6865d40](https://github.com/3ware/workflows/commit/6865d404241f5951c693f390ea7b08943a6bb758))
+
 ## [4.9.0](https://github.com/3ware/workflows/compare/v4.8.0...v4.9.0) (2025-02-25)
 
 
