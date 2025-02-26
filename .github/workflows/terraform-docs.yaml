@@ -24,7 +24,6 @@ jobs:
     needs: [get-temp-token]
     env:
       TF_DOCS_FILE: README.md
-      # TODO: Define as an input, because calling workflow could use a different event type
       BRANCH: ${{ github.base_ref }}
     steps:
       - name: Decrypt the installation access token
@@ -59,13 +58,14 @@ jobs:
           GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
         uses: planetscale/ghcommit-action@c7915d6c18d5ce4eb42b0eff3f10a29fe0766e4c # v0.1.44
         with:
-          commit_message: "docs(terraform): Update ${{ env.TF_DOCS_FILE }}"
+          commit_message: "docs(${{ inputs.tf-directory }}): Update ${{ env.TF_DOCS_FILE }}"
           repo: ${{ github.repository }}
           branch: ${{ env.BRANCH }}
-          file_pattern: "terraform/**/${{ env.TF_DOCS_FILE }}"
+          file_pattern: "${{ inputs.tf-directory }}/**/${{ env.TF_DOCS_FILE }}"
 
+      # This step produces a job summary if the commit fails or if the documents are not updated
       - name: Summary with commit failure
-        if: ${{ failure() && steps.push-with-sig.outcome == 'failure' }}
+        if: ${{ (failure() && steps.push-with-sig.outcome == 'failure') || (success() && steps.push-with-sig.outputs.commit-hash == '') }}
         run: |
           echo "### :x: ${{ env.TF_DOCS_FILE }} not updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -75,7 +75,7 @@ jobs:
           echo "Please review the logs" >> $GITHUB_STEP_SUMMARY
 
       - name: Summary with document changes
-        if: ${{ steps.push-with-sig.conclusion == 'success' }}
+        if: ${{ steps.push-with-sig.conclusion == 'success' && steps.push-with-sig.outputs.commit-hash != ''}}
         run: |
           echo "### :white_check_mark: Terraform docs updated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY

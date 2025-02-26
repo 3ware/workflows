@@ -11,13 +11,13 @@
             "release": "major"
           },
           {
-            "type": "refactor",
-            "release": "minor"
+            "release": "minor",
+            "type": "refactor"
           },
           {
-            "type": "chore",
+            "release": "patch",
             "scope": "deps",
-            "release": "patch"
+            "type": "chore"
           }
         ]
       }
@@ -29,25 +29,31 @@
         "presetConfig": {
           "types": [
             {
-              "type": "refactor",
+              "hidden": false,
               "section": "Enhancement",
-              "hidden": false
+              "type": "refactor"
             },
             {
-              "type": "feat",
+              "hidden": false,
               "section": "Features",
-              "hidden": false
+              "type": "feat"
             },
             {
-              "type": "fix",
+              "hidden": false,
               "section": "Bug Fixes",
-              "hidden": false
+              "type": "fix"
             },
             {
-              "type": "chore",
+              "hidden": false,
               "scope": "deps",
-              "section": "Chores",
-              "hidden": false
+              "section": "Security",
+              "type": "fix"
+            },
+            {
+              "hidden": false,
+              "scope": "deps",
+              "section": "Dependencies",
+              "type": "chore"
             }
           ]
         }
@@ -56,9 +62,9 @@
     [
       "@semantic-release/github",
       {
-        "successComment": "This ${issue.pull_request ? 'PR is included' : 'issue has been resolved'} in version ${nextRelease.version}",
         "labels": false,
-        "releasedLabels": false
+        "releasedLabels": false,
+        "successComment": "This ${issue.pull_request ? 'PR is included' : 'issue has been resolved'} in version ${nextRelease.version}"
       }
     ],
     [
