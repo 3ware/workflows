@@ -90,7 +90,6 @@ jobs:
           requireScope: true
           scopes: |
             ${{ env.COMMIT_SCOPES }}
-          # TODO: Add scopes to PR comment if applicable
           subjectPattern: ^([A-Z]).+$ # Subject must start with an upper case character
           subjectPatternError: |
             The subject "{subject}" found in the pull request title
