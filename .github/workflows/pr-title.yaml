@@ -89,7 +89,7 @@ jobs:
         with:
           requireScope: true
           scopes: |
-            "$COMMIT_SCOPES"
+            ${{ env.COMMIT_SCOPES }}
           # TODO: Add scopes to PR comment if applicable
           subjectPattern: ^([A-Z]).+$ # Subject must start with an upper case character
           subjectPatternError: |
