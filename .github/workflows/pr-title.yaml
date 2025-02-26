@@ -62,10 +62,23 @@ jobs:
     # Run if PR title length job does not exit
     needs: [pr-title-length]
     permissions:
+      contents: read
       pull-requests: write
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+
+      - name: Get commitlint scopes from configuration file
+        id: commit_scope
+        run: |
+          {
+            echo 'COMMIT_SCOPES<<EOF'
+            jq -r '.rules["scope-enum"][2][]' .commitlintrc.json
+            echo EOF
+          } >> "$GITHUB_ENV"
+
       - name: Validate PR title conforms to conventional spec
         id: validate-pr-title
         env:
@@ -75,11 +88,9 @@ jobs:
         uses: amannn/action-semantic-pull-request@47b15d52c5c30e94a17ec87eb8dd51ff5221fed9 # v5.3.0
         with:
           requireScope: true
-          # TODO: Required scopes for this repo and as an input when called
+          scopes: |
+            "$COMMIT_SCOPES"
           # TODO: Add scopes to PR comment if applicable
-          # scopes: Ideally get them from the commitlint config file to avoid duplication
-          # Maybe use this action; will require commitlint.config.js changing to .commitlintrc.json
-          # https://github.com/marketplace/actions/get-properties-from-json-file
           subjectPattern: ^([A-Z]).+$ # Subject must start with an upper case character
           subjectPatternError: |
             The subject "{subject}" found in the pull request title
