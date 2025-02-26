@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.11.0](https://github.com/3ware/workflows/compare/v4.10.0...v4.11.0) (2025-02-26)
+
+
+### Features
+
+* **pr-title:** Add commitlint scopes ([#129](https://github.com/3ware/workflows/issues/129)) ([827f302](https://github.com/3ware/workflows/commit/827f302c0c44cb84e4a8b19fd2582da532ea31fb))
+
 ## [4.10.0](https://github.com/3ware/workflows/compare/v4.9.0...v4.10.0) (2025-02-25)
 
 
