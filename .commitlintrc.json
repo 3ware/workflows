@@ -40,7 +40,7 @@
         "docs",
         "feat",
         "fix",
-        "refactor",
+        "refactor"
       ]
     ]
   }
