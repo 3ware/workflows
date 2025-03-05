@@ -70,12 +70,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
 
-      - name: Get commitlint scopes from configuration file
-        id: commit_scope
+      - name: Get attributes from commitlint configuration file
+        id: commitlint
         run: |
           {
             echo 'COMMIT_SCOPES<<EOF'
             jq -r '.rules["scope-enum"][2][]' .commitlintrc.json
+            echo EOF
+          } >> "$GITHUB_ENV"
+          {
+            echo 'COMMIT_TYPES<<EOF'
+            jq -r '.rules["type-enum"][2][]' .commitlintrc.json
             echo EOF
           } >> "$GITHUB_ENV"
 
@@ -87,6 +92,8 @@ jobs:
         # https://github.com/amannn/action-semantic-pull-request/issues/248
         uses: amannn/action-semantic-pull-request@0723387faaf9b38adef4775cd42cfd5155ed6017 # v5.5.3
         with:
+          types: |
+            ${{ env.COMMIT_TYPES }}
           requireScope: true
           scopes: |
             ${{ env.COMMIT_SCOPES }}
