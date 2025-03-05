@@ -2,7 +2,7 @@ name: Checks
 
 on:
   pull_request:
-    types: [opened, edited, reopened, synchronize]
+    types: [opened, reopened, synchronize]
     branches: [main]
   workflow_call: {}
 
@@ -34,6 +34,7 @@ jobs:
   # Approve PR raised by 3ware-release[bot] to upgrade trunk on trunk branches
   # after all checks have passed.
   auto-approve-pr:
+    # TODO: Add terraform app to actor, maybe project/** to branch as well
     if: ${{ github.actor == '3ware-release[bot]' && github.head_ref == 'trunk-io/update-trunk' }}
     needs: [enforce-all-checks]
     runs-on: ubuntu-latest
