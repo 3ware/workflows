@@ -131,9 +131,9 @@ jobs:
           echo '${{ toJson(github.event) }}'
 
       - name: Trigger checks when title is valid
-        if: ${{ github.event.pull_request.title.changes.from }}
+        if: ${{ github.event.pull_request.changes.title.from }}
         run: |
-          echo "Title changed from: ${{ github.event.pull_request.title.changes.from }}"
+          echo "Title changed from: ${{ github.event.pull_request.changes.title.from }}"
 
       - name: Summary with valid title
         # A length check is not required here because the validate-pr-title step will only run if the title is less than or equal to the max length
