@@ -34,8 +34,9 @@ jobs:
   # Approve PR raised by 3ware-release[bot] to upgrade trunk on trunk branches
   # after all checks have passed.
   auto-approve-pr:
-    # TODO: Add terraform app to actor, maybe project/** to branch as well
-    if: ${{ github.actor == '3ware-release[bot]' && github.head_ref == 'trunk-io/update-trunk' }}
+    if: |
+      ( github.actor == '3ware-release[bot]' && github.head_ref == 'trunk-io/update-trunk') ||
+      ( github.actor == '3ware-terraform[bot]' && github.head_ref == 'project/**')
     needs: [enforce-all-checks]
     runs-on: ubuntu-latest
     timeout-minutes: 5
