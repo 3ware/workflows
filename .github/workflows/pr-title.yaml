@@ -130,8 +130,9 @@ jobs:
         run: |
           echo '${{ toJson(github.event) }}'
 
-      - name: Trigger checks when title is valid
-        if: ${{ github.event.pull_request.changes.title.from }}
+      # Trigger checks with empty commit when PR title is edited to resolve validation failure
+      - name: Trigger checks with empty commit
+        if: ${{ github.event.pull_request.action == 'edited' && github.event.pull_request.changes.title.from != null }}
         run: |
           echo "Title changed from: ${{ github.event.pull_request.changes.title.from }}"
 
