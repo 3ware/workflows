@@ -128,7 +128,8 @@ jobs:
 
       - name: dump pull request event details
         run: |
-          echo '${{ toJson(github.event) }}'
+          echo "PR action: ${{ github.event.pull_request.action }}"
+          echo "PR changes: ${{ toJSON(github.event.pull_request.changes) }}"
 
       # Trigger checks with empty commit when PR title is edited to resolve validation failure
       - name: Trigger checks with empty commit
