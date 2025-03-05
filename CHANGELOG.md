@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.11.1](https://github.com/3ware/workflows/compare/v4.11.0...v4.11.1) (2025-03-05)
+
+
+### Bug Fixes
+
+* **pr-title:** Remove unecessary `if always` conditions ([#169](https://github.com/3ware/workflows/issues/169)) ([016d847](https://github.com/3ware/workflows/commit/016d847b4c400c7cfd923888824782912358bc31))
+
 ## [4.11.0](https://github.com/3ware/workflows/compare/v4.10.0...v4.11.0) (2025-02-26)
 
 
