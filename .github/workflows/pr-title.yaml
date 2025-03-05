@@ -126,6 +126,10 @@ jobs:
           header: pr-title-error
           delete: true
 
+      - name: dump pull request event details
+        run: |
+          echo '${{ toJson(github.event) }}'
+
       - name: Trigger checks when title is valid
         if: ${{ github.event.pull_request.title.changes.from }}
         run: |
