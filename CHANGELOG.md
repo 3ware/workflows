@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.12.0](https://github.com/3ware/workflows/compare/v4.11.1...v4.12.0) (2025-03-05)
+
+
+### Enhancement
+
+* **pr-title:** Get commit types from commitlint configuration ([#170](https://github.com/3ware/workflows/issues/170)) ([e39a749](https://github.com/3ware/workflows/commit/e39a749c3b5e05c64284ae24d889fde4eea88ed5))
+
 ## [4.11.1](https://github.com/3ware/workflows/compare/v4.11.0...v4.11.1) (2025-03-05)
 
 
