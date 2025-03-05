@@ -2,7 +2,7 @@ name: Validate PR title
 
 on:
   pull_request:
-    types: [opened, edited, reopened, synchronize]
+    types: [opened, edited, reopened]
     branches: [main]
   workflow_call: {}
 
@@ -120,10 +120,16 @@ jobs:
       - name: Delete PR comment on resolution
         # Delete comment if the error message is null or the PR title is the correct length
         if: ${{ steps.validate-pr-title.outputs.error_message == null }}
+        id: delete-comment
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
           header: pr-title-error
           delete: true
+
+      - name: Trigger checks when title is valid
+        if: ${{ github.event.pull_request.title.changes.from }}
+        run: |
+          echo "Title changed from: ${{ github.event.pull_request.title.changes.from }}"
 
       - name: Summary with valid title
         # A length check is not required here because the validate-pr-title step will only run if the title is less than or equal to the max length
