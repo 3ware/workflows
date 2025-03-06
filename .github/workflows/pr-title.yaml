@@ -19,6 +19,8 @@ env:
 
 jobs:
   pr-title-length:
+    outputs:
+      check_run_conclusion: ${{ steps.pr-title-check-run-conclusion.outputs.check_run_conclusion }}
     permissions:
       checks: read
       pull-requests: write
@@ -73,12 +75,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "CHECK_RUN_CONCLUSION=$(gh api /repos/${{ github.repository }}/check-runs/${{ env.CHECK_RUN_ID }} --jq '.conclusion')" >> "$GITHUB_ENV"
+          echo "check_run_conclusion=$(gh api /repos/${{ github.repository }}/check-runs/${{ env.CHECK_RUN_ID }} --jq '.conclusion')" >> "$GITHUB_OUTPUT"
 
+  check-run-conclusion:
+    needs: [pr-title-length]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
       - name: Echo check run conclusion
         if: ${{ always() }}
         run: |
-          echo "Check run conclusion: ${{ env.CHECK_RUN_CONCLUSION }}"
+          echo "Check run conclusion: ${{ needs.pr-title-length.outputs.check_run_conclusion }}"
 
   pr-title-convention:
     # Run if PR title length job does not exit
