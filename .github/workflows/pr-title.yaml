@@ -1,9 +1,6 @@
 name: Validate PR title
 
 on:
-  pull_request:
-    types: [opened, edited, reopened]
-    branches: [main]
   workflow_call: {}
 
 # Disable permissions for all available scopes
