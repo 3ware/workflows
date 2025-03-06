@@ -59,6 +59,7 @@ jobs:
     # Run if PR title length job does not exit
     needs: [pr-title-length]
     permissions:
+      checks: write
       contents: read
       pull-requests: write
     runs-on: ubuntu-latest
