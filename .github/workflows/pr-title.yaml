@@ -75,6 +75,11 @@ jobs:
         run: |
           echo "CHECK_RUN_CONCLUSION=$(gh api /repos/${{ github.repository }}/check-runs/${{ env.CHECK_RUN_ID }} --jq '.conclusion')" >> "$GITHUB_ENV"
 
+      - name: Echo check run conclusion
+        if: ${{ always() }}
+        run: |
+          echo "Check run conclusion: ${{ env.CHECK_RUN_CONCLUSION }}"
+
   pr-title-convention:
     # Run if PR title length job does not exit
     needs: [pr-title-length]
