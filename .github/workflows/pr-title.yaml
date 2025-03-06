@@ -20,6 +20,7 @@ env:
 jobs:
   pr-title-length:
     permissions:
+      checks: read
       pull-requests: write
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -54,6 +55,22 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "The pull request title is too long. Please update the title to be ${{ env.MAX_PR_TITLE_LENGTH }} characters or less." >> $GITHUB_STEP_SUMMARY
           exit 1
+
+      - name: Get check run ID
+        if: ${{ always() }}
+        id: pr-title-check-run-id
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "CHECK_RUN_ID=$(gh api /repos/${{ github.repository }}/commits/${{ github.sha }}/check-runs --jq '.check_runs[] | select(.name == "Validate PR title / pr-title-length") | .id')" >> "$GITHUB_ENV"
+
+      - name: Get check run conclusion
+        if: ${{ always() }}
+        id: pr-title-check-run-conclusion
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "CHECK_RUN_CONCLUSION=$(gh api /repos/${{ github.repository }}/check-runs/${{ env.CHECK_RUN_ID }} | --jq '.conclusion')" >> "$GITHUB_ENV"
 
   pr-title-convention:
     # Run if PR title length job does not exit
@@ -129,18 +146,6 @@ jobs:
         with:
           header: pr-title-error
           delete: true
-
-      # This is required to update the check status to 'success' on the head.sha which does not happen on 'edited' events
-      - name: Empty commit to trigger new checks
-        if: ${{ steps.delete-comment.conclusion == 'success' }}
-        uses: planetscale/ghcommit-action@c7915d6c18d5ce4eb42b0eff3f10a29fe0766e4c # v0.1.44
-        env:
-          GITHUB_TOKEN: ${{ secrets.PR_CHECK_FG_PAT }}
-        with:
-          commit_message: "fix(pr-title): Create empty commit to trigger new checks"
-          repo: ${{ github.repository }}
-          branch: ${{ github.head_ref }}
-          empty: true
 
       - name: Summary with valid title
         # A length check is not required here because the validate-pr-title step will only run if the title is less than or equal to the max length
