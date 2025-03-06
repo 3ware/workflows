@@ -59,7 +59,7 @@ jobs:
     # Run if PR title length job does not exit
     needs: [pr-title-length]
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
     runs-on: ubuntu-latest
     timeout-minutes: 5
