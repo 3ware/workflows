@@ -10,7 +10,6 @@ jobs:
   validate-pr-title:
     name: Validate PR title
     permissions:
-      checks: read
       contents: read
       pull-requests: write
     uses: 3ware/workflows/.github/workflows/pr-title.yaml@feat-pr-title-recheck

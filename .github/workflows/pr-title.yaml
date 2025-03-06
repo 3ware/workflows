@@ -19,17 +19,11 @@ env:
 
 jobs:
   pr-title-length:
-    outputs:
-      check_run_id: ${{ steps.pr-title-check-run-id.outputs.check_run_id }}
     permissions:
-      checks: read
       pull-requests: write
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: dump-github-context
-        run: echo '${{ toJson(github) }}'
-
       - name: Get PR title length
         id: pr-title-length
         env:
@@ -53,40 +47,13 @@ jobs:
 
             Please update the title to be ${{ env.MAX_PR_TITLE_LENGTH }} characters or less. If you need help, feel free to ask! 😊
 
-      - name: Exit if PR title is too long
+      - name: Long title summary
         if: ${{ fromJson(env.PR_TITLE_LENGTH) > fromJson(env.MAX_PR_TITLE_LENGTH) }}
         run: |
           echo "### :x: Pull Request title is invalid" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "The pull request title is too long. Please update the title to be ${{ env.MAX_PR_TITLE_LENGTH }} characters or less." >> $GITHUB_STEP_SUMMARY
           exit 1
-
-      - name: Get check run ID
-        if: ${{ always() }}
-        id: pr-title-check-run-id
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "check_run_id=$(gh api /repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha }}/check-runs --jq '.check_runs[] | select(.name == "Validate PR title / pr-title-length") | .id')" >> "$GITHUB_OUTPUT"
-
-  check-run-conclusion:
-    needs: [pr-title-length]
-    permissions:
-      checks: read
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Get check run conclusion
-        id: pr-title-check-run-conclusion
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CHECK_RUN_ID: ${{ needs.pr-title-length.outputs.check_run_id }}
-        run: |
-          echo "CHECK_RUN_CONCLUSION=$(gh api /repos/${{ github.repository }}/check-runs/${{ env.CHECK_RUN_ID }} --jq '.conclusion')" >> "$GITHUB_ENV"
-
-      - name: Echo check run conclusion
-        run: |
-          echo "$CHECK_RUN_CONCLUSION"
 
   pr-title-convention:
     # Run if PR title length job does not exit
