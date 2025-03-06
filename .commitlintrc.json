@@ -16,6 +16,7 @@
         "delete-run",
         "dep-review",
         "get-token",
+        "pr-check",
         "pr-title",
         "ossf",
         "release",

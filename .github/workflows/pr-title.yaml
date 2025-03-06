@@ -1,9 +1,6 @@
 name: Validate PR title
 
 on:
-  pull_request:
-    types: [opened, edited, reopened]
-    branches: [main]
   workflow_call: {}
 
 # Disable permissions for all available scopes
@@ -62,7 +59,7 @@ jobs:
     # Run if PR title length job does not exit
     needs: [pr-title-length]
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -127,10 +124,23 @@ jobs:
       - name: Delete PR comment on resolution
         # Delete comment if the error message is null or the PR title is the correct length
         if: ${{ steps.validate-pr-title.outputs.error_message == null }}
+        id: delete-comment
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
           header: pr-title-error
           delete: true
+
+      # This is required to update the check status to 'success' on the head.sha which does not happen on 'edited' events
+      - name: Empty commit to trigger new checks
+        if: ${{ steps.delete-comment.conclusion == 'success' }}
+        uses: planetscale/ghcommit-action@c7915d6c18d5ce4eb42b0eff3f10a29fe0766e4c # v0.1.44
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commit_message: "fix(pr-title): Create empty commit to trigger new checks"
+          repo: ${{ github.repository }}
+          branch: ${{ github.head_ref }}
+          empty: true
 
       - name: Summary with valid title
         # A length check is not required here because the validate-pr-title step will only run if the title is less than or equal to the max length

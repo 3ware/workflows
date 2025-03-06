@@ -1,0 +1,23 @@
+name: PR Check
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+# Disable permissions for all available scopes
+permissions: {}
+
+jobs:
+  validate-pr-title:
+    name: Validate PR title
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: 3ware/workflows/.github/workflows/pr-title.yaml@feat-pr-title-recheck
+
+  enforce-all-checks:
+    name: Checks
+    needs: [validate-pr-title]
+    permissions:
+      checks: read
+    uses: 3ware/workflows/.github/workflows/wait-for-checks.yaml@61d14ca4e861fc9c11acacc7d80a10a78775a4e3 # 4.11.0
+    secrets: inherit
