@@ -84,8 +84,10 @@ jobs:
     steps:
       - name: Echo check run conclusion
         if: ${{ always() }}
+        env:
+          CHECK_RUN_CONCLUSION: ${{ needs.pr-title-length.outputs.check_run_conclusion }}
         run: |
-          echo "Check run conclusion: ${{ needs.pr-title-length.outputs.check_run_conclusion }}"
+          echo $CHECK_RUN_CONCLUSION
 
   pr-title-convention:
     # Run if PR title length job does not exit
