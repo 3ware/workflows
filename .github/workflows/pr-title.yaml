@@ -59,7 +59,7 @@ jobs:
     # Run if PR title length job does not exit
     needs: [pr-title-length]
     permissions:
-      contents: write
+      contents: read
       pull-requests: write
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -135,7 +135,7 @@ jobs:
         if: ${{ steps.delete-comment.conclusion == 'success' }}
         uses: planetscale/ghcommit-action@c7915d6c18d5ce4eb42b0eff3f10a29fe0766e4c # v0.1.44
         env:
-          GITHUB_TOKEN: ${{ secrets.PR_APPROVAL_FG_PAT }}
+          GITHUB_TOKEN: ${{ secrets.PR_CHECK_FG_PAT }}
         with:
           commit_message: "fix(pr-title): Create empty commit to trigger new checks"
           repo: ${{ github.repository }}
