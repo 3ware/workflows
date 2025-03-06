@@ -12,7 +12,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    uses: 3ware/workflows/.github/workflows/pr-title.yaml@feat-pr-title-recheck
+    uses: 3ware/workflows/.github/workflows/pr-title.yaml@0bd5c5d052b31311b5f841f71f113260df047181 # 4.13.0
 
   enforce-all-checks:
     name: Checks
