@@ -1,9 +1,6 @@
 name: Checks
 
 on:
-  pull_request:
-    types: [opened, reopened, synchronize]
-    branches: [main]
   workflow_call: {}
 
 # Disable permissions for all available scopes
@@ -26,10 +23,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           # check run "auto-approve-pr" is completed with conclusion "cancelled" (unsuccessful) when skipped
           # auto-approve-pr should run on the conclusion of enforce-all-checks, so checks should not check for auto-approve-pr
-          ignore: auto-approve-pr
           # ignore any pattern before '/ enforce-all-checks' for calling workflows
           # For example if the calling workflow job name is 'Checks' the path to ignore is 'Checks / enforce-all-checks'
-          ignore_pattern: .*\/ enforce-all-checks
+          ignore_pattern: .*\/ (enforce-all-checks|auto-approve-pr)
 
   # Approve PR raised by 3ware-release[bot] to upgrade trunk on trunk branches
   # after all checks have passed.

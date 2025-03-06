@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.13.0](https://github.com/3ware/workflows/compare/v4.12.0...v4.13.0) (2025-03-06)
+
+
+### Features
+
+* **pr-check:** Create pr-check workflow ([#172](https://github.com/3ware/workflows/issues/172)) ([9c6cac7](https://github.com/3ware/workflows/commit/9c6cac70a8d306d5d1bbef1dcb789fd7adc33b6c))
+
 ## [4.12.0](https://github.com/3ware/workflows/compare/v4.11.1...v4.12.0) (2025-03-05)
 
 

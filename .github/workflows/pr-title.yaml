@@ -1,9 +1,6 @@
 name: Validate PR title
 
 on:
-  pull_request:
-    types: [opened, edited, reopened]
-    branches: [main]
   workflow_call: {}
 
 # Disable permissions for all available scopes
@@ -50,7 +47,7 @@ jobs:
 
             Please update the title to be ${{ env.MAX_PR_TITLE_LENGTH }} characters or less. If you need help, feel free to ask! 😊
 
-      - name: Exit if PR title is too long
+      - name: Long title summary
         if: ${{ fromJson(env.PR_TITLE_LENGTH) > fromJson(env.MAX_PR_TITLE_LENGTH) }}
         run: |
           echo "### :x: Pull Request title is invalid" >> $GITHUB_STEP_SUMMARY
@@ -127,6 +124,7 @@ jobs:
       - name: Delete PR comment on resolution
         # Delete comment if the error message is null or the PR title is the correct length
         if: ${{ steps.validate-pr-title.outputs.error_message == null }}
+        id: delete-comment
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         with:
           header: pr-title-error
