@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.14.1](https://github.com/3ware/workflows/compare/v4.14.0...v4.14.1) (2025-03-07)
+
+
+### Bug Fixes
+
+* **checks:** Add `startsWith` auto-approve-pr condition ([#174](https://github.com/3ware/workflows/issues/174)) ([e939dec](https://github.com/3ware/workflows/commit/e939dec8ea5398b382dbd2d4d4a413d938c755f3))
+
 ## [4.14.0](https://github.com/3ware/workflows/compare/v4.13.0...v4.14.0) (2025-03-06)
 
 
