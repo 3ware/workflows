@@ -28,11 +28,13 @@ jobs:
           ignore_pattern: .*\/ (enforce-all-checks|auto-approve-pr)
 
   # Approve PR raised by 3ware-release[bot] to upgrade trunk on trunk branches or by 3ware-terraform[bot] on project branches
-  # This job will only run if enforce-all-checks job has passed successfully.
+  # This job will only run if enforce-all-checks job has passed successfully on pull requests. This workflow could be called by
+  # a merge_group event: in this case it should not run
   auto-approve-pr:
     if: |
+      github.event_name == 'pull_request' &&
       ( github.actor == '3ware-release[bot]' && github.head_ref == 'trunk-io/update-trunk') ||
-      ( github.actor == '3ware-terraform[bot]' && github.head_ref == 'project/**')
+      ( github.actor == '3ware-terraform[bot]' && startsWith(github.head_ref, 'project/'))
     needs: [enforce-all-checks]
     runs-on: ubuntu-latest
     timeout-minutes: 5
