@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.14.0](https://github.com/3ware/workflows/compare/v4.13.0...v4.14.0) (2025-03-06)
+
+
+### Enhancement
+
+* **checks:** Add condition to auto-approve 3ware-terraform PRs ([#173](https://github.com/3ware/workflows/issues/173)) ([2356929](https://github.com/3ware/workflows/commit/2356929a8b79f60f6e30a5c34e95035de2f33903))
+
 ## [4.13.0](https://github.com/3ware/workflows/compare/v4.12.0...v4.13.0) (2025-03-06)
 
 
