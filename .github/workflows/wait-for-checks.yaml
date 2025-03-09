@@ -7,7 +7,7 @@ on:
 permissions: {}
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref }}
+  group: checks-${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
 
 jobs:
