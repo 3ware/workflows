@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.14.2](https://github.com/3ware/workflows/compare/v4.14.1...v4.14.2) (2025-03-09)
+
+
+### Bug Fixes
+
+* **workflows:** Add prefix to concurrency group names ([#178](https://github.com/3ware/workflows/issues/178)) ([37327f0](https://github.com/3ware/workflows/commit/37327f029989e2d8b94cb3a68bd78ca8ddf809ce))
+
 ## [4.14.1](https://github.com/3ware/workflows/compare/v4.14.0...v4.14.1) (2025-03-07)
 
 
