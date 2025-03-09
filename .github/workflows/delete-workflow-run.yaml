@@ -2,6 +2,7 @@ name: Delete old workflow runs
 on:
   schedule:
     - cron: 0 0 1 * *
+  workflow_dispatch: {}
 
 # Disable permissions for all available scopes
 permissions: {}
@@ -24,4 +25,4 @@ jobs:
           token: ${{ github.token }}
           repository: ${{ github.repository }}
           retain_days: 90
-          keep_minimum_runs: 14
+          keep_minimum_runs: 6
