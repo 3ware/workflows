@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.15.0](https://github.com/3ware/workflows/compare/v4.14.2...v4.15.0) (2025-03-09)
+
+
+### Enhancement
+
+* **dep-review:** Enable pr comment summary ([#179](https://github.com/3ware/workflows/issues/179)) ([849449f](https://github.com/3ware/workflows/commit/849449ff64602e1c00e67b456a01d53d11d41bcd))
+
 ## [4.14.2](https://github.com/3ware/workflows/compare/v4.14.1...v4.14.2) (2025-03-09)
 
 
