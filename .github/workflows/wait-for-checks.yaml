@@ -31,7 +31,7 @@ jobs:
   # This job will only run if enforce-all-checks job has passed successfully on pull requests. This workflow could be called by
   # a merge_group event: in this case it should not run
   auto-approve-pr:
-    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.labels[0].name == 'auto-approve' }}
+    if: ${{ github.event_name == 'pull_request_target' && contains(github.event.pull_request.labels.*.name, 'auto-approve') }}
     needs: [enforce-all-checks]
     runs-on: ubuntu-latest
     timeout-minutes: 5
