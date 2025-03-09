@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.15.1](https://github.com/3ware/workflows/compare/v4.15.0...v4.15.1) (2025-03-09)
+
+
+### Bug Fixes
+
+* **dep-review:** Disable persist-credentials for checkout ([#180](https://github.com/3ware/workflows/issues/180)) ([729744b](https://github.com/3ware/workflows/commit/729744b34ff420150dc6855f3b2428e6bcde07fe))
+
 ## [4.15.0](https://github.com/3ware/workflows/compare/v4.14.2...v4.15.0) (2025-03-09)
 
 
