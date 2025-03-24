@@ -16,6 +16,7 @@
         "delete-run",
         "dep-review",
         "get-token",
+        "iac-deploy",
         "pr-check",
         "pr-title",
         "ossf",

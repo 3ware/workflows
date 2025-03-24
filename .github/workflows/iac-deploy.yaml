@@ -1,0 +1,155 @@
+name: IAC Deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: The deployment environment
+        type: string
+        required: true
+
+# Disable permissions for all available scopes
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}-${{ inputs.environment }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  targets:
+    name: IAC Targets
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    outputs:
+      targets: ${{ steps.directories.outputs.all_changed_files }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check changed directories
+        id: directories
+        uses: tj-actions/changed-files@c3a1bb2c992d77180ae65be6ae6c166cf40f857c # v45.0.3
+        with:
+          dir_names: true
+          dir_names_max_depth: 3
+          # TODO: Use inputs for these
+          files: iac/environments/**
+          files_ignore: iac/environments/glb/**
+
+  iac-deploy:
+    needs: [targets]
+    if: ${{ needs.targets.outputs.targets != '[]' }}
+    name: IAC Deploy
+    permissions:
+      actions: read # Required to identify workflow run.
+      checks: write # Required to add status summary.
+      contents: read # Required to checkout repository.
+      id-token: write # Require for OIDC.
+      pull-requests: write # Required to add comment and label.
+    env:
+      TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
+      WORKING_DIR: ${{ needs.targets.outputs.targets }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      # AWS Credentials required for tflint deep check
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+        with:
+          # TODO: Use an input for the region
+          aws-region: eu-west-2
+          mask-aws-account-id: true
+          role-to-assume: >-
+            ${{ github.event_name == 'merge_group' &&
+            secrets[format('AWS_IAM_{0}_OIDC_AA_ROLE_ARN', inputs.environment)] ||
+            secrets[format('AWS_IAM_{0}_OIDC_RO_ROLE_ARN', inputs.environment)]
+            }}
+          role-session-name: >-
+            iac-deployment-${{ github.event_name == 'merge_group' &&
+            format('apply-{0}', inputs.environment) ||
+            format('plan-{0}', inputs.environment)
+            }}
+
+      - name: Terraform Fmt + Init + Validate
+        if: ${{ github.event_name == 'pull_request' }}
+        id: tf
+        uses: op5dev/tf-via-pr@f455e10e6e83d28f53f505a2d8242433a17536f3 # v13.0.0
+        with:
+          working-directory: ${{ env.WORKING_DIR }}
+          command: init
+          arg-lock: false
+          format: true
+          validate: true
+          label-pr: false
+
+      - name: Cache TFLint plugin directory
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+        with:
+          path: .trunk/plugins/
+          key: ${{ runner.os }}-${{ github.repository }}-tflint-${{ hashFiles('.trunk/configs/.tflint_ci.hcl') }}
+
+      # Install TFLint; required to download plugins
+      - name: Install TFLint
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: terraform-linters/setup-tflint@15ef44638cb215296e7ba9e7a41f20b5b06f4784 # v4.0.0
+        with:
+          tflint_wrapper: true
+
+      # Run TFLint using the configuration file in the trunk directory
+      - name: Run TFLint
+        if: ${{ github.event_name == 'pull_request' }}
+        id: tflint
+        run: |
+          tflint --chdir=${{ env.WORKING_DIR }} --config=$GITHUB_WORKSPACE/.trunk/configs/.tflint_ci.hcl --init
+          tflint --chdir=${{ env.WORKING_DIR }} --config=$GITHUB_WORKSPACE/.trunk/configs/.tflint_ci.hcl --format compact
+        continue-on-error: true
+
+      # Add PR comment then exit workflow if TFLint detects a violation
+      - name: Add PR comment on TFLint error
+        if: ${{ steps.tflint.outputs.exitcode != 0 }}
+        env:
+          GH_TOKEN: ${{ github.token }} # https://cli.github.com/manual/gh_auth_login
+        run: |
+          # Compose TFLint output.
+          tflint="
+          <details><summary>❌ TFLint error.</summary>
+
+          \`\`\`hcl
+          ${{ steps.tflint.outputs.stderr || steps.tflint.outputs.stdout }}
+          \`\`\`
+          </details>"
+
+          # Get body of PR comment from tf step output.
+          comment=$(gh api /repos/{owner}/{repo}/issues/comments/${{ steps.tf.outputs.comment-id }} --method GET --jq '.body')
+
+          # Replace placeholder with TFLint output.
+          comment="${comment//<!-- placeholder-2 -->/$tflint}"
+
+          # Update PR comment combined with TFLint output.
+          gh api /repos/{owner}/{repo}/issues/comments/${{ steps.tf.outputs.comment-id }} --method PATCH --field body="$comment"
+
+          # Exit workflow due to TFLint error.
+          exit 1
+
+      - name: IAC Deployment ${{ format('{0}', github.event_name == 'merge_group' && 'Apply' || 'Plan') }}
+        uses: op5dev/tf-via-pr@f455e10e6e83d28f53f505a2d8242433a17536f3 # v13.0.0
+        with:
+          working-directory: ${{ env.WORKING_DIR }}
+          command: ${{ github.event_name == 'merge_group' && 'apply' || 'plan' }}
+          arg-lock: ${{ github.event_name == 'merge_group' }}
+          plan-encrypt: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
