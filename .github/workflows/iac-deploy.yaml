@@ -84,7 +84,12 @@ jobs:
             format('plan-{0}', inputs.environment)
             }}
 
-      - name: Terraform Fmt + Init + Validate
+      - name: Setup IAC tool
+        uses: opentofu/setup-opentofu@592200bd4b9bbf4772ace78f887668b1aee8f716 # v1.0.5
+        with:
+          tofu_wrapper: false
+
+      - name: IAC Fmt + Init + Validate
         if: ${{ github.event_name == 'pull_request' }}
         id: tf
         uses: op5dev/tf-via-pr@f455e10e6e83d28f53f505a2d8242433a17536f3 # v13.0.0
@@ -95,6 +100,7 @@ jobs:
           format: true
           validate: true
           label-pr: false
+          tool: tofu
 
       - name: Cache TFLint plugin directory
         if: ${{ github.event_name == 'pull_request' }}
@@ -153,3 +159,4 @@ jobs:
           command: ${{ github.event_name == 'merge_group' && 'apply' || 'plan' }}
           arg-lock: ${{ github.event_name == 'merge_group' }}
           plan-encrypt: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
+          tool: tofu
