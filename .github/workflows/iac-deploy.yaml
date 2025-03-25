@@ -55,6 +55,7 @@ jobs:
       id-token: write # Require for OIDC.
       pull-requests: write # Required to add comment and label.
     env:
+      TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
       TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
       WORKING_DIR: ${{ needs.targets.outputs.targets }}
     runs-on: ubuntu-latest
@@ -84,12 +85,19 @@ jobs:
             format('plan-{0}', inputs.environment)
             }}
 
-      - name: Setup IAC tool
+      - name: Cache TF plugin directory
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: ${{ env.TF_PLUGIN_CACHE_DIR }}
+          key: cache-tf-${{ runner.os }}-${{ github.repository }}-${{ hashFiles('${{ env.WORKING_DIR }}/.terraform.lock.hcl') }}
+
+      - name: Setup TF tool
         uses: opentofu/setup-opentofu@592200bd4b9bbf4772ace78f887668b1aee8f716 # v1.0.5
         with:
           tofu_wrapper: false
 
-      - name: IAC Fmt + Init + Validate
+      - name: TF Fmt + Init + Validate
         if: ${{ github.event_name == 'pull_request' }}
         id: tf
         uses: op5dev/tf-via-pr@f455e10e6e83d28f53f505a2d8242433a17536f3 # v13.0.0
@@ -107,7 +115,7 @@ jobs:
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: .trunk/plugins/
-          key: ${{ runner.os }}-${{ github.repository }}-tflint-${{ hashFiles('.trunk/configs/.tflint_ci.hcl') }}
+          key: cache-tflint-${{ runner.os }}-${{ github.repository }}-${{ hashFiles('.trunk/configs/.tflint_ci.hcl') }}
 
       # Install TFLint; required to download plugins
       - name: Install TFLint
