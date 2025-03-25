@@ -76,8 +76,8 @@ jobs:
           mask-aws-account-id: true
           role-to-assume: >-
             ${{ github.event_name == 'merge_group' &&
-            secrets[format('AWS_IAM_{0}_OIDC_AA_ROLE_ARN', inputs.environment)] ||
-            secrets[format('AWS_IAM_{0}_OIDC_RO_ROLE_ARN', inputs.environment)]
+            secrets[format('AWS_OIDC_AA_{0}_ROLE_ARN', inputs.environment)] ||
+            secrets[format('AWS_OIDC_RO_{0}_ROLE_ARN', inputs.environment)]
             }}
           role-session-name: >-
             iac-deployment-${{ github.event_name == 'merge_group' &&
