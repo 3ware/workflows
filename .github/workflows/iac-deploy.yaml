@@ -44,13 +44,13 @@ jobs:
           files: iac/environments/**
           files_ignore: iac/environments/glb/**
 
-      - name: Echo some stuff
+      - name: Print Outputs
         run: |
-          echo "Changed directories: ${{ steps.directories.outputs.all_changed_files }}"
+          echo "Change directories: ${{ steps.directories.outputs.all_changed_files }}"
 
   iac-deploy:
     needs: [targets]
-    if: ${{ needs.targets.outputs.targets != '[]' }}
+    if: ${{ needs.targets.outputs.targets != '[]' && needs.targets.outputs.targets != '' }}
     name: IAC Deploy
     permissions:
       actions: read # Required to identify workflow run.
