@@ -16,15 +16,15 @@ jobs:
     secrets: inherit
 
   terraform-docs:
+    needs: [get-temp-token]
+    env:
+      TF_DOCS_FILE: README.md
+      BRANCH: ${{ github.base_ref }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     concurrency:
       group: ${{ github.workflow }}-${{ github.head_ref }}
       cancel-in-progress: true
-    needs: [get-temp-token]
-    env:
-      TF_DOCS_FILE: README.md
-      BRANCH: ${{ github.base_ref }}
     steps:
       - name: Decrypt the installation access token
         id: decrypt-token

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.16.0](https://github.com/3ware/workflows/compare/v4.15.1...v4.16.0) (2025-03-26)
+
+
+### Features
+
+* **dep-review:** Add workflow call trigger ([#187](https://github.com/3ware/workflows/issues/187)) ([2f8001a](https://github.com/3ware/workflows/commit/2f8001ae2c31dc22bac309ac1cc309d4cde3dff4))
+
 ## [4.15.1](https://github.com/3ware/workflows/compare/v4.15.0...v4.15.1) (2025-03-09)
 
 
