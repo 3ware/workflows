@@ -14,12 +14,12 @@ jobs:
     secrets: inherit
 
   semantic-release:
+    needs: [get-temp-token]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
-    needs: [get-temp-token]
     steps:
       - name: Decrypt the installation access token
         id: decrypt-token

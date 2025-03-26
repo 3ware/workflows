@@ -15,8 +15,8 @@ jobs:
     uses: 3ware/workflows/.github/workflows/pr-title.yaml@0bd5c5d052b31311b5f841f71f113260df047181 # 4.13.0
 
   enforce-all-checks:
-    name: Checks
     needs: [validate-pr-title]
+    name: Checks
     permissions:
       checks: read
     uses: 3ware/workflows/.github/workflows/wait-for-checks.yaml@61d14ca4e861fc9c11acacc7d80a10a78775a4e3 # 4.11.0
