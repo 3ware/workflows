@@ -44,6 +44,10 @@ jobs:
           files: iac/environments/**
           files_ignore: iac/environments/glb/**
 
+      - name: Echo some stuff
+        run: |
+          echo "Changed directories: ${{ steps.directories.outputs.all_changed_files }}"
+
   iac-deploy:
     needs: [targets]
     if: ${{ needs.targets.outputs.targets != '[]' }}
