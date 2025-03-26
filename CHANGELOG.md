@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.17.0](https://github.com/3ware/workflows/compare/v4.16.0...v4.17.0) (2025-03-26)
+
+
+### Features
+
+* **pr-check:** Add auto-approve job for renovate PRs ([#190](https://github.com/3ware/workflows/issues/190)) ([1b9c229](https://github.com/3ware/workflows/commit/1b9c2294e48ac2b3bcf53a90d1f41a9440477ed5))
+
 ## [4.16.0](https://github.com/3ware/workflows/compare/v4.15.1...v4.16.0) (2025-03-26)
 
 
