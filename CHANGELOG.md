@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.19.0](https://github.com/3ware/workflows/compare/v4.18.0...v4.19.0) (2025-04-03)
+
+
+### Features
+
+* **iac-deploy:** Create reusable workflow for iac deployments ([#189](https://github.com/3ware/workflows/issues/189)) ([742f0f5](https://github.com/3ware/workflows/commit/742f0f5c35c5038dc3ab7df9f942f762f320d6b2))
+
 ## [4.18.0](https://github.com/3ware/workflows/compare/v4.17.0...v4.18.0) (2025-04-03)
 
 
