@@ -94,7 +94,6 @@ jobs:
         run: mkdir --parents ${{ env.TF_PLUGIN_CACHE_DIR }}
 
       - name: Cache TF plugin directory
-        if: ${{ github.event_name == 'pull_request' }}
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: ${{ env.TF_PLUGIN_CACHE_DIR }}
@@ -119,6 +118,7 @@ jobs:
           tool: tofu
 
       - name: Create TFLint cache directory
+        if: ${{ github.event_name == 'pull_request' }}
         run: mkdir --parents ${{ env.TFLINT_PLUGIN_DIR }}
 
       - name: Cache TFLint plugin directory
