@@ -27,17 +27,15 @@ jobs:
           # For example if the calling workflow job name is 'Checks' the path to ignore is 'Checks / enforce-all-checks'
           ignore_pattern: .*\/ (enforce-all-checks|auto-approve-pr)
 
-  # Approve PR raised by 3ware-release[bot] to upgrade trunk on trunk branches or by 3ware-terraform[bot] on project branches
-  # This job will only run if enforce-all-checks job has passed successfully on pull requests. This workflow could be called by
-  # a merge_group event: in this case it should not run
-  # auto-approve-pr:
-  #   if: ${{ github.event_name == 'pull_request_target' && contains(github.event.pull_request.labels.*.name, 'auto-approve') }}
-  #   needs: [enforce-all-checks]
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 5
-  #   steps:
-  #     - name: Auto Approve PR
-  #       uses: hmarr/auto-approve-action@f0939ea97e9205ef24d872e76833fa908a770363 # v4.0.0
-  #       with:
-  #         github-token: ${{ secrets.PR_APPROVAL_PAT }}
-  #         review-message: All checks passed. Auto Approved.
+  # Approve PR raised by renovate bot
+  auto-approve-pr:
+    needs: [enforce-all-checks]
+    if: ${{ github.actor == 'renovate[bot]' && github.event_name == 'pull_request_target' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Auto Approve PR
+        uses: hmarr/auto-approve-action@f0939ea97e9205ef24d872e76833fa908a770363 # v4.0.0
+        with:
+          github-token: ${{ secrets.PR_APPROVAL_PAT }}
+          review-message: All checks passed. Auto Approved.

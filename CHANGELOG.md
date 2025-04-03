@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.18.0](https://github.com/3ware/workflows/compare/v4.17.0...v4.18.0) (2025-04-03)
+
+
+### Features
+
+* **dep-review:** Update dependency-review-action to v4.6.0 ([#192](https://github.com/3ware/workflows/issues/192)) ([f469ee8](https://github.com/3ware/workflows/commit/f469ee8612f15ec29656e569eb6c2b53f44b243e))
+
+## [4.17.0](https://github.com/3ware/workflows/compare/v4.16.0...v4.17.0) (2025-03-26)
+
+
+### Features
+
+* **pr-check:** Add auto-approve job for renovate PRs ([#190](https://github.com/3ware/workflows/issues/190)) ([1b9c229](https://github.com/3ware/workflows/commit/1b9c2294e48ac2b3bcf53a90d1f41a9440477ed5))
+
 ## [4.16.0](https://github.com/3ware/workflows/compare/v4.15.1...v4.16.0) (2025-03-26)
 
 
