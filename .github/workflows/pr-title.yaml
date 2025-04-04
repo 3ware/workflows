@@ -8,7 +8,10 @@ permissions: {}
 
 concurrency:
   group: pr-title-${{ github.workflow }}-${{ github.head_ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
+  # Do no cancel in progress jobs. When a PR is synchronized and edited in quick
+  # succession, for example by Renovate pushing an update and changing the title,
+  # the checks workflow fails because it sees this job has been cancelled.
 
 defaults:
   run:
