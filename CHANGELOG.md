@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.19.1](https://github.com/3ware/workflows/compare/v4.19.0...v4.19.1) (2025-04-04)
+
+
+### Bug Fixes
+
+* **pr-title:** Set cancel-in-progress to false ([#193](https://github.com/3ware/workflows/issues/193)) ([c68b0d5](https://github.com/3ware/workflows/commit/c68b0d5cfaa5c31b21ae08682d9c4f9e8a261d32))
+
 ## [4.19.0](https://github.com/3ware/workflows/compare/v4.18.0...v4.19.0) (2025-04-03)
 
 
