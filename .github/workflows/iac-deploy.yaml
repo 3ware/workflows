@@ -3,6 +3,10 @@ name: IAC Deploy
 on:
   workflow_call:
     inputs:
+      aws-region:
+        description: The AWS region to deploy to
+        type: string
+        required: true
       environment:
         description: The deployment environment
         type: string
@@ -43,7 +47,7 @@ jobs:
         with:
           dir_names: true
           dir_names_max_depth: 3
-          files: iac/environments/${{ env.ENVIRONMENT_MAP[inputs.environment] }}/**
+          files: iac/environments/${{ fromJSON(env.ENVIRONMENT_MAP)[inputs.environment] }}/**
           files_ignore: iac/environments/glb/**
 
   iac-deploy:
@@ -75,8 +79,7 @@ jobs:
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
         with:
-          # TODO: Use an input for the region
-          aws-region: eu-west-2
+          aws-region: ${{ inputs.aws-region}}
           mask-aws-account-id: true
           role-to-assume: >-
             ${{ github.event_name == 'merge_group' &&
