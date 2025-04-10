@@ -178,5 +178,5 @@ jobs:
           working-directory: ${{ env.WORKING_DIR }}
           command: ${{ github.event_name == 'merge_group' && 'apply' || 'plan' }}
           arg-lock: ${{ github.event_name == 'merge_group' }}
-          arg-var: aws_environment=${{ inputs.environment }}
+          arg-var: "aws_environment=${{ inputs.environment }}"
           plan-encrypt: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
