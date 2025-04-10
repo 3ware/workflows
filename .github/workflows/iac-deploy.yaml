@@ -3,6 +3,10 @@ name: IAC Deploy
 on:
   workflow_call:
     inputs:
+      aws-region:
+        description: The AWS region to deploy to
+        type: string
+        required: true
       environment:
         description: The deployment environment
         type: string
@@ -24,6 +28,9 @@ jobs:
     name: IAC Targets
     permissions:
       contents: read
+    env:
+      # Maps the environment name to the directory name
+      ENVIRONMENT_MAP: '{"development":"dev","testing":"tst","productions":"prd","staging":"stg"}'
     runs-on: ubuntu-latest
     outputs:
       targets: ${{ steps.directories.outputs.all_changed_files }}
@@ -40,13 +47,8 @@ jobs:
         with:
           dir_names: true
           dir_names_max_depth: 3
-          # TODO: Use inputs for these
-          files: iac/environments/**
+          files: iac/environments/${{ fromJSON(env.ENVIRONMENT_MAP)[inputs.environment] }}/**
           files_ignore: iac/environments/glb/**
-
-      - name: Print Outputs
-        run: |
-          echo "Change directories: ${{ steps.directories.outputs.all_changed_files }}"
 
   iac-deploy:
     needs: [targets]
@@ -60,6 +62,7 @@ jobs:
       pull-requests: write # Required to add comment and label.
     env:
       TFLINT_PLUGIN_DIR: ${{ github.workspace }}/.tflint.d/plugins
+      TF_VAR_aws_environment: ${{ inputs.environment }}
       TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
       TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
       WORKING_DIR: ${{ needs.targets.outputs.targets }}
@@ -76,8 +79,7 @@ jobs:
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
         with:
-          # TODO: Use an input for the region
-          aws-region: eu-west-2
+          aws-region: ${{ inputs.aws-region}}
           mask-aws-account-id: true
           role-to-assume: >-
             ${{ github.event_name == 'merge_group' &&
@@ -174,8 +176,8 @@ jobs:
       - name: IAC Deployment ${{ format('{0}', github.event_name == 'merge_group' && 'Apply' || 'Plan') }}
         uses: op5dev/tf-via-pr@f455e10e6e83d28f53f505a2d8242433a17536f3 # v13.0.0
         with:
+          tool: tofu
           working-directory: ${{ env.WORKING_DIR }}
           command: ${{ github.event_name == 'merge_group' && 'apply' || 'plan' }}
           arg-lock: ${{ github.event_name == 'merge_group' }}
           plan-encrypt: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
-          tool: tofu
