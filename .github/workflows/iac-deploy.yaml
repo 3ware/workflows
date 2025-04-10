@@ -24,6 +24,9 @@ jobs:
     name: IAC Targets
     permissions:
       contents: read
+    env:
+      # Maps the environment name to the directory name
+      ENVIRONMENT_MAP: '{"development":"dev","testing":"tst","productions":"prd","staging":"stg"}'
     runs-on: ubuntu-latest
     outputs:
       targets: ${{ steps.directories.outputs.all_changed_files }}
@@ -40,13 +43,8 @@ jobs:
         with:
           dir_names: true
           dir_names_max_depth: 3
-          # TODO: Use inputs for these
-          files: iac/environments/**
+          files: iac/environments/${{ env.ENVIRONMENT_MAP[inputs.environment] }}/**
           files_ignore: iac/environments/glb/**
-
-      - name: Print Outputs
-        run: |
-          echo "Change directories: ${{ steps.directories.outputs.all_changed_files }}"
 
   iac-deploy:
     needs: [targets]
