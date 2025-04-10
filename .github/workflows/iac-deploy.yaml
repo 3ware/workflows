@@ -60,6 +60,7 @@ jobs:
       pull-requests: write # Required to add comment and label.
     env:
       TFLINT_PLUGIN_DIR: ${{ github.workspace }}/.tflint.d/plugins
+      TF_VAR_aws_environment: ${{ inputs.environment }}
       TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
       TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
       WORKING_DIR: ${{ needs.targets.outputs.targets }}
@@ -178,5 +179,4 @@ jobs:
           working-directory: ${{ env.WORKING_DIR }}
           command: ${{ github.event_name == 'merge_group' && 'apply' || 'plan' }}
           arg-lock: ${{ github.event_name == 'merge_group' }}
-          arg-var: "aws_environment=${{ inputs.environment }}"
           plan-encrypt: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
