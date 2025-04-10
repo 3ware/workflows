@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.20.0](https://github.com/3ware/workflows/compare/v4.19.1...v4.20.0) (2025-04-10)
+
+
+### Features
+
+* **iac-deploy:** Add TF_VAR environment variable for environment ([#195](https://github.com/3ware/workflows/issues/195)) ([6817683](https://github.com/3ware/workflows/commit/6817683a719454b6e83057001b262099fc79ae2a))
+
 ## [4.19.1](https://github.com/3ware/workflows/compare/v4.19.0...v4.19.1) (2025-04-04)
 
 
