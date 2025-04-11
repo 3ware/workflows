@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.20.1](https://github.com/3ware/workflows/compare/v4.20.0...v4.20.1) (2025-04-11)
+
+
+### Bug Fixes
+
+* **checks:** Add event action to concurrency group name ([#196](https://github.com/3ware/workflows/issues/196)) ([372f02c](https://github.com/3ware/workflows/commit/372f02cdc50a591d18d468e53cf1fd86878b91e5))
+
 ## [4.20.0](https://github.com/3ware/workflows/compare/v4.19.1...v4.20.0) (2025-04-10)
 
 
