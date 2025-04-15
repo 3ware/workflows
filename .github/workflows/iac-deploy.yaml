@@ -52,6 +52,11 @@ jobs:
             iac/.tflint.hcl
           files_ignore: iac/environments/glb/**
 
+      - name: Echo outputs
+        run: |
+          echo ${{ steps.directories.outputs.all_changed_files }}"
+          echo ${{ github.actor }}
+
   iac-deploy:
     needs: [targets]
     if: ${{ needs.targets.outputs.targets != '[]' && needs.targets.outputs.targets != '' }}
