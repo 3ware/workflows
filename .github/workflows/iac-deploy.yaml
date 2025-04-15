@@ -73,9 +73,8 @@ jobs:
       TF_VAR_aws_environment: ${{ inputs.environment }}
       TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
       TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
-      # TODO: test as me: chris3ware. Restore 'renovate[bot]' after test
       WORKING_DIR: >-
-        ${{ (github.actor == 'chris3ware' && needs.targets.outputs.targets == 'iac') &&
+        ${{ (github.actor == 'renovate[bot]' && needs.targets.outputs.targets == 'iac') &&
         'iac/environments/dev' ||
         needs.targets.outputs.targets }}
     runs-on: ubuntu-latest
