@@ -76,7 +76,7 @@ jobs:
       # TODO: test as me: chris3ware. Restore 'renovate[bot]' after test
       WORKING_DIR: >-
         ${{ (github.actor == 'chris3ware' && needs.targets.outputs.targets == 'iac') &&
-        'iac/environments/development' ||
+        'iac/environments/dev' ||
         needs.targets.outputs.targets }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
