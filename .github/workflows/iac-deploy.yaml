@@ -54,7 +54,7 @@ jobs:
 
       - name: Echo outputs
         run: |
-          echo ${{ steps.directories.outputs.all_changed_files }}"
+          echo ${{ steps.directories.outputs.all_changed_files }}
           echo ${{ github.actor }}
 
   iac-deploy:
@@ -75,7 +75,7 @@ jobs:
       TF_TOKEN_APP_TERRAFORM_IO: ${{ secrets.TF_TOKEN_APP_TERRAFORM_IO }}
       # TODO: test as me: chris3ware. Restore 'renovate[bot]' after test
       WORKING_DIR: >-
-        ${{ (github.actor == 'chris3ware' && needs.targets.outputs.targets == 'iac/.tflint.hcl') &&
+        ${{ (github.actor == 'chris3ware' && needs.targets.outputs.targets == 'iac') &&
         'iac/environments/development' ||
         needs.targets.outputs.targets }}
     runs-on: ubuntu-latest
