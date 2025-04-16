@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.21.0](https://github.com/3ware/workflows/compare/v4.20.1...v4.21.0) (2025-04-16)
+
+
+### Features
+
+* **iac-deploy:** Add capability to run on TFLint config updates ([#198](https://github.com/3ware/workflows/issues/198)) ([b9e0df8](https://github.com/3ware/workflows/commit/b9e0df88ffca42645fc680e00ab33cff0e14e9a3))
+
 ## [4.20.1](https://github.com/3ware/workflows/compare/v4.20.0...v4.20.1) (2025-04-11)
 
 
