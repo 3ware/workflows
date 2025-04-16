@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.21.1](https://github.com/3ware/workflows/compare/v4.21.0...v4.21.1) (2025-04-16)
+
+
+### Bug Fixes
+
+* **pr-title:** Trim the double quotes from the jq output ([#200](https://github.com/3ware/workflows/issues/200)) ([f8709c7](https://github.com/3ware/workflows/commit/f8709c7286d1f5fec708a46cf9ae686891308c8c))
+
 ## [4.21.0](https://github.com/3ware/workflows/compare/v4.20.1...v4.21.0) (2025-04-16)
 
 
