@@ -8,7 +8,7 @@ permissions: {}
 
 concurrency:
   group: checks-${{ github.workflow }}-${{ github.head_ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.actor == 'renovate[bot]' && false || true }}
 
 jobs:
   enforce-all-checks:
