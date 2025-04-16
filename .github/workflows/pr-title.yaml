@@ -32,7 +32,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo "PR_TITLE_LENGTH=$(gh api /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | jq '.title' | wc -c)" >> "$GITHUB_ENV"
+          {
+            echo 'PR_TITLE_LENGTH<<EOF'
+            $(gh api /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | jq '.title' | tr -d '"' |wc -c)
+            echo EOF
+          } >> "$GITHUB_ENV"
 
       - name: Add PR comment on failure
         # Only add a comment if the PR title is too long
