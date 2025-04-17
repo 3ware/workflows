@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.21.2](https://github.com/3ware/workflows/compare/v4.21.1...v4.21.2) (2025-04-17)
+
+
+### Bug Fixes
+
+* **pr-title:** Use correct multiline string syntax ([#201](https://github.com/3ware/workflows/issues/201)) ([6ac6d84](https://github.com/3ware/workflows/commit/6ac6d849f984cab8ee03693ab881ef8c96f5b265))
+
 ## [4.21.1](https://github.com/3ware/workflows/compare/v4.21.0...v4.21.1) (2025-04-16)
 
 
