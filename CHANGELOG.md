@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.21.4](https://github.com/3ware/workflows/compare/v4.21.3...v4.21.4) (2025-04-17)
+
+
+### Bug Fixes
+
+* **checks:** Resolve issue with expression evaluation ([fbdc054](https://github.com/3ware/workflows/commit/fbdc0541b8cd74bc4ef8d16d4195ce162319a505))
+
 ## [4.21.3](https://github.com/3ware/workflows/compare/v4.21.2...v4.21.3) (2025-04-17)
 
 
