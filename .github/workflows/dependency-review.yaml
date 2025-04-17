@@ -16,7 +16,7 @@ permissions: {}
 
 concurrency:
   group: dep-review-${{ github.workflow }}-${{ github.head_ref }}
-  cancel-in-progress: ${{ github.actor == 'renovate[bot]' && false || true }}
+  cancel-in-progress: ${{ github.actor != 'renovate[bot]' }}
 
 jobs:
   dependency-review:
