@@ -7,11 +7,8 @@ on:
 permissions: {}
 
 concurrency:
-  # Add the event type to the concurrency group name
-  # For example: to ensure unique events for edited and synchronized events
-  # Renovate PRs are often edited and synchronized in quick succession
-  group: pr-title-${{ github.workflow }}-${{ github.event.action }}-${{ github.head_ref }}
-  cancel-in-progress: true
+  group: pr-title-${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: ${{ github.actor == 'renovate[bot]' && false || true }}
 
 defaults:
   run:
