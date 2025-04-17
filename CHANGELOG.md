@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.21.3](https://github.com/3ware/workflows/compare/v4.21.2...v4.21.3) (2025-04-17)
+
+
+### Bug Fixes
+
+* **checks:** Add expression to allow renovate workflow run concurrency ([#199](https://github.com/3ware/workflows/issues/199)) ([3801868](https://github.com/3ware/workflows/commit/38018682e6cf43e913d9fbcab733c743a13054d3))
+
 ## [4.21.2](https://github.com/3ware/workflows/compare/v4.21.1...v4.21.2) (2025-04-17)
 
 
