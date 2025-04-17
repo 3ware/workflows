@@ -31,7 +31,7 @@ jobs:
         run: |
           {
             echo 'PR_TITLE_LENGTH<<EOF'
-            $(gh api /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | jq '.title' | tr -d '"' |wc -c)
+            gh api /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | jq '.title' | tr -d '"' |wc -c
             echo EOF
           } >> "$GITHUB_ENV"
 
