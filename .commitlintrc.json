@@ -14,7 +14,7 @@
         "checks",
         "commitlint",
         "delete-run",
-        "dep-review",
+        "deps",
         "get-token",
         "iac-deploy",
         "pr-check",
