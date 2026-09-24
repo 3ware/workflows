@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.21.5](https://github.com/3ware/workflows/compare/v4.21.4...v4.21.5) (2026-09-24)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency semantic-release to v19.0.3 [SECURITY] ([#202](https://github.com/3ware/workflows/issues/202)) ([445e5d0](https://github.com/3ware/workflows/commit/445e5d0dd54681b90dd7fbd49d5231f23ec89ad9))
+
 ## [4.21.4](https://github.com/3ware/workflows/compare/v4.21.3...v4.21.4) (2025-04-17)
 
 
