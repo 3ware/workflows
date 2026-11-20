@@ -46,7 +46,7 @@ jobs:
   auto-approve-pr:
     needs: enforce-all-checks
     # auto-approve should only run on PRs created by bots and not on release-please branches
-    if: github.event.action != 'edited' && (github.event.pull_request.user.login == 'renovate[bot]' || github.event.pull_request.user.login == 'threeware-bot[bot]') && github.event.pull_request.head.ref != 'release-please--branches--main'
+    if: github.event.action != 'edited' && (github.event.pull_request.user.login == 'renovate[bot]' || github.event.pull_request.user.login == '3ware[bot]') && github.event.pull_request.head.ref != 'release-please--branches--main'
     name: Approve PR
     permissions:
       contents: write # Required to enable auto-merge
@@ -66,7 +66,7 @@ jobs:
         # cspell: disable-next-line
         uses: lekman/auto-approve-action@v1
         with:
-          allowed-authors: threeware-bot[bot], renovate[bot]
+          allowed-authors: 3ware[bot], renovate[bot]
           github-token: ${{ secrets.GITHUB_TOKEN }}
           max-files-changed: "5"
           merge-method: squash
