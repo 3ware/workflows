@@ -1,0 +1,106 @@
+name: Validate PR Title
+
+on:
+  workflow_call:
+    secrets:
+      threeware-bot-app-id:
+        description: threeware-bot App client ID.
+        required: true
+      threeware-bot-private-key:
+        description: threeware-bot App private key.
+        required: true
+
+# Disable permissions for all available scopes
+permissions: {}
+
+jobs:
+  pr-title-check:
+    name: PR Title Check
+    permissions:
+      contents: read
+      pull-requests: write # Required to add comments on PRs
+    runs-on: ubuntu-latest # Uses Docker container; cannot use ubuntu-slim
+    timeout-minutes: 5
+    concurrency:
+      group: pr-title-${{ github.workflow }}-${{ github.event.pull_request.head.ref }}
+      cancel-in-progress: false
+    env:
+      # Re-run checks when the PR title is corrected, except on renovate PRs
+      RERUN_CHECKS: ${{ github.event.action == 'edited' && github.event.changes.title.from != null && github.event.pull_request.user.login != 'renovate[bot]' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Validate PR title conforms to conventional spec
+        id: validate-pr-title
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # cspell:disable-next-line
+        uses: amannn/action-semantic-pull-request@v6.1.1
+        with:
+          types: |
+            build
+            chore
+            ci
+            docs
+            feat
+            fix
+            refactor
+            revert
+          requireScope: true
+          # Deny characters &, <, and > in the subject line to ensure proper formatting
+          # https://docs.slack.dev/messaging/formatting-message-text/#escaping
+          subjectPattern: ^[^&<>]+$
+          subjectPatternError: |
+            Subject line must not contain the characters &, <, or >.
+
+      - name: Add PR comment on failure
+        # Only add a comment if the error message is not null.
+        if: ${{ always() && steps.validate-pr-title.outputs.error_message != null }}
+        id: pr-comment
+        # cspell:disable-next-line
+        uses: marocchino/sticky-pull-request-comment@v3.0.5
+        with:
+          header: pr-title-error
+          message: |
+            ### Invalid PR Title
+
+            ${{ steps.validate-pr-title.outputs.error_message }}
+
+            Please update the title accordingly; checks will re-run automatically.
+
+      - name: Delete PR comment on resolution
+        # Delete comment, if it exists, when the PR title is valid.
+        if: ${{ steps.validate-pr-title.outputs.error_message == null }}
+        id: delete-comment
+        # cspell:disable-next-line
+        uses: marocchino/sticky-pull-request-comment@v3.0.5
+        with:
+          header: pr-title-error
+          delete: true
+
+      # Workflow triggered by GITHUB_TOKEN require manual approval
+      # Use threeware-bot application token for re-run checks to remove this dependency
+      - name: Get GitHub App token
+        if: env.RERUN_CHECKS == 'true'
+        id: app-token
+        uses: actions/create-github-app-token@v3.3.0
+        with:
+          client-id: ${{ secrets.threeware-bot-app-id }}
+          private-key: ${{ secrets.threeware-bot-private-key }}
+          permission-contents: write # Required to push commit to re-run checks
+
+      - name: Re-run Checks
+        if: env.RERUN_CHECKS == 'true'
+        # cspell:disable-next-line
+        uses: planetscale/ghcommit-action@v0.2.22
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        with:
+          repo: ${{ github.repository }}
+          branch: ${{ github.head_ref }}
+          commit_message: "chore(pr-check): re-run checks after PR title correction"
+          empty: true

@@ -1,0 +1,19 @@
+name: Lint
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+
+# Disable permissions for all available scopes
+permissions: {}
+
+jobs:
+  trunk:
+    name: Trunk Code Quality
+    permissions:
+      contents: read
+    uses: $/.github/workflows/reusable-trunk-code-quality.yaml
+    secrets:
+      threeware-bot-app-id: ${{ secrets.THREEWARE_RELEASE_APPLICATION_ID }}
+      threeware-bot-private-key: ${{ secrets.THREEWARE_RELEASE_APPLICATION_PRIVATE_KEY }}

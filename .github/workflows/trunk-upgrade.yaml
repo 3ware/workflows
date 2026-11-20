@@ -1,45 +1,46 @@
 name: Trunk Upgrade
+
 on:
   schedule:
-    - cron: 0 1 * * 2
-  workflow_call: {}
+    # On the first day of every month @ 8am
+    - cron: 0 8 1 * *
   workflow_dispatch: {}
 
 permissions: {}
+
 concurrency:
-  group: ${{ github.workflow }}-${{ github.repository }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:
-  get-temp-token:
-    uses: 3ware/workflows/.github/workflows/get-workflow-token.yaml@57a900982a56bebaf91e660a56adb7f021690d15 # v4.0.0
-    secrets: inherit
-
   trunk-upgrade:
-    needs: [get-temp-token]
-    name: Upgrade Trunk
+    name: Trunk Upgrade
     permissions:
-      contents: write # For trunk to create PRs
-      pull-requests: write # For trunk to create PRs
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+      contents: read # Required by checkout step
+    runs-on: ubuntu-slim
     steps:
+      # Uses github.token for authentication
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
 
-      - name: Decrypt the installation access token
-        id: decrypt-token
-        env:
-          KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
-        run: |
-          DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$KEY" \
-          --output - <(echo "${{ needs.get-temp-token.outputs.temp-token }}" \
-          | base64 --decode))
-          echo "::add-mask::$DECRYPTED_TOKEN"
-          echo "temp-token=$DECRYPTED_TOKEN" >> $GITHUB_OUTPUT
+      # Use threeware-release application token for trunk. This ensure workflows can
+      # run on pull requests that trunk creates.
+      - name: Get GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3.3.0
+        with:
+          client-id: ${{ secrets.THREEWARE_RELEASE_APPLICATION_ID }}
+          private-key: ${{ secrets.THREEWARE_RELEASE_APPLICATION_PRIVATE_KEY }}
+          permission-contents: write # Required to update trunk-related files
+          permission-pull-requests: write # Required to create and update pull requests
 
       - name: Trunk Upgrade
-        uses: trunk-io/trunk-action/upgrade@8e4c812061ece3fa253bbfa5a80ee1caefa19eb1 # v1.22.9
+        uses: trunk-io/trunk-action/upgrade@v2.0.0
         with:
-          github-token: ${{ steps.decrypt-token.outputs.temp-token }}
+          github-token: ${{ steps.app-token.outputs.token }}
+          labels: auto-merge,trunk
+          lowercase-title: true
           prefix: "ci(trunk): "
+          sign-commits: true
