@@ -1,0 +1,101 @@
+name: Trunk OpenTofu Setup
+description: Initialise OpenTofu in applicable IaC directories
+
+inputs:
+  dir-max-depth:
+    description: Maximum depth to search for IaC directories
+    required: false
+    default: 3
+  iac-dir-path:
+    description: Path to the IaC directory
+    required: false
+    default: iac
+  tofu-version:
+    description: Version of OpenTofu to use
+    required: true
+
+runs:
+  using: composite
+  steps:
+    # For regular runs, find changed IaC directories for initialization
+    # Output the directory names as a JSON array
+    - name: IaC targets
+      id: iac-dir
+      uses: tj-actions/changed-files@v47.0.6
+      with:
+        files: |
+          ${{ inputs.iac-dir-path }}/**
+        dir_names: true
+        dir_names_max_depth: ${{ inputs.dir-max-depth }}
+        json: true
+        # Ensure output, parsed by 'jq' is not escaped
+        # i.e. ["iac/module1"] instead of [\"iac\/module1\"]
+        escape_json: false
+
+    # On trunk upgrade runs, or when the TFLint plugin config changed, every IaC directory must be initialised
+    # Step runs for trunk upgrade or TFLint plugin change to find all IaC directories containing .tf files
+    # TFLint plugin changes is detected in lint.yaml and triggers INIT_ALL_MODULES environment variable
+    - name: All IaC targets
+      id: iac-dir-all
+      if: ${{ env.IS_TRUNK_UPGRADE == 'true' || env.INIT_ALL_MODULES == 'true' }}
+      shell: bash
+      env:
+        IAC_DIR_PATH: ${{ inputs.iac-dir-path }}
+        DIR_MAX_DEPTH: ${{ inputs.dir-max-depth }}
+      run: |
+        dirs=$(find "${IAC_DIR_PATH}" -maxdepth "${DIR_MAX_DEPTH}" -name '*.tf' -exec dirname {} \; | sort --unique | jq --null-input --raw-input --compact-output '[inputs]')
+        printf 'all_dirs=%s\n' "${dirs}" >>"${GITHUB_OUTPUT}"
+
+    # Output the directories found for logging
+    - name: Directory output
+      shell: bash
+      env:
+        MODIFIED_DIRS: ${{ steps.iac-dir.outputs.all_modified_files }}
+        ALL_DIRS: ${{ steps.iac-dir-all.outputs.all_dirs }}
+      run: |
+        echo "Modified IaC directories: ${MODIFIED_DIRS}"
+        echo "All IaC directories: ${ALL_DIRS}"
+
+    # Set the final array of IaC directories to be used for initialization
+    - name: Set IaC directories
+      id: iac-dirs
+      shell: bash
+      env:
+        MODIFIED_DIRS: ${{ steps.iac-dir.outputs.all_modified_files }}
+        ALL_DIRS: ${{ steps.iac-dir-all.outputs.all_dirs }}
+      run: |
+        dirs="${ALL_DIRS:-${MODIFIED_DIRS}}"
+        printf 'dirs=%s\n' "${dirs:-[]}" >>"${GITHUB_OUTPUT}"
+
+    # Install OpenTofu
+    - name: Setup OpenTofu
+      if: ${{ steps.iac-dirs.outputs.dirs != '[]' }}
+      uses: opentofu/setup-opentofu@v2.0.2
+      with:
+        tofu_version: ${{ inputs.tofu-version }}
+        tofu_wrapper: false
+
+    # Set the TF_PLUGIN_CACHE_DIR environment variable for OpenTofu
+    - name: Configure OpenTofu plugin cache
+      if: ${{ steps.iac-dirs.outputs.dirs != '[]' }}
+      shell: bash
+      # trunk-ignore(zizmor/zizmor/github-env): TF_PLUGIN_CACHE_DIR must be set as an environment variable
+      run: |
+        plugin_cache_dir="${HOME}/.cache/trunk/terraform.d/plugin-cache"
+        mkdir -p "${plugin_cache_dir}"
+        printf 'TF_PLUGIN_CACHE_DIR=%s\n' "${plugin_cache_dir}" >>"${GITHUB_ENV}"
+
+    # Initialise OpenTofu in every directory where IaC files have changed
+    # (or all directories, for trunk upgrade runs).
+    - name: Initialise OpenTofu
+      if: ${{ steps.iac-dirs.outputs.dirs != '[]' }}
+      shell: bash
+      env:
+        IAC_DIRS: ${{ steps.iac-dirs.outputs.dirs }}
+      run: |
+        dirs=$(jq -r '.[]' <<<"${IAC_DIRS}")
+
+        while IFS= read -r dir; do
+          echo "Initializing OpenTofu in directory: ${dir}"
+          tofu -chdir="${GITHUB_WORKSPACE}/${dir}" init -backend=false -input=false -lockfile=readonly
+        done <<<"${dirs}"

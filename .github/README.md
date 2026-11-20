@@ -1,137 +1,125 @@
 # 3ware reusable workflows
 
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/3ware/workflows/badge)](https://api.securityscorecards.dev/projects/github.com/3ware/workflows) [![semantic-release: conventionalcommits](https://img.shields.io/badge/semantic--release-conventionalcommits-blue?logo=semantic-release)](https://github.com/semantic-release/semantic-release) [![GitHub release](https://img.shields.io/github/release/3ware/workflows?include_prereleases=&sort=semver&color=yellow)](https://github.com/3ware/workflows/releases/) [![issues - workflows](https://img.shields.io/github/issues/3ware/workflows)](https://github.com/3ware/workflows/issues) [![CI](https://img.shields.io/github/actions/workflow/status/3ware/workflows/wait-for-checks.yaml?label=CI&logo=githubactions&logoColor=white)](https://github.com/3ware/workflows/actions/workflows/wait-for-checks.yaml)
+[![GitHub release](https://img.shields.io/github/release/3ware/workflows?include_prereleases=&sort=semver&color=green)](https://github.com/3ware/workflows/releases/) [![issues - workflows](https://img.shields.io/github/issues/3ware/workflows)](https://github.com/3ware/workflows/issues) [![CI](https://img.shields.io/github/actions/workflow/status/3ware/workflows/pr-check.yaml?label=CI&logo=githubactions&logoColor=white)](https://github.com/3ware/workflows/actions/workflows/pr-check.yaml)
 
-The repository contains [GitHub Action](https://docs.github.com/en/actions) [reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) that can be consumed by other repositories.
+The repository contains [GitHub Action](https://docs.github.com/en/actions) [reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows) and [composite actions](https://docs.github.com/en/actions/tutorials/create-actions/create-a-composite-action) that can be consumed by other repositories.
 
-## Table of contents
+<details>
+<summary><strong>Table of contents</strong></summary>
 
 - [3ware reusable workflows](#3ware-reusable-workflows)
-  - [Table of contents](#table-of-contents)
-  - [Workflows](#workflows)
-    - [dependency-review](#dependency-review)
-    - [get-terraform-dir](#get-terraform-dir)
-    - [get-workflow-token](#get-workflow-token)
-      - [Encrypt the token output](#encrypt-the-token-output)
-      - [Add Job level output](#add-job-level-output)
-      - [Add Workflow level output](#add-workflow-level-output)
-      - [Use encrypted token output in calling workflow](#use-encrypted-token-output-in-calling-workflow)
-      - [Decrypt the token](#decrypt-the-token)
-      - [Use the token for authentication](#use-the-token-for-authentication)
-    - [pr-title](#pr-title)
-    - [release](#release)
-    - [scorecard](#scorecard)
-    - [terraform-docs](#terraform-docs)
-    - [wait-for-checks](#wait-for-checks)
+  - [Reusable Workflows](#reusable-workflows)
+    - [Pull Request Title Validation](#pull-request-title-validation)
+    - [Trunk Code Quality](#trunk-code-quality)
+  - [Composite Actions](#composite-actions)
+    - [Trunk tofu init](#trunk-tofu-init)
+      - [Recommended Folder Structure](#recommended-folder-structure)
 
-## Workflows
+</details>
 
-### dependency review
+## Reusable Workflows
 
-GitHub provides a [dependency review action](https://github.com/actions/dependency-review-action) to scan pull requests for vulnerabilities.
+### Pull Request Title Validation
 
-### get-terraform-dir
+Validate the pull request title conforms to the [conventional commit specification](https://www.conventionalcommits.org/en/v1.0.0/). This is important because all changes must be made through pull requests. Commits are _squashed_ when the pull request is merged and the pull request title is used as the commit message. Accurate release notes and version tags can be generated when commits follow the spec.
 
-This workflow uses [changed-files](https://github.com/tj-actions/changed-files) to output the terraform working directory which can then be used by other actions to initialise terraform. This is useful for multi directory configurations.
+- **Secrets:** `threeware-bot-app-id`, `threeware-bot-private-key`
+- **Caller permissions:** `contents: read`, `pull-requests: write`
 
-### get-workflow-token
-
-According to GitHub's documentation regarding [Authenticating with the API](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github#authenticating-with-the-api), Personal Access Tokens (PATS) should be used temporarily for development work and production workflows should use [GitHub App Authentication](https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps). Most GitHub Action documentation for workflows that require permissions over and above what `GITHUB_TOKEN` can provide, suggest using a PAT - however I wanted to see if I could follow GitHub's advice and use an app. It can be quite easy to lose track of which PAT is stored as which action secret if you have a few of them floating around, and you don't need to worry about expiration and rotation.
-
-This workflow uses the [workflow-application-token-action](https://github.com/marketplace/actions/workflow-application-token-action) to generate the [installation access token](https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#authenticating-as-an-installation) using a GitHub App, which can be used in place of a Personal Access Token.
-
-To make the workflow reusable, the output (the token), must be encrypted for use between jobs / workflows. If it isn't the runner will [skip the output](https://docs.github.com/en/actions/using-jobs/defining-outputs-for-jobs#overview) because it contains a secret, causing subsequent workflows to fail due to authentication errors.
-
-Therefore some extra steps are required in the reusable workflow to encrypt the token and pass the output from the step to the workflow:
-
-#### Encrypt the token output
+> [!WARNING]
+> Do not define a workflow-level concurrency group in the calling workflow. The reusable workflow already defines a job-level group per pull request.
 
 ```yaml
-- name: Get GitHub authentication token
-  id: get-workflow-token
-  uses:
-    uses: peter-murray/workflow-application-token-action@v2.1.0 # Output is 'token'
+name: Example PR Workflow
 
-- name: Encrypt the token for reuse between jobs / workflows
-  id: encrypt-token
-  env:
-    KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
-    TOKEN: ${{ steps.get-workflow-token.outputs.token }}
-  run: |
-    ENCRYPTED_TOKEN=$(gpg --symmetric --batch --passphrase "$KEY" \
-      --output - <(echo "$TOKEN") | base64 -w0)
-    echo "encrypted-token=$ENCRYPTED_TOKEN" >> $GITHUB_OUTPUT
-```
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+    branches: [main]
 
-#### Add Job level output
+permissions: {}
 
-```yaml
 jobs:
-  get-temp-token:
-    outputs:
-      token: ${{ steps.encrypt-token.outputs.encrypted-token }}
+  validate-pr-title:
+    name: Validate PR Title
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: 3ware/workflows/.github/workflows/reusable-validate-pr-title.yaml@v5.0.0
+    secrets:
+      threeware-bot-app-id: ${{ secrets.threeware_BOT_APP_ID }}
+      threeware-bot-private-key: ${{ secrets.threeware_BOT_PRIVATE_KEY }}
 ```
 
-#### Add Workflow level output
+### Trunk Code Quality
+
+Runs [trunk code quality](https://docs.trunk.io/code-quality/overview), configured via the `.trunk/trunk.yaml` configuration file, on changes made via pull requests.
+
+- **Inputs:** `persist-credentials`
+- **Secrets:** `threeware-bot-app-id`, `threeware-bot-private-key`
+- **Caller permissions:** `contents: read`
+
+> [!WARNING]
+> Do not define a workflow-level concurrency group in the calling workflow. The reusable workflow already cancels superseded runs on the same pull request; a matching caller group can cause the run to be cancelled as a deadlock.
 
 ```yaml
-workflow_call:
-  outputs:
-    temp-token:
-      description: "The temporary installation access token"
-      value: ${{ jobs.get-temp-token.outputs.token }}
+name: Example Lint Workflow
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+
+# Disable permissions for all available scopes
+permissions: {}
+
+jobs:
+  trunk:
+    name: Trunk Code Quality
+    permissions:
+      contents: read
+    uses: 3ware/workflows/.github/workflows/reusable-trunk-code-quality.yaml@v5.0.0
+    secrets:
+      threeware-bot-app-id: ${{ secrets.threeware_BOT_APP_ID }}
+      threeware-bot-private-key: ${{ secrets.threeware_BOT_PRIVATE_KEY }}
 ```
 
-The calling workflow can then access the token - but it must be decrypted before it can be used. Also remember to `::add-mask::` to prevent it being shown in the logs:
+---
 
-#### Use encrypted token output in calling workflow
+## Composite Actions
+
+### Trunk tofu init
+
+Trunk's action uses a composite action defined in [setup-ci](https://github.com/trunk-io/trunk-action#custom-setup) to prepare a workspace if necessary before any linters are run. Trunk is used to `fmt`, `validate` and `tflint` Infrastructure-as-Code projects. These tools require the IaC directory to be initialised with `tofu init`. The purpose of `trunk-tofu-init` is to detect file modification within IaC directories and initialise them prior to running `trunk check`.
+
+When the `IS_TRUNK_UPGRADE` or `INIT_ALL_MODULES` environment variable is `true`, every directory containing `.tf` files is initialised instead of only the changed ones.
+
+- **Inputs:** `tofu-version` (required), `dir-max-depth` (optional, default `3`), `iac-dir-path` (optional, default `iac`)
+
+Define the following workflow in `.trunk/setup-ci/action.yaml`:
 
 ```yaml
-calling-workflow:
-  needs: get-temp-token
+name: Trunk Code Quality Setup
+description: Set up dependencies for Trunk Code Quality
+
+runs:
+  using: composite
+  steps:
+    - name: Initialise OpenTofu Directories
+      uses: 3ware/workflows/.github/actions/trunk-tofu-init@v5.0.0
+      with:
+        tofu-version: 1.13.0
 ```
 
-#### Decrypt the token
+> [!TIP]
+> For ease of configuration follow the recommended IaC project folder structure below
 
-```yaml
-- name: Decrypt the installation access token
-  id: decrypt-token
-  env:
-    KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
-  run: |
-    DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$KEY" \
-    --output - <(echo "${{ needs.get-temp-token.outputs.temp-token }}" \
-    | base64 --decode))
-    echo "::add-mask::$DECRYPTED_TOKEN"
-    echo "temp-token=$DECRYPTED_TOKEN" >> $GITHUB_OUTPUT
+#### Recommended Folder Structure
+
+```txt
+iac
+├── environments
+└── modules
+    ├── module1
+    └── module2
 ```
-
-#### Use the token for authentication
-
-```yaml
-- name: Step that required token for authentication
-  env:
-    GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
-```
-
-Thanks to this [this blog post](https://nitratine.net/blog/post/how-to-pass-secrets-between-runners-in-github-actions/) and [stack overflow answer](https://stackoverflow.com/a/75387551/18073694) for the wise words. See [get-workflow-token](https://github.com/3ware/workflows/blob/main/.github/workflows/get-workflow-token.yaml) and [release](https://github.com/3ware/workflows/blob/main/.github/workflows/semantic-release.yaml) for complete workflows.
-
-### pr-title
-
-This workflow ensures that Pull Request titles follow the [conventional syntax](https://www.conventionalcommits.org/en/v1.0.0-beta.2/) using the [semantic-pull-request](https://github.com/marketplace/actions/semantic-pull-request) action. When the Pull Request is Squashed & Merged into main, the Pull Request title is used as the commit message, which is analysed by the [release](#release) workflow.
-
-### release
-
-[Semantic Release](https://github.com/marketplace/actions/action-for-semantic-release) generates tags and releases by mapping conventional commit messages to major, minor and patch version numbers. This action requires an authentication token to push the changes it generates to protected branches. It makes use of the [get-workflow-token](#get-workflow-token) for this, instead of using a PAT.
-
-### scorecard
-
-GitHub recommends using the [OSSF Scorecard action](https://github.com/marketplace/actions/ossf-scorecard-action) action in their [Security Hardening Guide](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions#using-openssf-scorecards-to-secure-workflows) for GitHub Actions.
-
-### terraform-docs
-
-[Terraform docs](https://github.com/marketplace/actions/terraform-docs-gh-actions) generates terraform module documentation and commits the updated _README_ to the repository. This workflow uses [get-workflow-token](#get-workflow-token) for authentication and [ghcommit-action](https://github.com/planetscale/ghcommit-action) to push the updated README with a verified commit.
-
-### wait-for-checks
-
-Since switching to [trunk-io's](https://docs.trunk.io/code-quality/setup-and-installation/github-integration) GitHub App for linting, the CI badge in this document was referencing a non-existent workflow. The [wait-for-checks](https://github.com/poseidon/wait-for-status-checks) workflow polls the checks api for the status of all the checks that run on a pull request and can be used as the sole required status check for a repository - and provide a reliable source for the CI badge.

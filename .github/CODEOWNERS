@@ -1,1 +1,7 @@
-* @3ware/repo-maintainers
+# Require review from repository maintainers team
+/.editorconfig @3ware/repo-maintainers
+/.github/** @3ware/repo-maintainers
+/.trunk/configs/** @3ware/repo-maintainers
+/.trunk/scripts/** @3ware/repo-maintainers
+/.vscode/** @3ware/repo-maintainers
+/CHANGELOG.md @3ware/repo-maintainers

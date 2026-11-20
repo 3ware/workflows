@@ -1,0 +1,36 @@
+# # This workflow generates an installation access token for GitHub authentication
+# name: Generate workflow token
+# on:
+#   workflow_call:
+#     outputs:
+#       temp-token:
+#         description: The temporary installation access token
+#         value: ${{ jobs.get-temp-token.outputs.token }}
+
+# # Disable permissions for all available scopes
+# permissions: {}
+
+# jobs:
+#   get-temp-token:
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 5
+#     outputs:
+#       token: ${{ steps.encrypt-token.outputs.encrypted-token }}
+#     steps:
+#       - name: Get GitHub authentication token
+#         id: get-workflow-token
+#         uses: peter-murray/workflow-application-token-action@d17e3a9a36850ea89f35db16c1067dd2b68ee343 # v4.0.1
+#         with:
+#           application_id: ${{ secrets.THREEWARE_RELEASE_APPLICATION_ID }}
+#           application_private_key: ${{ secrets.THREEWARE_RELEASE_APPLICATION_PRIVATE_KEY }}
+#           organization: 3ware
+
+#       - name: Encrypt the token for reuse between jobs / workflows
+#         id: encrypt-token
+#         env:
+#           KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
+#           TOKEN: ${{ steps.get-workflow-token.outputs.token }}
+#         run: |
+#           ENCRYPTED_TOKEN=$(gpg --symmetric --batch --passphrase "$KEY" \
+#             --output - <(echo "$TOKEN") | base64 -w0)
+#           echo "encrypted-token=$ENCRYPTED_TOKEN" >> $GITHUB_OUTPUT

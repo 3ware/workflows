@@ -1,0 +1,65 @@
+name: Trunk Code Quality
+
+on:
+  workflow_call:
+    inputs:
+      persist-credentials:
+        description: Persist credentials for the checkout step. Set to true if required by subsequent steps or setup-ci.
+        type: boolean
+        required: false
+        default: false
+    secrets:
+      threeware-bot-app-id:
+        description: threeware-bot App client ID.
+        required: true
+      threeware-bot-private-key:
+        description: threeware-bot App private key.
+        required: true
+
+# Disable permissions for all available scopes
+permissions: {}
+
+jobs:
+  trunk-code-quality:
+    name: Code Quality Check
+    permissions:
+      contents: read # Required to checkout the repository
+    # slim runner does not perform well with setup CI
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Job-level with a unique prefix so it can't match a caller's workflow-level group
+    concurrency:
+      group: trunk-${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+      cancel-in-progress: true
+    steps:
+      # trunk-ignore(zizmor/zizmor/artipacked): Defaults to false, but can be overridden by the workflow input
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: ${{ inputs.persist-credentials }}
+
+      # Use threeware-bot application token for trunk; allows zizmor to run in
+      # 'online-mode' which allows reusable workflow checks
+      - name: Get GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3.3.0
+        with:
+          client-id: ${{ secrets.threeware-bot-app-id }}
+          private-key: ${{ secrets.threeware-bot-private-key }}
+          owner: 3ware # Grant access to repositories under this owner
+          permission-actions: write # Enable GitHub Action caching for Trunk
+          permission-contents: read
+          permission-checks: write # Required for Trunk to post annotations
+          # Scope repositories for the GitHub App token; this repo and edc-workflows
+          # required for reusable workflow checks by Zizmor in online mode
+          repositories: |
+            ${{ github.repository }}
+            workflows
+
+      - name: Run Code Quality
+        uses: trunk-io/trunk-action@v2.0.0
+        with:
+          # Run 'trunk check --all' on linter upgrades to verify updates do not
+          # produce errors
+          arguments: ${{ github.head_ref == 'trunk-io/update-trunk' && '--all' || '' }}
+          github-token: ${{ steps.app-token.outputs.token }}

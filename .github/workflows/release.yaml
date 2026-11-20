@@ -1,69 +1,33 @@
 name: Release
 
 on:
-  workflow_call: {}
   push:
     branches: [main]
 
-# Disable permissions for all available scopes
 permissions: {}
 
+concurrency:
+  group: release-please
+  cancel-in-progress: false
+
 jobs:
-  get-temp-token:
-    uses: 3ware/workflows/.github/workflows/get-workflow-token.yaml@57a900982a56bebaf91e660a56adb7f021690d15 # v4.0.0
-    secrets: inherit
-
-  semantic-release:
-    needs: [get-temp-token]
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
+  release:
+    name: Release Please
+    runs-on: ubuntu-slim
     steps:
-      - name: Decrypt the installation access token
-        id: decrypt-token
-        env:
-          KEY: ${{ secrets.PGP_SECRET_SIGNING_PASSPHRASE }}
-        run: |
-          DECRYPTED_TOKEN=$(gpg --decrypt --quiet --batch --passphrase "$KEY" \
-          --output - <(echo "${{ needs.get-temp-token.outputs.temp-token }}" \
-          | base64 --decode))
-          echo "::add-mask::$DECRYPTED_TOKEN"
-          echo "temp-token=$DECRYPTED_TOKEN" >> $GITHUB_OUTPUT
-
-      - name: Checkout repository
-        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+      - name: Get GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3.3.0
         with:
-          token: ${{ steps.decrypt-token.outputs.temp-token }}
-          persist-credentials: false
+          client-id: ${{ secrets.THREEWARE_RELEASE_APPLICATION_ID }}
+          private-key: ${{ secrets.THREEWARE_RELEASE_APPLICATION_PRIVATE_KEY }}
+          permission-contents: write # Required to update release-related files
+          permission-issues: write # See: https://github.com/googleapis/release-please-action/tree/v5.0.0/#workflow-permissions
+          permission-pull-requests: write # Required to create and update pull requests
 
-      - name: Create GitHub release and update CHANGELOG
-        id: release
-        uses: cycjimmy/semantic-release-action@61680d0e9b02ff86f5648ade99e01be17f0260a4 # v4.0.0
+      - name: Run Release Please
+        uses: googleapis/release-please-action@v5.0.0
         with:
-          semantic_version: 19.0.3
-          extra_plugins: |
-            @semantic-release/changelog@6.0.0
-            @semantic-release/git@10.0.0
-            conventional-changelog-conventionalcommits@5.0.0
-        env:
-          GITHUB_TOKEN: ${{ steps.decrypt-token.outputs.temp-token }}
-
-      - name: Summary with release
-        if: ${{ steps.release.outputs.new_release_published == 'true' }}
-        run: |
-          echo "### :white_check_mark: New release published" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Release bumped from v${{ steps.release.outputs.last_release_version }} to v${{ steps.release.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "#### CHANGELOG" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.release.outputs.new_release_notes }}" >>$GITHUB_STEP_SUMMARY
-
-      - name: Summary without release
-        if: ${{ steps.release.outputs.new_release_published == 'false' }}
-        run: |
-          echo "### :negative_squared_cross_mark: No release published" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "There are no relevant changes, so no new version is released" >> $GITHUB_STEP_SUMMARY
+          config-file: .github/release-please-config.json
+          manifest-file: .github/release-please-manifest.json
+          token: ${{ steps.app-token.outputs.token }}

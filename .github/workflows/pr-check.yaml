@@ -1,23 +1,74 @@
 name: PR Check
+
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, edited, reopened, synchronize]
+    branches: [main]
 
 # Disable permissions for all available scopes
 permissions: {}
 
 jobs:
   validate-pr-title:
-    name: Validate PR title
+    name: Validate PR Title
     permissions:
       contents: read
+      # trunk-ignore(zizmor/zizmor/undocumented-permissions): permission described in reusable workflow
       pull-requests: write
-    uses: 3ware/workflows/.github/workflows/pr-title.yaml@696305065316a4d4708a179e8c31c3e3e01ed15f # 4.21.2
+    uses: $/.github/workflows/reusable-validate-pr-title.yaml
+    secrets:
+      threeware-bot-app-id: ${{ secrets.THREEWARE_RELEASE_APPLICATION_ID }}
+      threeware-bot-private-key: ${{ secrets.THREEWARE_RELEASE_APPLICATION_PRIVATE_KEY }}
 
   enforce-all-checks:
-    needs: [validate-pr-title]
-    name: Checks
+    name: Status Checks
+    # Run on every event except PR title edits
+    # validate-pr-title will re-run checks after title corrections
+    # Ensures this required check runs when release-please edits the PR body
+    if: github.event.changes.title.from == null
     permissions:
-      checks: read
-    uses: 3ware/workflows/.github/workflows/wait-for-checks.yaml@696305065316a4d4708a179e8c31c3e3e01ed15f # 4.21.2
-    secrets: inherit
+      checks: read # Required to read the status of checks on the PR
+    runs-on: ubuntu-latest # Requires timeout longer than 15 minutes; cannot use ubuntu-slim
+    timeout-minutes: 30
+    concurrency:
+      group: checks-${{ github.workflow }}-${{ github.event.pull_request.head.ref }}
+      # bots often trigger edited and synchronize events close together, so this
+      # job should not be cancelled if it is already running
+      cancel-in-progress: false
+    steps:
+      - name: GitHub Checks
+        uses: poseidon/wait-for-status-checks@v0.7.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # The Checks API returns display names here, not workflow-qualified job names.
+          ignore_pattern: ^(Status Checks|Approve PR)$
+
+  auto-approve-pr:
+    needs: enforce-all-checks
+    # auto-approve should only run on PRs created by bots and not on release-please branches
+    if: github.event.action != 'edited' && (github.event.pull_request.user.login == 'renovate[bot]' || github.event.pull_request.user.login == 'threeware-bot[bot]') && github.event.pull_request.head.ref != 'release-please--branches--main'
+    name: Approve PR
+    permissions:
+      contents: write # Required to enable auto-merge
+      pull-requests: write # Required to approve the PR
+    runs-on: ubuntu-slim
+    timeout-minutes: 10
+    concurrency:
+      group: auto-approve-${{ github.workflow }}-${{ github.event.pull_request.head.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Auto approve
+        # cspell: disable-next-line
+        uses: lekman/auto-approve-action@v1
+        with:
+          allowed-authors: threeware-bot[bot], renovate[bot]
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          max-files-changed: "5"
+          merge-method: squash
+          path-filters: .github/gh-actions-lock.version,.github/workflows/**,.trunk/trunk.yaml
+          required-labels: auto-merge
