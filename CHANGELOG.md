@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.0.0](https://github.com/3ware/workflows/compare/v4.21.5...v5.0.0) (2026-11-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **actions:** Add GitHub Action workflow lock file ([#203](https://github.com/3ware/workflows/issues/203))
+
+### Features
+
+* **actions:** Add GitHub Action workflow lock file ([#203](https://github.com/3ware/workflows/issues/203)) ([5b76231](https://github.com/3ware/workflows/commit/5b76231d39a61aef5c0335f30e932d2bef32d998))
+
 ## [4.21.5](https://github.com/3ware/workflows/compare/v4.21.4...v4.21.5) (2026-09-24)
 
 
