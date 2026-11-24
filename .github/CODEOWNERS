@@ -1,5 +1,12 @@
 # Require review from repository maintainers team
 /.editorconfig @3ware/repo-maintainers
-/.github/** @3ware/repo-maintainers
+/.github/actions/** @3ware/repo-maintainers
+/.github/CODEOWNERS @3ware/repo-maintainers
+/.github/README.md @3ware/repo-maintainers
+/.github/release-please-config.json @3ware/repo-maintainers
+/.github/release-please-manifest.json @3ware/repo-maintainers
+/.github/renovate.json @3ware/repo-maintainers
+/.github/workflows/reusable-trunk-code-quality.yaml @3ware/repo-maintainers
+/.github/workflows/reusable-validate-pr-title.yaml @3ware/repo-maintainers
 /.vscode/** @3ware/repo-maintainers
 /CHANGELOG.md @3ware/repo-maintainers
