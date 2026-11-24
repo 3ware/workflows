@@ -16,6 +16,15 @@ jobs:
       # trunk-ignore(zizmor/zizmor/undocumented-permissions): permission described in reusable workflow
       pull-requests: write
     uses: $/.github/workflows/reusable-validate-pr-title.yaml
+    with:
+      scopes: |
+        actions
+        config
+        deps
+        release
+        renovate
+        security
+        trunk
     secrets:
       threeware-bot-app-id: ${{ secrets.THREEWARE_RELEASE_APPLICATION_ID }}
       threeware-bot-private-key: ${{ secrets.THREEWARE_RELEASE_APPLICATION_PRIVATE_KEY }}

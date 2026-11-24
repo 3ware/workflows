@@ -25,7 +25,7 @@ jobs:
         with:
           persist-credentials: false
 
-      # Use threeware-release application token for trunk. This ensure workflows can
+      # Use threeware-bot application token for trunk. This ensure workflows can
       # run on pull requests that trunk creates.
       - name: Get GitHub App token
         id: app-token
@@ -43,4 +43,5 @@ jobs:
           labels: auto-merge,trunk
           lowercase-title: true
           prefix: "ci(trunk): "
+          reviewers: chazypro
           sign-commits: true

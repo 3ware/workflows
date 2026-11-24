@@ -2,6 +2,11 @@ name: Validate PR Title
 
 on:
   workflow_call:
+    inputs:
+      scopes:
+        description: Newline-delimited list of allowed scopes. Leave empty to allow any.
+        type: string
+        required: false
     secrets:
       threeware-bot-app-id:
         description: threeware-bot App client ID.
@@ -50,7 +55,7 @@ jobs:
             fix
             refactor
             revert
-          requireScope: true
+          scopes: ${{ inputs.scopes }}
           # Deny characters &, <, and > in the subject line to ensure proper formatting
           # https://docs.slack.dev/messaging/formatting-message-text/#escaping
           subjectPattern: ^[^&<>]+$
@@ -102,5 +107,5 @@ jobs:
         with:
           repo: ${{ github.repository }}
           branch: ${{ github.head_ref }}
-          commit_message: "chore(pr-check): re-run checks after PR title correction"
+          commit_message: re-run checks after PR title correction
           empty: true
