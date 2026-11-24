@@ -16,6 +16,15 @@ jobs:
       # trunk-ignore(zizmor/zizmor/undocumented-permissions): permission described in reusable workflow
       pull-requests: write
     uses: $/.github/workflows/reusable-validate-pr-title.yaml
+    with:
+      scopes: |
+        actions
+        config
+        deps
+        release
+        renovate
+        security
+        trunk
     secrets:
       threeware-bot-app-id: ${{ secrets.THREEWARE_RELEASE_APPLICATION_ID }}
       threeware-bot-private-key: ${{ secrets.THREEWARE_RELEASE_APPLICATION_PRIVATE_KEY }}
@@ -73,7 +82,7 @@ jobs:
         with:
           allowed-authors: 3ware[bot], renovate[bot]
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          max-files-changed: "5"
+          max-files-changed: "10"
           merge-method: squash
           path-filters: .github/gh-actions-lock.version,.github/workflows/**,.trunk/trunk.yaml
           required-labels: auto-merge
