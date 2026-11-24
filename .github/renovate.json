@@ -6,14 +6,18 @@
       "description": "Actions within reusable workflows use feat prefix to trigger a release",
       "matchManagers": ["github-actions"],
       "matchFileNames": [".github/workflows/reusable-*.yaml"],
-      "commitMessagePrefix": "feat(actions): "
+      "commitMessagePrefix": "feat(actions): ",
+      // adding review-required prevents auto-approve workflow running
+      "labels": ["reusable-workflow", "review-required"]
     },
     {
       "description": "Major action updates in reusable workflows are breaking changes",
       "matchManagers": ["github-actions"],
       "matchFileNames": [".github/workflows/reusable-*.yaml"],
       "matchUpdateTypes": ["major"],
-      "commitMessagePrefix": "feat(actions)!: "
+      "commitMessagePrefix": "feat(actions)!: ",
+      // adding review-required prevents auto-approve workflow running
+      "labels": ["reusable-workflow", "review-required"]
     }
   ]
 }
