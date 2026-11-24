@@ -22,7 +22,7 @@ workflows:
     '.github/workflows/reusable-validate-pr-title.yaml':
         - 'actions/checkout@v7.0.1'
         - 'actions/create-github-app-token@v3.3.0'
-        - 'amannn/action-semantic-pull-request@v6.1.1'
+        - 'amannn/action-semantic-pull-request@v6.1.2'
         - 'marocchino/sticky-pull-request-comment@v3.0.5'
         - 'planetscale/ghcommit-action@v0.2.22'
     '.github/workflows/scheduled.yaml':
@@ -62,9 +62,9 @@ dependencies:
         commit: 'sha1-043fb46d1a93c77aae656e7c1c64a875d1fc6a0a'
         owner_id: 44036562
         repo_id: 192625955
-    'amannn/action-semantic-pull-request@v6.1.1':
-        ref: 'v6.1.1'
-        commit: 'sha1-48f256284bd46cdaab1048c3721360e808335d50'
+    'amannn/action-semantic-pull-request@v6.1.2':
+        ref: 'v6.1.2'
+        commit: 'sha1-2252a14e810aa9b85c2d560bd7070c802206ecf6'
         owner_id: 4038316
         repo_id: 220418983
     'googleapis/release-please-action@v5.0.0':
