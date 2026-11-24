@@ -1,4 +1,19 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>3ware/renovate-config"]
+  "extends": ["local>3ware/renovate-config"],
+  "packageRules": [
+    {
+      "description": "Actions within reusable workflows use feat prefix to trigger a release",
+      "matchManagers": ["github-actions"],
+      "matchFileNames": [".github/workflows/reusable-*.yaml"],
+      "commitMessagePrefix": "feat(actions): "
+    },
+    {
+      "description": "Major action updates in reusable workflows are breaking changes",
+      "matchManagers": ["github-actions"],
+      "matchFileNames": [".github/workflows/reusable-*.yaml"],
+      "matchUpdateTypes": ["major"],
+      "commitMessagePrefix": "feat(actions)!: "
+    }
+  ]
 }
