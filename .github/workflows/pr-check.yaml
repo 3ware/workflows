@@ -82,7 +82,7 @@ jobs:
         with:
           allowed-authors: 3ware[bot], renovate[bot]
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          max-files-changed: "5"
+          max-files-changed: "10"
           merge-method: squash
           path-filters: .github/gh-actions-lock.version,.github/workflows/**,.trunk/trunk.yaml
           required-labels: auto-merge
