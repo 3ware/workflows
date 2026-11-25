@@ -21,6 +21,7 @@ jobs:
         actions
         config
         deps
+        pr-title
         release
         renovate
         security
