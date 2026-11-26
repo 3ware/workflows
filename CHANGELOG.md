@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.0.0](https://github.com/3ware/workflows/compare/v5.0.0...v6.0.0) (2026-11-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* **trunk:** Rename GitHub App inputs ([#213](https://github.com/3ware/workflows/issues/213))
+* **pr-title:** Rename GitHub App inputs ([#212](https://github.com/3ware/workflows/issues/212))
+
+### Features
+
+* **pr-title:** Rename GitHub App inputs ([#212](https://github.com/3ware/workflows/issues/212)) ([7f485ff](https://github.com/3ware/workflows/commit/7f485ffdb83cc9fbbb8fec80e72d2f0f2ca3536b))
+* **pr-title:** Update amannn/action-semantic-pull-request action to v6.1.2 ([#210](https://github.com/3ware/workflows/issues/210)) ([41d97ea](https://github.com/3ware/workflows/commit/41d97eab01831286c352be2bc8e3cd52a80396e1))
+* **trunk:** Rename GitHub App inputs ([#213](https://github.com/3ware/workflows/issues/213)) ([d9ed51e](https://github.com/3ware/workflows/commit/d9ed51eddbf47f252741ff28d97db9fe404b9c97))
+
 ## [5.0.0](https://github.com/3ware/workflows/compare/v4.21.5...v5.0.0) (2026-11-20)
 
 
