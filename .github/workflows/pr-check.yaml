@@ -27,8 +27,8 @@ jobs:
         security
         trunk
     secrets:
-      threeware-bot-app-id: ${{ secrets.THREEWARE_RELEASE_APPLICATION_ID }}
-      threeware-bot-private-key: ${{ secrets.THREEWARE_RELEASE_APPLICATION_PRIVATE_KEY }}
+      github-app-id: ${{ secrets.THREEWARE_RELEASE_APPLICATION_ID }}
+      github-app-private-key: ${{ secrets.THREEWARE_RELEASE_APPLICATION_PRIVATE_KEY }}
 
   enforce-all-checks:
     name: Status Checks

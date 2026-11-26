@@ -8,11 +8,11 @@ on:
         type: string
         required: false
     secrets:
-      threeware-bot-app-id:
-        description: threeware-bot App client ID.
+      github-app-id:
+        description: GitHub App client ID.
         required: true
-      threeware-bot-private-key:
-        description: threeware-bot App private key.
+      github-app-private-key:
+        description: GitHub App private key.
         required: true
 
 # Disable permissions for all available scopes
@@ -88,14 +88,14 @@ jobs:
           delete: true
 
       # Workflow triggered by GITHUB_TOKEN require manual approval
-      # Use threeware-bot application token for re-run checks to remove this dependency
+      # Use GitHub App token for re-run checks to remove this dependency
       - name: Get GitHub App token
         if: env.RERUN_CHECKS == 'true'
         id: app-token
         uses: actions/create-github-app-token@v3.3.0
         with:
-          client-id: ${{ secrets.threeware-bot-app-id }}
-          private-key: ${{ secrets.threeware-bot-private-key }}
+          client-id: ${{ secrets.github-app-id }}
+          private-key: ${{ secrets.github-app-private-key }}
           permission-contents: write # Required to push commit to re-run checks
 
       - name: Re-run Checks
