@@ -38,8 +38,8 @@ Validate the pull request title conforms to the [conventional commit specificati
 
 GitHub App, with `contents:write` permission, required to trigger a check run when an incorrect pull request title is corrected.
 
-- `threeware-bot-app-id` (required)
-- `threeware-bot-private-key` (required)
+- `github-app-id` (required)
+- `github-app-private-key` (required)
 
 #### Permissions
 
@@ -71,8 +71,8 @@ jobs:
         build
         deps
     secrets:
-      threeware-bot-app-id: ${{ secrets.threeware_BOT_APP_ID }}
-      threeware-bot-private-key: ${{ secrets.threeware_BOT_PRIVATE_KEY }}
+      github-app-id: ${{ secrets.GH_APP_ID }}
+      github-app-private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
 ```
 
 ### Trunk Code Quality
