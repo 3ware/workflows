@@ -82,13 +82,15 @@ Runs [trunk code quality](https://docs.trunk.io/code-quality/overview), configur
 #### Inputs
 
 - `persist-credentials` (optional). Defaults to `false`.
+- `owner` (optional). Owner the GitHub App token is scoped to. Defaults to the calling repository's owner.
+- `additional-repos` (optional). Newline delimited repository names, in addition to the calling repository, the token is scoped to. Defaults to `workflows`.
 
 #### Secrets
 
 GitHub App, which creates an organisation token for specific repositories, that allows `zizmor` to run in [online mode](https://docs.zizmor.sh/usage/#operating-modes).
 
-- `threeware-bot-app-id` (required)
-- `threeware-bot-private-key` (required)
+- `github-app-id` (required)
+- `github-app-private-key` (required)
 
 #### Permissions
 
@@ -115,8 +117,8 @@ jobs:
       contents: read
     uses: 3ware/workflows/.github/workflows/reusable-trunk-code-quality.yaml@v5.0.0
     secrets:
-      threeware-bot-app-id: ${{ secrets.threeware_BOT_APP_ID }}
-      threeware-bot-private-key: ${{ secrets.threeware_BOT_PRIVATE_KEY }}
+      github-app-id: ${{ secrets.GH_APP_ID }}
+      github-app-private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
 ```
 
 ---
