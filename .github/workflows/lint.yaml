@@ -15,5 +15,5 @@ jobs:
       contents: read
     uses: $/.github/workflows/reusable-trunk-code-quality.yaml
     secrets:
-      threeware-bot-app-id: ${{ secrets.THREEWARE_RELEASE_APPLICATION_ID }}
-      threeware-bot-private-key: ${{ secrets.THREEWARE_RELEASE_APPLICATION_PRIVATE_KEY }}
+      github-app-id: ${{ secrets.THREEWARE_RELEASE_APPLICATION_ID }}
+      github-app-private-key: ${{ secrets.THREEWARE_RELEASE_APPLICATION_PRIVATE_KEY }}
