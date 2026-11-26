@@ -65,7 +65,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    uses: 3ware/workflows/.github/workflows/reusable-validate-pr-title.yaml@v5.0.0
+    uses: 3ware/workflows/.github/workflows/reusable-validate-pr-title.yaml@v6.0.0
     with:
       scopes: |
         build
@@ -115,7 +115,7 @@ jobs:
     name: Trunk Code Quality
     permissions:
       contents: read
-    uses: 3ware/workflows/.github/workflows/reusable-trunk-code-quality.yaml@v5.0.0
+    uses: 3ware/workflows/.github/workflows/reusable-trunk-code-quality.yaml@v6.0.0
     secrets:
       github-app-id: ${{ secrets.GH_APP_ID }}
       github-app-private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
