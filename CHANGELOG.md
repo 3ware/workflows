@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.0](https://github.com/3ware/workflows/compare/v6.0.0...v6.1.0) (2026-11-27)
+
+
+### Features
+
+* **trunk:** Add `trunk-arguments` input ([#216](https://github.com/3ware/workflows/issues/216)) ([475aa03](https://github.com/3ware/workflows/commit/475aa03960a4fc7515d5a53fa166ff9b974ca804))
+
 ## [6.0.0](https://github.com/3ware/workflows/compare/v5.0.0...v6.0.0) (2026-11-26)
 
 
