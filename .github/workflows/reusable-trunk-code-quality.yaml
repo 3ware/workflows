@@ -48,9 +48,7 @@ jobs:
         with:
           persist-credentials: ${{ inputs.persist-credentials }}
 
-      # TODO: [#213] Remove this step and the .trunk/setup-ci stub once trunk-action references setup-ci as $/
-      # This step lists $/.trunk/setup-ci so gh actions-lock records its actions
-      # for this workflow in the lock file.
+      # TODO: [#215] Remove this step and .trunk/setup-ci once trunk-action references setup-ci as $/
       - name: Lock setup-ci dependencies
         # trunk-ignore(actionlint/if-cond)
         if: false

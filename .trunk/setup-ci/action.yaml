@@ -1,9 +1,16 @@
-name: Trunk setup-ci stub
-description: No-op placeholder so `$/.trunk/setup-ci` resolves in this repository. Callers provide their own.
+# name: Trunk setup-ci
+# description: No-op placeholder so `$/.trunk/setup-ci` resolves in this repository. Callers provide their own.
+
+# runs:
+#   using: composite
+#   steps:
+#     - name: No-op
+#       shell: bash
+#       run: exit 0
+name: Trunk setup CI
+description: Install tools from mise.toml for custom Trunk linters
 
 runs:
   using: composite
   steps:
-    - name: No-op
-      shell: bash
-      run: exit 0
+    - uses: jdx/mise-action@v5.3.0
