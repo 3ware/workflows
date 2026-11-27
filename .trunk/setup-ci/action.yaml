@@ -1,0 +1,9 @@
+name: Trunk setup-ci stub
+description: No-op placeholder so `$/.trunk/setup-ci` resolves in this repository. Callers provide their own.
+
+runs:
+  using: composite
+  steps:
+    - name: No-op
+      shell: bash
+      run: exit 0

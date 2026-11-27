@@ -48,6 +48,14 @@ jobs:
         with:
           persist-credentials: ${{ inputs.persist-credentials }}
 
+      # TODO: [#213] Remove this step and the .trunk/setup-ci stub once trunk-action references setup-ci as $/
+      # This step lists $/.trunk/setup-ci so gh actions-lock records its actions
+      # for this workflow in the lock file.
+      - name: Lock setup-ci dependencies
+        # trunk-ignore(actionlint/if-cond)
+        if: false
+        uses: $/.trunk/setup-ci
+
       # Use GitHub App token for trunk; allows zizmor to run in
       # 'online-mode' which allows reusable workflow checks
       - name: Get GitHub App token
