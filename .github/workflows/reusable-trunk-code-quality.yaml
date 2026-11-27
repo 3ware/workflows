@@ -18,6 +18,11 @@ on:
         type: string
         required: false
         default: workflows
+      trunk-arguments:
+        description: Arguments to pass to the Trunk CLI.
+        type: string
+        required: false
+        default: ""
     secrets:
       github-app-id:
         description: GitHub App client ID.
@@ -70,6 +75,6 @@ jobs:
         uses: trunk-io/trunk-action@v2.0.0
         with:
           # Run 'trunk check --all' on linter upgrades to verify updates do not
-          # produce errors
-          arguments: ${{ github.head_ref == 'trunk-io/update-trunk' && '--all' || '' }}
+          # produce errors. Include any additional arguments passed. e.g: '--exclude'
+          arguments: ${{ format('{0} {1}', github.head_ref == 'trunk-io/update-trunk' && '--all' || '', inputs.trunk-arguments) }}
           github-token: ${{ steps.app-token.outputs.token }}

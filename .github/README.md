@@ -84,6 +84,7 @@ Runs [trunk code quality](https://docs.trunk.io/code-quality/overview), configur
 - `persist-credentials` (optional). Defaults to `false`.
 - `owner` (optional). Owner the GitHub App token is scoped to. Defaults to the calling repository's owner.
 - `additional-repos` (optional). Newline delimited repository names, in addition to the calling repository, the token is scoped to. Defaults to `workflows`.
+- `trunk-arguments` (optional). Include any CLI arguments supported by `trunk check`. e.g. `--exclude`.
 
 #### Secrets
 
@@ -115,7 +116,7 @@ jobs:
     name: Trunk Code Quality
     permissions:
       contents: read
-    uses: 3ware/workflows/.github/workflows/reusable-trunk-code-quality.yaml@v6.0.0
+    uses: 3ware/workflows/.github/workflows/reusable-trunk-code-quality.yaml@v6.1.0
     secrets:
       github-app-id: ${{ secrets.GH_APP_ID }}
       github-app-private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
